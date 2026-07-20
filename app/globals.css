@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-serif: "Playfair Display", Georgia, serif;
+  }
+
+  * {
+    @apply border-sand-200/60;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-sand-50 text-ink-800 antialiased;
+    font-feature-settings: "ss01", "cv01";
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif tracking-tight text-ink-900;
+  }
+
+  ::selection {
+    @apply bg-gold/30 text-ink-900;
+  }
+}
+
+@layer components {
+  .container-wide {
+    @apply mx-auto w-full max-w-7xl px-6 lg:px-8;
+  }
+
+  .glass {
+    @apply border border-white/40 bg-white/60 backdrop-blur-xl;
+  }
+
+  .glass-dark {
+    @apply border border-white/10 bg-white/5 backdrop-blur-xl;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-gold-dark;
+  }
+
+  /* Focus ring used across interactive elements for accessibility */
+  .focus-ring {
+    @apply outline-none ring-offset-2 ring-offset-sand-50 focus-visible:ring-2 focus-visible:ring-gold;
+  }
+}
+
+/* Custom scrollbar for a premium feel */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: theme("colors.sand.100");
+}
+::-webkit-scrollbar-thumb {
+  background: theme("colors.sand.300");
+  border-radius: 9999px;
+  border: 2px solid theme("colors.sand.100");
+}
+::-webkit-scrollbar-thumb:hover {
+  background: theme("colors.sand.400");
+}

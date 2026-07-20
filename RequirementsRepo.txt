@@ -1,0 +1,119 @@
+For this repo, the setup requirements break into three parts: frontend, backend, and AI/services.
+
+1. Core tools you need
+1. Node.js (recommended 18+ for Next 14)
+2. npm
+3. Python (recommended 3.10+)
+4. PostgreSQL (most API routes need DB access, not just the server process)
+5. Optional accounts/services: OpenAI, S3-compatible storage, Stripe, email provider
+
+2. Frontend requirements
+1. Install dependencies and run with npm install, then npm run dev (documented in README.md).
+2. Frontend calls backend using NEXT_PUBLIC_BACKEND_URL from env (see http.ts); default is http://localhost:8000 (see http.ts).
+3. Backend API is mounted under /api (see router.py), so frontend base URL should point to backend host only, for example http://localhost:8000.
+
+3. Backend requirements
+1. Install Python deps from requirements.txt.
+2. Configure backend env from config.py:
+- database_url
+- auth_secret (or nextauth_secret fallback logic exists at config.py)
+- app_base_url and frontend_origin for CORS/callbacks (main.py, config.py)
+3. Run migrations before real usage (Alembic is wired to settings.database_url in env.py).
+4. Optional but useful: seed products/blogs via seed.py, because design generation relies on product candidates.
+5. Start server with uvicorn app.main:app --reload --port 8000 (same as README.md).
+
+4. AI implementation requirements
+1. For true LLM-based generation, set openai_api_key (defined in config.py).
+2. If openai_api_key is missing, your app still generates fallback concepts (see generator.py and generator.py).
+3. AI design generation still needs product data from DB matching, so database + seeded catalog are practically required.
+4. Image upload path is currently S3-backed; missing S3 keys causes upload failure (see s3.py and s3.py).
+
+5. Optional service requirements for full production flow
+1. Payments: stripe_secret_key and stripe_webhook_secret are required for checkout/webhooks (stripe_service.py, stripe_service.py).
+2. Email: email_provider can be none, resend, or smtp (config.py); resend needs resend_api_key (send.py); smtp needs smtp_host/smtp_port/smtp_user/smtp_password (send.py).
+
+If you want, I can generate a minimal env checklist next in two blocks: one for local dev only, and one for full AI + uploads + payments.
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+## S3 Backend Setup 
+
+
+Use this setup flow. It matches exactly how your backend uploads work.
+
+Your backend expectations:
+1. Upload service is in s3.py.
+2. Required env values are checked as S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY at s3.py.
+3. Config keys are defined in config.py.
+4. Presign endpoint is uploads.py.
+5. Allowed file types and max size are JPEG/PNG/WebP and 10 MB in s3.py.
+
+How to set up S3 (AWS):
+1. Create a bucket
+- Region: choose one and keep it consistent.
+- Bucket name: choose globally unique.
+- Keep ACLs disabled (Bucket owner enforced) unless you have a special reason.
+
+2. Add bucket CORS
+Use this CORS JSON (adjust origins for your domains):
+[
+  {
+    "AllowedHeaders": ["*"],
+    "AllowedMethods": ["PUT", "GET", "HEAD"],
+    "AllowedOrigins": ["http://localhost:3000", "https://your-frontend-domain.com"],
+    "ExposeHeaders": ["ETag"],
+    "MaxAgeSeconds": 3000
+  }
+]
+
+3. Make uploaded objects readable
+Because your backend returns a direct public URL from s3.py, objects must be publicly readable (or served by a public CDN URL).
+If you want simple dev setup, add bucket policy for uploads path:
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadUploads",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::YOUR_BUCKET/uploads/*"]
+    }
+  ]
+}
+
+4. Create IAM user for backend
+Grant only what backend needs:
+- s3:PutObject on arn:aws:s3:::YOUR_BUCKET/uploads/*
+- s3:GetObject on arn:aws:s3:::YOUR_BUCKET/uploads/*
+- Optional: s3:ListBucket on arn:aws:s3:::YOUR_BUCKET
+
+5. Set backend env values in backend .env
+Add:
+- STORAGE_PROVIDER=s3
+- S3_REGION=your-region (example: ap-south-1)
+- S3_BUCKET=your-bucket-name
+- S3_ACCESS_KEY_ID=your-access-key
+- S3_SECRET_ACCESS_KEY=your-secret-key
+- S3_ENDPOINT= (leave empty for AWS S3)
+- S3_PUBLIC_BASE_URL= (optional, set if using CloudFront/custom domain)
+
+Then restart backend server.
+
+Quick verification:
+1. Start backend and call POST /api/uploads/presign with:
+- contentType: image/png
+- size: 1024
+- fileName: test.png
+2. You should get uploadUrl, imageUrl, imageKey from s3.py.
+3. PUT the file bytes to uploadUrl using Content-Type from response headers.
+4. Open imageUrl in browser; it should load.
+
+Important caveat for this repo:
+- Even though STORAGE_PROVIDER supports s3, r2, supabase, local in config, upload route currently uses the S3 service directly via uploads.py. So S3-compatible settings must still be valid.

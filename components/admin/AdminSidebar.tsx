@@ -1,0 +1,48 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+export const ADMIN_NAV_LINKS = [
+  { label: "Dashboard", href: "/admin" },
+  { label: "Design Requests", href: "/admin/design-requests" },
+  { label: "Generated Designs", href: "/admin/generated-designs" },
+  { label: "Selected Designs", href: "/admin/selected-designs" },
+  { label: "Bookings", href: "/admin/bookings" },
+  { label: "Customers", href: "/admin/customers" },
+  { label: "Products", href: "/admin/products" },
+  { label: "Blogs", href: "/admin/blogs" },
+  { label: "Contact Messages", href: "/admin/contact-messages" },
+  { label: "Payments", href: "/admin/payments" },
+  { label: "AI Logs", href: "/admin/ai-logs" },
+  { label: "Settings", href: "/admin/settings" },
+  { label: "Team", href: "/admin/team" },
+];
+
+export function AdminSidebar() {
+  const pathname = usePathname();
+
+  return (
+    <aside className="h-full rounded-2xl border border-sand-200 bg-white p-3">
+      <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink-500">Admin Portal</p>
+      <nav className="space-y-1">
+        {ADMIN_NAV_LINKS.map((link) => {
+          const active = link.href === "/admin" ? pathname === link.href : pathname.startsWith(link.href);
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "block rounded-xl px-3 py-2 text-sm transition-colors",
+                active ? "bg-ink-900 text-sand-50" : "text-ink-600 hover:bg-sand-100 hover:text-ink-900"
+              )}
+            >
+              {link.label}
+            </Link>
+          );
+        })}
+      </nav>
+    </aside>
+  );
+}
