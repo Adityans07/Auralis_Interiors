@@ -8,7 +8,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    database_url: str = "postgresql+psycopg://aditya@localhost:5432/auralis"
+    # database_url: str = "postgresql+psycopg://aditya@localhost:5432/auralis"
+    databse_url: str = "postgresql://auralis_eros_user:DLlU6UUtNRbD0Ii79byYdy9koMzHjM1j@dpg-d9f82f9kh4rs73dn9eh0-a.oregon-postgres.render.com/auralis_eros"
     auth_secret: str = Field(default="development-only-secret", validation_alias="AUTH_SECRET")
     nextauth_secret: str | None = Field(default=None, validation_alias="NEXTAUTH_SECRET")
     nextauth_url: str | None = Field(default=None, validation_alias="NEXTAUTH_URL")
