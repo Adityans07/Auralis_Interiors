@@ -14,8 +14,7 @@ class Settings(BaseSettings):
     nextauth_secret: str | None = Field(default=None, validation_alias="NEXTAUTH_SECRET")
     nextauth_url: str | None = Field(default=None, validation_alias="NEXTAUTH_URL")
     app_base_url: str = "http://localhost:3000"
-    frontend_origin: str = "http://localhost:3000", "https://auralis-interiors.vercel.app",
-    "https://auralis-interiors-7ln23i4e2-adityar739-gmailcoms-projects.vercel.app"
+    frontend_origin: str = "http://localhost:3000,https://auralis-interiors.vercel.app,https://auralis-interiors-7ln23i4e2-adityar739-gmailcoms-projects.vercel.app"
 
     openai_api_key: str | None = None
     openai_model_text: str = "gpt-4o-mini"
