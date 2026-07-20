@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     auth_session_ttl_hours: int = 24 * 30
     password_reset_ttl_minutes: int = 30
     email_verification_ttl_minutes: int = 60 * 24
-    secure_cookies: bool = False
+    secure_cookies: bool = True
 
     @property
     def effective_auth_secret(self) -> str:

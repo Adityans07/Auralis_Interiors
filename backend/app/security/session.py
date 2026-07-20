@@ -94,7 +94,7 @@ def get_or_create_anonymous_session(
             token,
             httponly=True,
             secure=settings.secure_cookies,
-            samesite="lax",
+            samesite="none",
             max_age=60 * 60 * 24 * 365,
             path="/",
         )
@@ -162,7 +162,7 @@ def create_user_session(response: Response, request: Request, db: Session, user:
         session_token,
         httponly=True,
         secure=settings.secure_cookies,
-        samesite="lax",
+        samesite="none",
         max_age=max_age,
         path="/",
     )
@@ -171,7 +171,7 @@ def create_user_session(response: Response, request: Request, db: Session, user:
         csrf_token,
         httponly=False,
         secure=settings.secure_cookies,
-        samesite="lax",
+        samesite="none",
         max_age=max_age,
         path="/",
     )

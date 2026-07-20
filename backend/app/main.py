@@ -12,7 +12,9 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Auralis Interiors API", version="1.0.0")
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[origin.strip() for origin in settings.frontend_origin.split(",")],
+        allow_origins=[ "https://auralis-interiors.vercel.app",
+        "https://auralis-interiors-7ln23i4e2-adityar739-gmailcoms-projects.vercel.app",
+        "http://localhost:3000"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
