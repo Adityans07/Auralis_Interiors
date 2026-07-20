@@ -11,7 +11,8 @@ type AuthMeEnvelope = {
 };
 
 function backendBaseUrl(): string {
-  const fallback = "http://localhost:8000";
+  // const fallback = "http://localhost:8000";
+  const fallback = "https://auralis-interiors.onrender.com";
   const raw = process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL ?? fallback;
   return raw.replace(/\/+$/, "");
 }
