@@ -12,7 +12,7 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Auralis Interiors API", version="1.0.0")
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[settings.frontend_origin, settings.app_base_url],
+        allow_origins=[settings.frontend_origin,"http://localhost:3000" ,settings.app_base_url],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
