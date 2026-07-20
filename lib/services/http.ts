@@ -30,7 +30,8 @@ export class ApiRequestError extends Error {
   }
 }
 
-const DEFAULT_BACKEND_BASE_URL = "http://localhost:8000";
+// const DEFAULT_BACKEND_BASE_URL = "http://localhost:8000";
+const DEFAULT_BACKEND_BASE_URL = "https://auralis-interiors.onrender.com";
 const CSRF_COOKIE_NAME = "auralis_csrf";
 
 function sanitizeBaseUrl(url: string): string {
