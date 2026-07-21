@@ -167,6 +167,15 @@ def create_user_session(response: Response, request: Request, db: Session, user:
         path="/",
     )
     response.set_cookie(
+        settings.user_cookie_name,
+        user.id,
+        httponly=False,
+        secure=settings.secure_cookies,
+        samesite="none",
+        max_age=max_age,
+        path="/",
+    )
+    response.set_cookie(
         settings.csrf_cookie_name,
         csrf_token,
         httponly=False,
@@ -381,4 +390,3 @@ def owner_fields(context: RequestContext) -> dict[str, str | None]:
     if context.user_id:
         return {"user_id": context.user_id, "anonymous_session_id": None}
     return {"user_id": None, "anonymous_session_id": context.anonymous_session.id}
-
