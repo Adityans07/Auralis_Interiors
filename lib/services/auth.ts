@@ -30,6 +30,37 @@ function writeSession(customer: Customer | null) {
   cachedCustomer = customer;
 }
 
+const SESSION_COOKIE_NAME = "auralis_session";
+const USER_ID_COOKIE_NAME = "auralis_user_id";
+const SESSION_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
+
+function browserCookieAttributes(): string {
+  if (typeof window === "undefined") return "Path=/; SameSite=Lax";
+  const secure = window.location.protocol === "https:" ? "; Secure" : "";
+  return `Path=/; SameSite=Lax${secure}`;
+}
+
+function setBrowserCookie(name: string, value: string): void {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=${encodeURIComponent(value)}; ${browserCookieAttributes()}; Max-Age=${SESSION_COOKIE_MAX_AGE_SECONDS}`;
+}
+
+function clearBrowserCookie(name: string): void {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=; Path=/; SameSite=Lax; Max-Age=0`;
+}
+
+function syncBrowserSession(customer: Customer | null): void {
+  if (!customer?.id) {
+    clearBrowserCookie(SESSION_COOKIE_NAME);
+    clearBrowserCookie(USER_ID_COOKIE_NAME);
+    return;
+  }
+
+  setBrowserCookie(SESSION_COOKIE_NAME, customer.id);
+  setBrowserCookie(USER_ID_COOKIE_NAME, customer.id);
+}
+
 function toCustomer(
   user: Record<string, unknown>,
   freeGenerationStatus?: BackendFreeGenerationStatus
@@ -85,6 +116,7 @@ export const authService = {
     }
     const customer = toCustomer(user, response.data.freeGenerationStatus);
     writeSession(customer);
+    syncBrowserSession(customer);
     return { success: true, data: customer, message: "Welcome back." };
   },
 
@@ -106,6 +138,7 @@ export const authService = {
     }
     const customer = toCustomer(user, response.data.freeGenerationStatus);
     writeSession(customer);
+    syncBrowserSession(customer);
     return {
       success: true,
       data: customer,
@@ -121,6 +154,7 @@ export const authService = {
       // Treat logout as best effort and always clear local auth state.
     }
     writeSession(null);
+    syncBrowserSession(null);
     return { success: true, data: null };
   },
 
@@ -129,10 +163,12 @@ export const authService = {
     const response = await backendRequest<BackendAuthPayload>("/api/auth/me");
     if (!response.data.authenticated || !response.data.user) {
       writeSession(null);
+      syncBrowserSession(null);
       return { success: true, data: null };
     }
     const customer = toCustomer(response.data.user, response.data.freeGenerationStatus);
     writeSession(customer);
+    syncBrowserSession(customer);
     return { success: true, data: customer };
   },
 
@@ -224,6 +260,7 @@ export const authService = {
       hasUsedFreeGeneration: cachedCustomer?.freeGenerationUsed,
     });
     writeSession(updated);
+    syncBrowserSession(updated);
     return { success: true, data: updated, message: "Profile updated." };
   },
 
@@ -256,5 +293,6 @@ export const authService = {
 
   persist(customer: Customer) {
     writeSession(customer);
+    syncBrowserSession(customer);
   },
 };
