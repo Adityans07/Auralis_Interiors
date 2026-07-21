@@ -30,32 +30,20 @@ function writeSession(customer: Customer | null) {
   cachedCustomer = customer;
 }
 
-const SESSION_COOKIE_NAME = "auralis_session";
-const SESSION_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
-
-function browserCookieAttributes(): string {
-  if (typeof window === "undefined") return "Path=/; SameSite=Lax";
-  const secure = window.location.protocol === "https:" ? "; Secure" : "";
-  return `Path=/; SameSite=Lax${secure}`;
-}
-
-function setBrowserCookie(name: string, value: string): void {
+/**
+ * Authentication cookies are owned by the backend domain.  Do not mirror a
+ * user id into `auralis_session` here: that cookie can never be the backend's
+ * opaque session token and it caused Vercel middleware to reject valid logins.
+ *
+ * These are only cleanup cookies from older frontend builds.  A frontend page
+ * cannot read or clear the HttpOnly Render session, so the real session remains
+ * intact and continues to be sent to the API with `credentials: "include"`.
+ */
+function clearLegacyFrontendCookies(): void {
   if (typeof document === "undefined") return;
-  document.cookie = `${name}=${encodeURIComponent(value)}; ${browserCookieAttributes()}; Max-Age=${SESSION_COOKIE_MAX_AGE_SECONDS}`;
-}
-
-function clearBrowserCookie(name: string): void {
-  if (typeof document === "undefined") return;
-  document.cookie = `${name}=; Path=/; SameSite=Lax; Max-Age=0`;
-}
-
-function syncBrowserSession(customer: Customer | null): void {
-  if (!customer?.id) {
-    clearBrowserCookie(SESSION_COOKIE_NAME);
-    return;
+  for (const name of ["auralis_session", "auralis_user_id"]) {
+    document.cookie = `${name}=; Path=/; SameSite=Lax; Max-Age=0`;
   }
-
-  setBrowserCookie(SESSION_COOKIE_NAME, customer.id);
 }
 
 function toCustomer(
@@ -113,7 +101,7 @@ export const authService = {
     }
     const customer = toCustomer(user, response.data.freeGenerationStatus);
     writeSession(customer);
-    syncBrowserSession(customer);
+    clearLegacyFrontendCookies();
     return { success: true, data: customer, message: "Welcome back." };
   },
 
@@ -135,7 +123,7 @@ export const authService = {
     }
     const customer = toCustomer(user, response.data.freeGenerationStatus);
     writeSession(customer);
-    syncBrowserSession(customer);
+    clearLegacyFrontendCookies();
     return {
       success: true,
       data: customer,
@@ -151,7 +139,7 @@ export const authService = {
       // Treat logout as best effort and always clear local auth state.
     }
     writeSession(null);
-    syncBrowserSession(null);
+    clearLegacyFrontendCookies();
     return { success: true, data: null };
   },
 
@@ -160,12 +148,12 @@ export const authService = {
     const response = await backendRequest<BackendAuthPayload>("/api/auth/me");
     if (!response.data.authenticated || !response.data.user) {
       writeSession(null);
-      syncBrowserSession(null);
+      clearLegacyFrontendCookies();
       return { success: true, data: null };
     }
     const customer = toCustomer(response.data.user, response.data.freeGenerationStatus);
     writeSession(customer);
-    syncBrowserSession(customer);
+    clearLegacyFrontendCookies();
     return { success: true, data: customer };
   },
 
@@ -257,7 +245,6 @@ export const authService = {
       hasUsedFreeGeneration: cachedCustomer?.freeGenerationUsed,
     });
     writeSession(updated);
-    syncBrowserSession(updated);
     return { success: true, data: updated, message: "Profile updated." };
   },
 
@@ -290,6 +277,5 @@ export const authService = {
 
   persist(customer: Customer) {
     writeSession(customer);
-    syncBrowserSession(customer);
   },
 };
