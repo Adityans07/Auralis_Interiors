@@ -33,8 +33,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const sessionCookie =
-    request.cookies.get("auralis_session")?.value ?? request.cookies.get("auralis_user_id")?.value;
+  const sessionCookie = request.cookies.get("auralis_session")?.value;
   if (!sessionCookie) {
     return redirectToAdminLogin(request);
   }
