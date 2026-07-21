@@ -31,7 +31,6 @@ function writeSession(customer: Customer | null) {
 }
 
 const SESSION_COOKIE_NAME = "auralis_session";
-const USER_ID_COOKIE_NAME = "auralis_user_id";
 const SESSION_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
 function browserCookieAttributes(): string {
@@ -53,12 +52,10 @@ function clearBrowserCookie(name: string): void {
 function syncBrowserSession(customer: Customer | null): void {
   if (!customer?.id) {
     clearBrowserCookie(SESSION_COOKIE_NAME);
-    clearBrowserCookie(USER_ID_COOKIE_NAME);
     return;
   }
 
   setBrowserCookie(SESSION_COOKIE_NAME, customer.id);
-  setBrowserCookie(USER_ID_COOKIE_NAME, customer.id);
 }
 
 function toCustomer(

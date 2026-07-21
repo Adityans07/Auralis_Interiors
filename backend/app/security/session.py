@@ -184,7 +184,6 @@ def create_user_session(response: Response, request: Request, db: Session, user:
         max_age=max_age,
         path="/",
     )
-    response.delete_cookie(settings.user_cookie_name, path="/")
     return {"csrfToken": csrf_token, "sessionId": auth_session.id}
 
 
