@@ -30,6 +30,22 @@ function writeSession(customer: Customer | null) {
   cachedCustomer = customer;
 }
 
+/**
+ * Authentication cookies are owned by the backend domain.  Do not mirror a
+ * user id into `auralis_session` here: that cookie can never be the backend's
+ * opaque session token and it caused Vercel middleware to reject valid logins.
+ *
+ * These are only cleanup cookies from older frontend builds.  A frontend page
+ * cannot read or clear the HttpOnly Render session, so the real session remains
+ * intact and continues to be sent to the API with `credentials: "include"`.
+ */
+function clearLegacyFrontendCookies(): void {
+  if (typeof document === "undefined") return;
+  for (const name of ["auralis_session", "auralis_user_id"]) {
+    document.cookie = `${name}=; Path=/; SameSite=Lax; Max-Age=0`;
+  }
+}
+
 function toCustomer(
   user: Record<string, unknown>,
   freeGenerationStatus?: BackendFreeGenerationStatus
@@ -85,6 +101,7 @@ export const authService = {
     }
     const customer = toCustomer(user, response.data.freeGenerationStatus);
     writeSession(customer);
+    clearLegacyFrontendCookies();
     return { success: true, data: customer, message: "Welcome back." };
   },
 
@@ -106,6 +123,7 @@ export const authService = {
     }
     const customer = toCustomer(user, response.data.freeGenerationStatus);
     writeSession(customer);
+    clearLegacyFrontendCookies();
     return {
       success: true,
       data: customer,
@@ -121,6 +139,7 @@ export const authService = {
       // Treat logout as best effort and always clear local auth state.
     }
     writeSession(null);
+    clearLegacyFrontendCookies();
     return { success: true, data: null };
   },
 
@@ -129,10 +148,12 @@ export const authService = {
     const response = await backendRequest<BackendAuthPayload>("/api/auth/me");
     if (!response.data.authenticated || !response.data.user) {
       writeSession(null);
+      clearLegacyFrontendCookies();
       return { success: true, data: null };
     }
     const customer = toCustomer(response.data.user, response.data.freeGenerationStatus);
     writeSession(customer);
+    clearLegacyFrontendCookies();
     return { success: true, data: customer };
   },
 
