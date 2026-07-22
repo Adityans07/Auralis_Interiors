@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import httpx
 from decimal import Decimal
 
 from fastapi import APIRouter, Depends, Request, status
@@ -25,6 +26,7 @@ from app.security.usage import consume_successful_generation, resolve_entitlemen
 from app.services.ai.generator import generate_design_concepts
 from app.services.email.send import notify_admin, send_email
 from app.services.products.matching import search_matching_products
+from app.services.storage.s3 import upload_file, public_url
 from app.utils.responses import ApiError, success
 from app.utils.serializers import design_request_to_client, generated_design_to_client
 

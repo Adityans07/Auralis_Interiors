@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from typing import Any
+import httpx
 
 from openai import OpenAI
 
@@ -9,6 +10,7 @@ from app.core.config import settings
 from app.schemas.api import AiDesignResponse, DesignGenerationIn
 from app.services.ai.prompts import repair_prompt, system_prompt, user_prompt
 from app.services.products.matching import ProductCandidate, candidate_to_dict
+from app.services.storage.s3 import _client as s3_client, _key as s3_key, public_url
 from app.utils.responses import ApiError
 
 
@@ -18,10 +20,6 @@ def _budget_status(total: float, budget: float) -> str:
     if total <= budget * 1.2:
         return "SLIGHTLY_ABOVE_BUDGET"
     return "PREMIUM_OPTION"
-
-
-def _preview(seed: str) -> str:
-    return f"https://picsum.photos/seed/{seed.replace(' ', '-')}/900/600"
 
 
 def _fallback(input_data: DesignGenerationIn, candidates: list[ProductCandidate]) -> list[dict[str, Any]]:
@@ -57,6 +55,10 @@ def _fallback(input_data: DesignGenerationIn, candidates: list[ProductCandidate]
             }
         )
     return concepts
+
+
+def _preview(seed: str) -> str:
+    return f"https://picsum.photos/seed/{seed.replace(' ', '-')}/900/600"
 
 
 def _normalize(parsed: AiDesignResponse, input_data: DesignGenerationIn, candidates: list[ProductCandidate]) -> list[dict[str, Any]]:
@@ -102,6 +104,45 @@ def _call_openai(prompt: str) -> str | None:
     return response.choices[0].message.content
 
 
+def _generate_and_upload_image(prompt: str) -> str | None:
+    """Generate an image using OpenAI's DALL·E model and upload it to S3.
+    Returns the public URL of the uploaded image, or None if failed.
+    """
+    if not settings.openai_api_key or not settings.openai_model_image:
+        return None
+    try:
+        client = OpenAI(api_key=settings.openai_api_key)
+        # Using the OpenAI API to generate an image
+        response = client.images.generate(
+            model=settings.openai_model_image,
+            prompt=prompt,
+            n=1,
+            size="1024x1024",  # Adjust as needed based on your model and requirements
+        )
+        # The response contains a URL to the image (temporary)
+        image_url = response.data[0].url
+        if not image_url:
+            return None
+        # Download the image
+        resp = httpx.get(image_url, timeout=30.0)
+        resp.raise_for_status()
+        image_data = resp.content
+        content_type = resp.headers.get("content-type", "image/png")
+        # Upload to S3
+        key = s3_key(content_type)
+        s3_client().put_object(
+            Bucket=settings.s3_bucket,
+            Key=key,
+            Body=image_data,
+            ContentType=content_type
+        )
+        return public_url(key)
+    except Exception as _:
+        # Log the error? For now, just return None to fall back
+        # You can add logging here if you have a logger configured
+        return None
+
+
 def generate_design_concepts(input_data: DesignGenerationIn, candidates: list[ProductCandidate]) -> list[dict[str, Any]]:
     if not settings.openai_api_key:
         return _fallback(input_data, candidates)
@@ -116,6 +157,16 @@ def generate_design_concepts(input_data: DesignGenerationIn, candidates: list[Pr
                 parsed = AiDesignResponse.model_validate(json.loads(raw))
                 normalized = _normalize(parsed, input_data, candidates)
                 if len(normalized) >= 3:
+                    # Generate images for each concept if image model is configured
+                    if settings.openai_api_key and settings.openai_model_image:
+                        for concept in normalized:
+                            prompt = concept.get("imagePrompt", "")
+                            if not prompt:
+                                # Fallback to a combination of title and description if no imagePrompt
+                                prompt = f"{concept.get('title', '')} {concept.get('description', '')}"
+                            image_url = _generate_and_upload_image(prompt)
+                            if image_url:
+                                concept["previewImageUrl"] = image_url
                     return normalized
             except Exception:
                 repaired = _call_openai(repair_prompt(raw))
@@ -123,7 +174,29 @@ def generate_design_concepts(input_data: DesignGenerationIn, candidates: list[Pr
                     parsed = AiDesignResponse.model_validate(json.loads(repaired))
                     normalized = _normalize(parsed, input_data, candidates)
                     if len(normalized) >= 3:
+                        # Generate images for each concept if image model is configured
+                        if settings.openai_api_key and settings.openai_model_image:
+                            for concept in normalized:
+                                prompt = concept.get("imagePrompt", "")
+                                if not prompt:
+                                    # Fallback to a combination of title and description if no imagePrompt
+                                    prompt = f"{concept.get('title', '')} {concept.get('description', '')}"
+                                image_url = _generate_and_upload_image(prompt)
+                                if image_url:
+                                    concept["previewImageUrl"] = image_url
                         return normalized
-        return _fallback(input_data, candidates)
+        # If we get here, fall back to the fallback method
+        fallback_result = _fallback(input_data, candidates)
+        # Generate images for each fallback concept if image model is configured
+        if settings.openai_api_key and settings.openai_model_image:
+            for concept in fallback_result:
+                prompt = concept.get("imagePrompt", "")
+                if not prompt:
+                    # Fallback to a combination of title and description if no imagePrompt
+                    prompt = f"{concept.get('title', '')} {concept.get('description', '')}"
+                image_url = _generate_and_upload_image(prompt)
+                if image_url:
+                    concept["previewImageUrl"] = image_url
+        return fallback_result
     except Exception as exc:
         raise ApiError("AI_GENERATION_FAILED", "The AI design generator could not complete this request.", 502) from exc

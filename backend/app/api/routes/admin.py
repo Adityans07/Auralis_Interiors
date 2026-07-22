@@ -23,7 +23,6 @@ from app.models.entities import (
     ContactMessage,
     ContactMessageStatus,
     DesignRequest,
-    DesignRequestPriority,
     DesignRequestStatus,
     DesignType,
     GeneratedDesign,
@@ -199,22 +198,31 @@ def get_admin_dashboard(
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
     total_design_requests = db.query(DesignRequest).count()
-    new_design_requests_today = db.query(DesignRequest).filter(DesignRequest.created_at >= today_start).count()
-    completed_ai_generations = db.query(AIGenerationLog).filter(AIGenerationLog.status == AIGenerationStatus.COMPLETED).count()
-    failed_ai_generations = db.query(AIGenerationLog).filter(AIGenerationLog.status == AIGenerationStatus.FAILED).count()
+    new_design_requests_today = db.query(DesignRequest).filter(
+        DesignRequest.created_at >= today_start).count()
+    completed_ai_generations = db.query(AIGenerationLog).filter(
+        AIGenerationLog.status == AIGenerationStatus.COMPLETED).count()
+    failed_ai_generations = db.query(AIGenerationLog).filter(
+        AIGenerationLog.status == AIGenerationStatus.FAILED).count()
     selected_designs = db.query(SelectedDesign).count()
     pending_bookings = db.query(Booking).filter(Booking.status == BookingStatus.REQUESTED).count()
     confirmed_bookings = db.query(Booking).filter(Booking.status == BookingStatus.CONFIRMED).count()
-    unread_contacts = db.query(ContactMessage).filter(ContactMessage.status == ContactMessageStatus.NEW).count()
+    unread_contacts = db.query(ContactMessage).filter(
+        ContactMessage.status == ContactMessageStatus.NEW).count()
     total_customers = db.query(User).filter(User.role == UserRole.CUSTOMER.value).count()
-    paid_generations = db.query(func.coalesce(func.sum(UserUsage.paid_generations), 0)).scalar() or 0
+    paid_generations = db.query(
+        func.coalesce(
+            func.sum(
+                UserUsage.paid_generations),
+            0)).scalar() or 0
     estimated_revenue_cents = (
         db.query(func.coalesce(func.sum(Payment.amount), 0))
         .filter(Payment.status == PaymentStatus.PAID)
         .scalar()
         or 0
     )
-    conversion_rate = round((selected_designs / total_design_requests) * 100, 2) if total_design_requests else 0
+    conversion_rate = round((selected_designs / total_design_requests)
+                            * 100, 2) if total_design_requests else 0
 
     latest_design_requests = (
         db.query(DesignRequest)
@@ -230,7 +238,8 @@ def get_admin_dashboard(
         .all()
     )
     latest_bookings = db.query(Booking).order_by(Booking.created_at.desc()).limit(pageSize).all()
-    latest_contacts = db.query(ContactMessage).order_by(ContactMessage.created_at.desc()).limit(pageSize).all()
+    latest_contacts = db.query(ContactMessage).order_by(
+        ContactMessage.created_at.desc()).limit(pageSize).all()
     latest_failures = (
         db.query(AIGenerationLog)
         .filter(AIGenerationLog.status == AIGenerationStatus.FAILED)
@@ -531,7 +540,10 @@ def patch_design_request(
         if updates["assignedToId"]:
             assignee = db.get(User, updates["assignedToId"])
             if not assignee or assignee.role != UserRole.ADMIN.value:
-                raise ApiError("VALIDATION_ERROR", "Assigned user must be an admin.", status.HTTP_400_BAD_REQUEST)
+                raise ApiError(
+                    "VALIDATION_ERROR",
+                    "Assigned user must be an admin.",
+                    status.HTTP_400_BAD_REQUEST)
         record.assigned_to_id = updates["assignedToId"]
     if "internalStatus" in updates:
         record.internal_status = updates["internalStatus"]
@@ -539,7 +551,9 @@ def patch_design_request(
     record.last_admin_viewed_at = datetime.now(timezone.utc)
     _add_audit_log(db, admin_user, "DESIGN_REQUEST_UPDATED", "DESIGN_REQUEST", record.id, updates)
     db.commit()
-    return success({"id": record.id, "status": record.status.value, "priority": record.priority.value})
+    return success({"id": record.id,
+                    "status": record.status.value,
+                    "priority": record.priority.value})
 
 
 @router.post("/design-requests/{design_request_id}/notes")
@@ -550,7 +564,10 @@ def add_design_request_note(
     admin_user: User = Depends(require_admin),
 ):
     if payload.entityType != AdminNoteEntityType.DESIGN_REQUEST or payload.entityId != design_request_id:
-        raise ApiError("VALIDATION_ERROR", "Entity type or ID mismatch.", status.HTTP_400_BAD_REQUEST)
+        raise ApiError(
+            "VALIDATION_ERROR",
+            "Entity type or ID mismatch.",
+            status.HTTP_400_BAD_REQUEST)
     if not _entity_exists(db, payload.entityType, payload.entityId):
         raise ApiError("NOT_FOUND", "Entity not found.", status.HTTP_404_NOT_FOUND)
 
@@ -561,7 +578,8 @@ def add_design_request_note(
         created_by_id=admin_user.id,
     )
     db.add(note)
-    _add_audit_log(db, admin_user, "ADMIN_NOTE_CREATED", payload.entityType.value, payload.entityId, {"noteLength": len(payload.note)})
+    _add_audit_log(db, admin_user, "ADMIN_NOTE_CREATED", payload.entityType.value,
+                   payload.entityId, {"noteLength": len(payload.note)})
     db.commit()
     db.refresh(note)
     return success(_serialize_note(note), status_code=status.HTTP_201_CREATED)
@@ -588,7 +606,8 @@ def retry_generation(
     record.internal_status = "RETRY_REQUESTED"
     _add_audit_log(db, admin_user, "DESIGN_REQUEST_RETRY_REQUESTED", "DESIGN_REQUEST", record.id)
     db.commit()
-    return success({"id": record.id, "retryLogged": True, "message": "Retry was recorded for follow-up processing."})
+    return success({"id": record.id, "retryLogged": True,
+                   "message": "Retry was recorded for follow-up processing."})
 
 
 @router.get("/generated-designs")
@@ -601,15 +620,23 @@ def get_generated_designs(
 ):
     params = _parse_pagination(page, pageSize, search)
     query = (
-        db.query(GeneratedDesign)
-        .options(joinedload(GeneratedDesign.design_request).joinedload(DesignRequest.user), joinedload(GeneratedDesign.products), joinedload(GeneratedDesign.selected_design))
-        .join(DesignRequest, GeneratedDesign.design_request_id == DesignRequest.id)
-        .outerjoin(User, DesignRequest.user_id == User.id)
-        .order_by(GeneratedDesign.created_at.desc())
-    )
+        db.query(GeneratedDesign) .options(
+            joinedload(
+                GeneratedDesign.design_request).joinedload(
+                DesignRequest.user),
+            joinedload(
+                GeneratedDesign.products),
+            joinedload(
+                GeneratedDesign.selected_design)) .join(
+            DesignRequest,
+            GeneratedDesign.design_request_id == DesignRequest.id) .outerjoin(
+            User,
+            DesignRequest.user_id == User.id) .order_by(
+            GeneratedDesign.created_at.desc()))
     if params.search:
         needle = f"%{params.search}%"
-        query = query.filter(or_(GeneratedDesign.title.ilike(needle), GeneratedDesign.style.ilike(needle), DesignRequest.id.ilike(needle), User.email.ilike(needle)))
+        query = query.filter(or_(GeneratedDesign.title.ilike(needle), GeneratedDesign.style.ilike(
+            needle), DesignRequest.id.ilike(needle), User.email.ilike(needle)))
 
     total, records = _paginate(query, params.page, params.pageSize)
     return success(
@@ -642,11 +669,12 @@ def get_generated_design_detail(
     _admin: User = Depends(require_admin),
 ):
     record = (
-        db.query(GeneratedDesign)
-        .options(joinedload(GeneratedDesign.products), joinedload(GeneratedDesign.design_request).joinedload(DesignRequest.user))
-        .filter(GeneratedDesign.id == generated_design_id)
-        .one_or_none()
-    )
+        db.query(GeneratedDesign) .options(
+            joinedload(
+                GeneratedDesign.products), joinedload(
+                GeneratedDesign.design_request).joinedload(
+                    DesignRequest.user)) .filter(
+                        GeneratedDesign.id == generated_design_id) .one_or_none())
     if not record:
         raise ApiError("NOT_FOUND", "Generated design not found.", status.HTTP_404_NOT_FOUND)
     return success(generated_design_to_client(record))
@@ -667,7 +695,8 @@ def get_selected_designs(
         query = query.filter(SelectedDesign.status == statusValue)
     if params.search:
         needle = f"%{params.search}%"
-        query = query.filter(or_(SelectedDesign.id.ilike(needle), SelectedDesign.customer_name.ilike(needle), SelectedDesign.customer_email.ilike(needle), SelectedDesign.customer_phone.ilike(needle)))
+        query = query.filter(or_(SelectedDesign.id.ilike(needle), SelectedDesign.customer_name.ilike(
+            needle), SelectedDesign.customer_email.ilike(needle), SelectedDesign.customer_phone.ilike(needle)))
 
     total, records = _paginate(query, params.page, params.pageSize)
     return success(
@@ -698,35 +727,39 @@ def get_selected_design_detail(
     _admin: User = Depends(require_admin),
 ):
     record = (
-        db.query(SelectedDesign)
-        .options(joinedload(SelectedDesign.design_request), joinedload(SelectedDesign.generated_design), joinedload(SelectedDesign.bookings), joinedload(SelectedDesign.user), joinedload(SelectedDesign.assigned_to))
-        .filter(SelectedDesign.id == selected_design_id)
-        .one_or_none()
-    )
+        db.query(SelectedDesign) .options(
+            joinedload(
+                SelectedDesign.design_request), joinedload(
+                SelectedDesign.generated_design), joinedload(
+                    SelectedDesign.bookings), joinedload(
+                        SelectedDesign.user), joinedload(
+                            SelectedDesign.assigned_to)) .filter(
+                                SelectedDesign.id == selected_design_id) .one_or_none())
     if not record:
         raise ApiError("NOT_FOUND", "Selected design not found.", status.HTTP_404_NOT_FOUND)
-    return success(
-        {
-            "id": record.id,
-            "designRequestId": record.design_request_id,
-            "generatedDesignId": record.generated_design_id,
-            "customer": {
-                "userId": record.user_id,
-                "name": record.customer_name,
-                "email": record.customer_email,
-                "phone": record.customer_phone,
-            },
-            "status": record.status.value,
-            "finalEstimatedTotal": float(record.final_estimated_total),
-            "selectedProducts": record.selected_products,
-            "notes": record.notes,
-            "assignedTo": {"id": record.assigned_to.id, "name": record.assigned_to.name, "email": record.assigned_to.email} if record.assigned_to else None,
-            "createdAt": record.created_at.isoformat(),
-            "updatedAt": record.updated_at.isoformat(),
-            "bookings": [{"id": booking.id, "status": booking.status.value} for booking in record.bookings],
-            "internalNotes": _load_notes(db, AdminNoteEntityType.SELECTED_DESIGN, record.id),
-        }
-    )
+    return success({"id": record.id,
+                    "designRequestId": record.design_request_id,
+                    "generatedDesignId": record.generated_design_id,
+                    "customer": {"userId": record.user_id,
+                                 "name": record.customer_name,
+                                 "email": record.customer_email,
+                                 "phone": record.customer_phone,
+                                 },
+                    "status": record.status.value,
+                    "finalEstimatedTotal": float(record.final_estimated_total),
+                    "selectedProducts": record.selected_products,
+                    "notes": record.notes,
+                    "assignedTo": {"id": record.assigned_to.id,
+                                   "name": record.assigned_to.name,
+                                   "email": record.assigned_to.email} if record.assigned_to else None,
+                    "createdAt": record.created_at.isoformat(),
+                    "updatedAt": record.updated_at.isoformat(),
+                    "bookings": [{"id": booking.id,
+                                  "status": booking.status.value} for booking in record.bookings],
+                    "internalNotes": _load_notes(db,
+                                                 AdminNoteEntityType.SELECTED_DESIGN,
+                                                 record.id),
+                    })
 
 
 @router.patch("/selected-designs/{selected_design_id}")
@@ -743,13 +776,19 @@ def patch_selected_design(
     updates = payload.model_dump(exclude_none=True)
     if "status" in updates:
         record.status = updates["status"]
-        if updates["status"] in {SelectedDesignStatus.CONTACTED, SelectedDesignStatus.CONSULTATION_BOOKED, SelectedDesignStatus.DEAL_FINALIZED}:
+        if updates["status"] in {
+                SelectedDesignStatus.CONTACTED,
+                SelectedDesignStatus.CONSULTATION_BOOKED,
+                SelectedDesignStatus.DEAL_FINALIZED}:
             record.last_contacted_at = datetime.now(timezone.utc)
     if "assignedToId" in updates:
         if updates["assignedToId"]:
             assignee = db.get(User, updates["assignedToId"])
             if not assignee or assignee.role != UserRole.ADMIN.value:
-                raise ApiError("VALIDATION_ERROR", "Assigned user must be an admin.", status.HTTP_400_BAD_REQUEST)
+                raise ApiError(
+                    "VALIDATION_ERROR",
+                    "Assigned user must be an admin.",
+                    status.HTTP_400_BAD_REQUEST)
         record.assigned_to_id = updates["assignedToId"]
 
     _add_audit_log(db, admin_user, "SELECTED_DESIGN_UPDATED", "SELECTED_DESIGN", record.id, updates)
@@ -765,13 +804,21 @@ def add_selected_design_note(
     admin_user: User = Depends(require_admin),
 ):
     if payload.entityType != AdminNoteEntityType.SELECTED_DESIGN or payload.entityId != selected_design_id:
-        raise ApiError("VALIDATION_ERROR", "Entity type or ID mismatch.", status.HTTP_400_BAD_REQUEST)
+        raise ApiError(
+            "VALIDATION_ERROR",
+            "Entity type or ID mismatch.",
+            status.HTTP_400_BAD_REQUEST)
     if not _entity_exists(db, payload.entityType, payload.entityId):
         raise ApiError("NOT_FOUND", "Entity not found.", status.HTTP_404_NOT_FOUND)
 
-    note = AdminNote(entity_type=payload.entityType, entity_id=payload.entityId, note=payload.note, created_by_id=admin_user.id)
+    note = AdminNote(
+        entity_type=payload.entityType,
+        entity_id=payload.entityId,
+        note=payload.note,
+        created_by_id=admin_user.id)
     db.add(note)
-    _add_audit_log(db, admin_user, "ADMIN_NOTE_CREATED", payload.entityType.value, payload.entityId, {"noteLength": len(payload.note)})
+    _add_audit_log(db, admin_user, "ADMIN_NOTE_CREATED", payload.entityType.value,
+                   payload.entityId, {"noteLength": len(payload.note)})
     db.commit()
     db.refresh(note)
     return success(_serialize_note(note), status_code=status.HTTP_201_CREATED)
@@ -787,12 +834,20 @@ def get_bookings(
     _admin: User = Depends(require_admin),
 ):
     params = _parse_pagination(page, pageSize, search)
-    query = db.query(Booking).options(joinedload(Booking.selected_design), joinedload(Booking.user)).order_by(Booking.created_at.desc())
+    query = db.query(Booking).options(
+        joinedload(
+            Booking.selected_design), joinedload(
+            Booking.user)).order_by(
+                Booking.created_at.desc())
     if statusValue:
         query = query.filter(Booking.status == statusValue)
     if params.search:
         needle = f"%{params.search}%"
-        query = query.filter(or_(Booking.id.ilike(needle), Booking.name.ilike(needle), Booking.email.ilike(needle), Booking.phone.ilike(needle), Booking.city.ilike(needle)))
+        query = query.filter(or_(Booking.id.ilike(needle),
+                                 Booking.name.ilike(needle),
+                                 Booking.email.ilike(needle),
+                                 Booking.phone.ilike(needle),
+                                 Booking.city.ilike(needle)))
 
     total, records = _paginate(query, params.page, params.pageSize)
     return success(
@@ -825,31 +880,36 @@ def get_booking_detail(
     db: Session = Depends(get_db),
     _admin: User = Depends(require_admin),
 ):
-    booking = db.query(Booking).options(joinedload(Booking.selected_design), joinedload(Booking.user), joinedload(Booking.assigned_to)).filter(Booking.id == booking_id).one_or_none()
+    booking = db.query(Booking).options(
+        joinedload(
+            Booking.selected_design), joinedload(
+            Booking.user), joinedload(
+                Booking.assigned_to)).filter(
+                    Booking.id == booking_id).one_or_none()
     if not booking:
         raise ApiError("NOT_FOUND", "Booking not found.", status.HTTP_404_NOT_FOUND)
 
-    return success(
-        {
-            "id": booking.id,
-            "name": booking.name,
-            "email": booking.email,
-            "phone": booking.phone,
-            "projectType": booking.project_type,
-            "preferredDate": booking.preferred_date.isoformat(),
-            "preferredTime": booking.preferred_time,
-            "city": booking.city,
-            "state": booking.state,
-            "country": booking.country,
-            "budgetRange": booking.budget_range,
-            "message": booking.message,
-            "status": booking.status.value,
-            "selectedDesignId": booking.selected_design_id,
-            "assignedTo": {"id": booking.assigned_to.id, "name": booking.assigned_to.name} if booking.assigned_to else None,
-            "createdAt": booking.created_at.isoformat(),
-            "notes": _load_notes(db, AdminNoteEntityType.BOOKING, booking.id),
-        }
-    )
+    return success({"id": booking.id,
+                    "name": booking.name,
+                    "email": booking.email,
+                    "phone": booking.phone,
+                    "projectType": booking.project_type,
+                    "preferredDate": booking.preferred_date.isoformat(),
+                    "preferredTime": booking.preferred_time,
+                    "city": booking.city,
+                    "state": booking.state,
+                    "country": booking.country,
+                    "budgetRange": booking.budget_range,
+                    "message": booking.message,
+                    "status": booking.status.value,
+                    "selectedDesignId": booking.selected_design_id,
+                    "assignedTo": {"id": booking.assigned_to.id,
+                                   "name": booking.assigned_to.name} if booking.assigned_to else None,
+                    "createdAt": booking.created_at.isoformat(),
+                    "notes": _load_notes(db,
+                                         AdminNoteEntityType.BOOKING,
+                                         booking.id),
+                    })
 
 
 @router.patch("/bookings/{booking_id}")
@@ -881,7 +941,10 @@ def patch_booking(
         if updates["assignedToId"]:
             assignee = db.get(User, updates["assignedToId"])
             if not assignee or assignee.role != UserRole.ADMIN.value:
-                raise ApiError("VALIDATION_ERROR", "Assigned user must be an admin.", status.HTTP_400_BAD_REQUEST)
+                raise ApiError(
+                    "VALIDATION_ERROR",
+                    "Assigned user must be an admin.",
+                    status.HTTP_400_BAD_REQUEST)
         booking.assigned_to_id = updates["assignedToId"]
 
     _add_audit_log(db, admin_user, "BOOKING_UPDATED", "BOOKING", booking.id, updates)
@@ -897,11 +960,18 @@ def add_booking_note(
     admin_user: User = Depends(require_admin),
 ):
     if payload.entityType != AdminNoteEntityType.BOOKING or payload.entityId != booking_id:
-        raise ApiError("VALIDATION_ERROR", "Entity type or ID mismatch.", status.HTTP_400_BAD_REQUEST)
+        raise ApiError(
+            "VALIDATION_ERROR",
+            "Entity type or ID mismatch.",
+            status.HTTP_400_BAD_REQUEST)
     if not _entity_exists(db, payload.entityType, payload.entityId):
         raise ApiError("NOT_FOUND", "Entity not found.", status.HTTP_404_NOT_FOUND)
 
-    note = AdminNote(entity_type=payload.entityType, entity_id=payload.entityId, note=payload.note, created_by_id=admin_user.id)
+    note = AdminNote(
+        entity_type=payload.entityType,
+        entity_id=payload.entityId,
+        note=payload.note,
+        created_by_id=admin_user.id)
     db.add(note)
     _add_audit_log(db, admin_user, "ADMIN_NOTE_CREATED", payload.entityType.value, payload.entityId)
     db.commit()
@@ -920,7 +990,9 @@ def get_customers(
     _admin: User = Depends(require_admin),
 ):
     params = _parse_pagination(page, pageSize, search)
-    query = db.query(User).filter(User.role == UserRole.CUSTOMER.value).order_by(User.created_at.desc())
+    query = db.query(User).filter(
+        User.role == UserRole.CUSTOMER.value).order_by(
+        User.created_at.desc())
     if statusValue:
         query = query.filter(User.status == statusValue.value)
     if emailVerified is True:
@@ -929,7 +1001,8 @@ def get_customers(
         query = query.filter(User.email_verified_at.is_(None))
     if params.search:
         needle = f"%{params.search}%"
-        query = query.filter(or_(User.name.ilike(needle), User.email.ilike(needle), User.phone.ilike(needle), User.city.ilike(needle)))
+        query = query.filter(or_(User.name.ilike(needle), User.email.ilike(
+            needle), User.phone.ilike(needle), User.city.ilike(needle)))
 
     total, records = _paginate(query, params.page, params.pageSize)
     items = []
@@ -943,15 +1016,20 @@ def get_customers(
                 "phone": user.phone,
                 "city": user.city,
                 "status": user.status,
-                "emailVerified": bool(user.email_verified_at),
-                "freeGenerationUsed": bool(usage.free_generation_used) if usage else False,
-                "totalDesignRequests": db.query(DesignRequest).filter(DesignRequest.user_id == user.id).count(),
-                "totalBookings": db.query(Booking).filter(Booking.user_id == user.id).count(),
-                "totalPayments": db.query(Payment).filter(Payment.user_id == user.id, Payment.status == PaymentStatus.PAID).count(),
+                "emailVerified": bool(
+                    user.email_verified_at),
+                "freeGenerationUsed": bool(
+                    usage.free_generation_used) if usage else False,
+                "totalDesignRequests": db.query(DesignRequest).filter(
+                    DesignRequest.user_id == user.id).count(),
+                "totalBookings": db.query(Booking).filter(
+                    Booking.user_id == user.id).count(),
+                "totalPayments": db.query(Payment).filter(
+                    Payment.user_id == user.id,
+                    Payment.status == PaymentStatus.PAID).count(),
                 "createdAt": user.created_at.isoformat(),
                 "lastLoginAt": user.last_login_at.isoformat() if user.last_login_at else None,
-            }
-        )
+            })
 
     return success({"items": items, "meta": _page_meta(total, params.page, params.pageSize)})
 
@@ -967,36 +1045,56 @@ def get_customer_detail(
         raise ApiError("NOT_FOUND", "Customer not found.", status.HTTP_404_NOT_FOUND)
 
     usage = db.query(UserUsage).filter(UserUsage.user_id == user.id).one_or_none()
-    design_requests = db.query(DesignRequest).filter(DesignRequest.user_id == user.id).order_by(DesignRequest.created_at.desc()).all()
-    selected_designs = db.query(SelectedDesign).filter(SelectedDesign.user_id == user.id).order_by(SelectedDesign.created_at.desc()).all()
-    bookings = db.query(Booking).filter(Booking.user_id == user.id).order_by(Booking.created_at.desc()).all()
-    payments = db.query(Payment).filter(Payment.user_id == user.id).order_by(Payment.created_at.desc()).all()
-    contacts = db.query(ContactMessage).filter(ContactMessage.email == user.email).order_by(ContactMessage.created_at.desc()).all()
+    design_requests = db.query(DesignRequest).filter(
+        DesignRequest.user_id == user.id).order_by(
+        DesignRequest.created_at.desc()).all()
+    selected_designs = db.query(SelectedDesign).filter(
+        SelectedDesign.user_id == user.id).order_by(
+        SelectedDesign.created_at.desc()).all()
+    bookings = db.query(Booking).filter(
+        Booking.user_id == user.id).order_by(
+        Booking.created_at.desc()).all()
+    payments = db.query(Payment).filter(
+        Payment.user_id == user.id).order_by(
+        Payment.created_at.desc()).all()
+    contacts = db.query(ContactMessage).filter(
+        ContactMessage.email == user.email).order_by(
+        ContactMessage.created_at.desc()).all()
 
     safe = safe_user(user)
     safe.pop("role", None)
     safe.pop("status", None)
 
-    return success(
-        {
-            "customer": {
-                **safe,
-                "status": user.status,
-                "role": user.role,
-                "usage": {
-                    "freeGenerationUsed": bool(usage.free_generation_used) if usage else False,
-                    "totalGenerations": usage.total_generations if usage else 0,
-                    "paidGenerations": usage.paid_generations if usage else 0,
-                },
-            },
-            "designRequests": [{"id": item.id, "status": item.status.value, "createdAt": item.created_at.isoformat()} for item in design_requests],
-            "selectedDesigns": [{"id": item.id, "status": item.status.value, "createdAt": item.created_at.isoformat()} for item in selected_designs],
-            "bookings": [{"id": item.id, "status": item.status.value, "createdAt": item.created_at.isoformat()} for item in bookings],
-            "payments": [{"id": item.id, "status": item.status.value, "amount": item.amount, "currency": item.currency, "createdAt": item.created_at.isoformat()} for item in payments],
-            "contactHistory": [{"id": item.id, "subject": item.subject, "status": item.status.value, "createdAt": item.created_at.isoformat()} for item in contacts],
-            "notes": _load_notes(db, AdminNoteEntityType.CUSTOMER, user.id),
-        }
-    )
+    return success({"customer": {**safe,
+                                 "status": user.status,
+                                 "role": user.role,
+                                 "usage": {"freeGenerationUsed": bool(usage.free_generation_used) if usage else False,
+                                           "totalGenerations": usage.total_generations if usage else 0,
+                                           "paidGenerations": usage.paid_generations if usage else 0,
+                                           },
+                                 },
+                    "designRequests": [{"id": item.id,
+                                        "status": item.status.value,
+                                        "createdAt": item.created_at.isoformat()} for item in design_requests],
+                    "selectedDesigns": [{"id": item.id,
+                                         "status": item.status.value,
+                                         "createdAt": item.created_at.isoformat()} for item in selected_designs],
+                    "bookings": [{"id": item.id,
+                                  "status": item.status.value,
+                                  "createdAt": item.created_at.isoformat()} for item in bookings],
+                    "payments": [{"id": item.id,
+                                  "status": item.status.value,
+                                  "amount": item.amount,
+                                  "currency": item.currency,
+                                  "createdAt": item.created_at.isoformat()} for item in payments],
+                    "contactHistory": [{"id": item.id,
+                                        "subject": item.subject,
+                                        "status": item.status.value,
+                                        "createdAt": item.created_at.isoformat()} for item in contacts],
+                    "notes": _load_notes(db,
+                                         AdminNoteEntityType.CUSTOMER,
+                                         user.id),
+                    })
 
 
 @router.patch("/customers/{customer_id}/status")
@@ -1011,7 +1109,8 @@ def update_customer_status(
         raise ApiError("NOT_FOUND", "Customer not found.", status.HTTP_404_NOT_FOUND)
 
     user.status = payload.status.value
-    _add_audit_log(db, admin_user, "CUSTOMER_STATUS_UPDATED", "CUSTOMER", user.id, {"status": user.status})
+    _add_audit_log(db, admin_user, "CUSTOMER_STATUS_UPDATED",
+                   "CUSTOMER", user.id, {"status": user.status})
     db.commit()
     return success({"id": user.id, "status": user.status})
 
@@ -1024,11 +1123,18 @@ def add_customer_note(
     admin_user: User = Depends(require_admin),
 ):
     if payload.entityType != AdminNoteEntityType.CUSTOMER or payload.entityId != customer_id:
-        raise ApiError("VALIDATION_ERROR", "Entity type or ID mismatch.", status.HTTP_400_BAD_REQUEST)
+        raise ApiError(
+            "VALIDATION_ERROR",
+            "Entity type or ID mismatch.",
+            status.HTTP_400_BAD_REQUEST)
     if not _entity_exists(db, payload.entityType, payload.entityId):
         raise ApiError("NOT_FOUND", "Entity not found.", status.HTTP_404_NOT_FOUND)
 
-    note = AdminNote(entity_type=payload.entityType, entity_id=payload.entityId, note=payload.note, created_by_id=admin_user.id)
+    note = AdminNote(
+        entity_type=payload.entityType,
+        entity_id=payload.entityId,
+        note=payload.note,
+        created_by_id=admin_user.id)
     db.add(note)
     _add_audit_log(db, admin_user, "ADMIN_NOTE_CREATED", payload.entityType.value, payload.entityId)
     db.commit()
@@ -1063,7 +1169,11 @@ def get_products(
         query = query.filter(Product.stock_status == stockStatus)
     if params.search:
         needle = f"%{params.search}%"
-        query = query.filter(or_(Product.name.ilike(needle), Product.vendor_name.ilike(needle), Product.category.ilike(needle), Product.item_type.ilike(needle), Product.city.ilike(needle)))
+        query = query.filter(or_(Product.name.ilike(needle),
+                                 Product.vendor_name.ilike(needle),
+                                 Product.category.ilike(needle),
+                                 Product.item_type.ilike(needle),
+                                 Product.city.ilike(needle)))
 
     total, records = _paginate(query, params.page, params.pageSize)
     return success(
@@ -1102,7 +1212,10 @@ def create_product(
 ):
     existing = db.query(Product).filter(Product.slug == payload.slug).one_or_none()
     if existing:
-        raise ApiError("CONFLICT", "A product with this slug already exists.", status.HTTP_409_CONFLICT)
+        raise ApiError(
+            "CONFLICT",
+            "A product with this slug already exists.",
+            status.HTTP_409_CONFLICT)
 
     product = Product(
         name=payload.name,
@@ -1189,8 +1302,14 @@ def patch_product(
 
     updates = payload.model_dump(exclude_none=True)
     if "slug" in updates and updates["slug"] != product.slug:
-        if db.query(Product).filter(and_(Product.slug == updates["slug"], Product.id != product.id)).one_or_none():
-            raise ApiError("CONFLICT", "A product with this slug already exists.", status.HTTP_409_CONFLICT)
+        if db.query(Product).filter(
+            and_(
+                Product.slug == updates["slug"],
+                Product.id != product.id)).one_or_none():
+            raise ApiError(
+                "CONFLICT",
+                "A product with this slug already exists.",
+                status.HTTP_409_CONFLICT)
 
     mapping = {
         "imageUrl": "image_url",
@@ -1209,7 +1328,8 @@ def patch_product(
             continue
         setattr(product, mapping.get(key, key), value)
 
-    _add_audit_log(db, admin_user, "PRODUCT_UPDATED", "PRODUCT", product.id, {"fields": list(updates.keys())})
+    _add_audit_log(db, admin_user, "PRODUCT_UPDATED", "PRODUCT",
+                   product.id, {"fields": list(updates.keys())})
     db.commit()
     return success({"id": product.id})
 
@@ -1241,7 +1361,8 @@ def get_admin_blogs(
     query = db.query(BlogPost).order_by(BlogPost.updated_at.desc())
     if params.search:
         needle = f"%{params.search}%"
-        query = query.filter(or_(BlogPost.title.ilike(needle), BlogPost.slug.ilike(needle), BlogPost.category.ilike(needle), BlogPost.author_name.ilike(needle)))
+        query = query.filter(or_(BlogPost.title.ilike(needle), BlogPost.slug.ilike(
+            needle), BlogPost.category.ilike(needle), BlogPost.author_name.ilike(needle)))
 
     total, records = _paginate(query, params.page, params.pageSize)
     return success(
@@ -1272,7 +1393,10 @@ def create_blog(
 ):
     existing = db.query(BlogPost).filter(BlogPost.slug == payload.slug).one_or_none()
     if existing:
-        raise ApiError("CONFLICT", "A blog with this slug already exists.", status.HTTP_409_CONFLICT)
+        raise ApiError(
+            "CONFLICT",
+            "A blog with this slug already exists.",
+            status.HTTP_409_CONFLICT)
 
     content_blocks = [block.strip() for block in payload.content.split("\n\n") if block.strip()]
     post = BlogPost(
@@ -1335,11 +1459,18 @@ def patch_blog(
 
     updates = payload.model_dump(exclude_none=True)
     if "slug" in updates and updates["slug"] != post.slug:
-        if db.query(BlogPost).filter(and_(BlogPost.slug == updates["slug"], BlogPost.id != post.id)).one_or_none():
-            raise ApiError("CONFLICT", "A blog with this slug already exists.", status.HTTP_409_CONFLICT)
+        if db.query(BlogPost).filter(
+            and_(
+                BlogPost.slug == updates["slug"],
+                BlogPost.id != post.id)).one_or_none():
+            raise ApiError(
+                "CONFLICT",
+                "A blog with this slug already exists.",
+                status.HTTP_409_CONFLICT)
 
     if "content" in updates:
-        post.content = [block.strip() for block in updates["content"].split("\n\n") if block.strip()]
+        post.content = [block.strip()
+                        for block in updates["content"].split("\n\n") if block.strip()]
         updates.pop("content")
     if "coverImageUrl" in updates:
         post.cover_image_url = updates.pop("coverImageUrl")
@@ -1355,7 +1486,11 @@ def patch_blog(
     if payload.published is False:
         post.published_at = None
 
-    _add_audit_log(db, admin_user, "BLOG_UPDATED", "BLOG", post.id, {"fields": list(payload.model_dump(exclude_none=True).keys())})
+    _add_audit_log(
+        db, admin_user, "BLOG_UPDATED", "BLOG", post.id, {
+            "fields": list(
+                payload.model_dump(
+                    exclude_none=True).keys())})
     db.commit()
     return success({"id": post.id, "published": post.published})
 
@@ -1390,7 +1525,8 @@ def get_contact_messages(
         query = query.filter(ContactMessage.status == statusValue)
     if params.search:
         needle = f"%{params.search}%"
-        query = query.filter(or_(ContactMessage.name.ilike(needle), ContactMessage.email.ilike(needle), ContactMessage.subject.ilike(needle), ContactMessage.message.ilike(needle)))
+        query = query.filter(or_(ContactMessage.name.ilike(needle), ContactMessage.email.ilike(
+            needle), ContactMessage.subject.ilike(needle), ContactMessage.message.ilike(needle)))
 
     total, records = _paginate(query, params.page, params.pageSize)
     return success(
@@ -1457,7 +1593,8 @@ def patch_contact_message(
     if payload.status == ContactMessageStatus.REPLIED and not message.replied_at:
         message.replied_at = now
 
-    _add_audit_log(db, admin_user, "CONTACT_MESSAGE_UPDATED", "CONTACT_MESSAGE", message.id, {"status": payload.status.value})
+    _add_audit_log(db, admin_user, "CONTACT_MESSAGE_UPDATED", "CONTACT_MESSAGE",
+                   message.id, {"status": payload.status.value})
     db.commit()
     return success({"id": message.id, "status": message.status.value})
 
@@ -1470,11 +1607,18 @@ def add_contact_message_note(
     admin_user: User = Depends(require_admin),
 ):
     if payload.entityType != AdminNoteEntityType.CONTACT_MESSAGE or payload.entityId != message_id:
-        raise ApiError("VALIDATION_ERROR", "Entity type or ID mismatch.", status.HTTP_400_BAD_REQUEST)
+        raise ApiError(
+            "VALIDATION_ERROR",
+            "Entity type or ID mismatch.",
+            status.HTTP_400_BAD_REQUEST)
     if not _entity_exists(db, payload.entityType, payload.entityId):
         raise ApiError("NOT_FOUND", "Entity not found.", status.HTTP_404_NOT_FOUND)
 
-    note = AdminNote(entity_type=payload.entityType, entity_id=payload.entityId, note=payload.note, created_by_id=admin_user.id)
+    note = AdminNote(
+        entity_type=payload.entityType,
+        entity_id=payload.entityId,
+        note=payload.note,
+        created_by_id=admin_user.id)
     db.add(note)
     _add_audit_log(db, admin_user, "ADMIN_NOTE_CREATED", payload.entityType.value, payload.entityId)
     db.commit()
@@ -1497,7 +1641,9 @@ def get_payments(
         query = query.filter(Payment.status == statusValue)
     if params.search:
         needle = f"%{params.search}%"
-        query = query.filter(or_(Payment.id.ilike(needle), Payment.stripe_checkout_session_id.ilike(needle), Payment.stripe_payment_intent_id.ilike(needle)))
+        query = query.filter(or_(Payment.id.ilike(needle),
+                                 Payment.stripe_checkout_session_id.ilike(needle),
+                                 Payment.stripe_payment_intent_id.ilike(needle)))
 
     total, records = _paginate(query, params.page, params.pageSize)
     return success(
@@ -1530,22 +1676,24 @@ def get_payment_detail(
     db: Session = Depends(get_db),
     _admin: User = Depends(require_admin),
 ):
-    payment = db.query(Payment).options(joinedload(Payment.user)).filter(Payment.id == payment_id).one_or_none()
+    payment = db.query(Payment).options(
+        joinedload(
+            Payment.user)).filter(
+        Payment.id == payment_id).one_or_none()
     if not payment:
         raise ApiError("NOT_FOUND", "Payment not found.", status.HTTP_404_NOT_FOUND)
-    return success(
-        {
-            "id": payment.id,
-            "designRequestId": payment.design_request_id,
-            "customer": {"id": payment.user.id, "name": payment.user.name, "email": payment.user.email} if payment.user else None,
-            "stripeSessionId": payment.stripe_checkout_session_id,
-            "stripePaymentIntentId": payment.stripe_payment_intent_id,
-            "amount": payment.amount,
-            "currency": payment.currency,
-            "status": payment.status.value,
-            "createdAt": payment.created_at.isoformat(),
-        }
-    )
+    return success({"id": payment.id,
+                    "designRequestId": payment.design_request_id,
+                    "customer": {"id": payment.user.id,
+                                 "name": payment.user.name,
+                                 "email": payment.user.email} if payment.user else None,
+                    "stripeSessionId": payment.stripe_checkout_session_id,
+                    "stripePaymentIntentId": payment.stripe_payment_intent_id,
+                    "amount": payment.amount,
+                    "currency": payment.currency,
+                    "status": payment.status.value,
+                    "createdAt": payment.created_at.isoformat(),
+                    })
 
 
 @router.get("/ai-logs")
@@ -1563,7 +1711,8 @@ def get_ai_logs(
         query = query.filter(AIGenerationLog.status == statusValue)
     if params.search:
         needle = f"%{params.search}%"
-        query = query.filter(or_(AIGenerationLog.id.ilike(needle), AIGenerationLog.design_request_id.ilike(needle), AIGenerationLog.error_code.ilike(needle), AIGenerationLog.error_message.ilike(needle)))
+        query = query.filter(or_(AIGenerationLog.id.ilike(needle), AIGenerationLog.design_request_id.ilike(
+            needle), AIGenerationLog.error_code.ilike(needle), AIGenerationLog.error_message.ilike(needle)))
 
     total, logs = _paginate(query, params.page, params.pageSize)
     return success(
@@ -1581,13 +1730,15 @@ def get_ai_logs(
                     "completionTokens": log.completion_tokens,
                     "totalTokens": log.total_tokens,
                     "createdAt": log.created_at.isoformat(),
-                    "completedAt": log.updated_at.isoformat() if log.status in {AIGenerationStatus.COMPLETED, AIGenerationStatus.FAILED} else None,
-                }
-                for log in logs
-            ],
-            "meta": _page_meta(total, params.page, params.pageSize),
-        }
-    )
+                    "completedAt": log.updated_at.isoformat() if log.status in {
+                        AIGenerationStatus.COMPLETED,
+                        AIGenerationStatus.FAILED} else None,
+                } for log in logs],
+            "meta": _page_meta(
+                total,
+                params.page,
+                params.pageSize),
+        })
 
 
 @router.get("/ai-logs/{log_id}")
@@ -1649,7 +1800,8 @@ def patch_admin_settings(
     value = dict(current.value) if current else {}
     value.update(payload.model_dump(exclude_none=True))
     setting = _upsert_settings(db, "admin.portal", value, admin_user.id)
-    _add_audit_log(db, admin_user, "BUSINESS_SETTINGS_UPDATED", "SETTINGS", setting.id, {"fields": list(payload.model_dump(exclude_none=True).keys())})
+    _add_audit_log(db, admin_user, "BUSINESS_SETTINGS_UPDATED", "SETTINGS", setting.id, {
+                   "fields": list(payload.model_dump(exclude_none=True).keys())})
     db.commit()
     return success(setting.value)
 
@@ -1663,7 +1815,9 @@ def get_admin_team(
     _admin: User = Depends(require_admin),
 ):
     params = _parse_pagination(page, pageSize, search)
-    query = db.query(User).filter(User.role == UserRole.ADMIN.value).order_by(User.created_at.desc())
+    query = db.query(User).filter(
+        User.role == UserRole.ADMIN.value).order_by(
+        User.created_at.desc())
     if params.search:
         needle = f"%{params.search}%"
         query = query.filter(or_(User.name.ilike(needle), User.email.ilike(needle)))
@@ -1697,9 +1851,15 @@ def patch_team_member(
     if not user or user.role != UserRole.ADMIN.value:
         raise ApiError("NOT_FOUND", "Admin user not found.", status.HTTP_404_NOT_FOUND)
     if user.id == admin_user.id and payload.role and payload.role != UserRole.ADMIN.value:
-        raise ApiError("FORBIDDEN", "You cannot remove your own admin role.", status.HTTP_403_FORBIDDEN)
+        raise ApiError(
+            "FORBIDDEN",
+            "You cannot remove your own admin role.",
+            status.HTTP_403_FORBIDDEN)
     if user.id == admin_user.id and payload.status and payload.status != UserStatus.ACTIVE:
-        raise ApiError("FORBIDDEN", "You cannot disable your own admin account.", status.HTTP_403_FORBIDDEN)
+        raise ApiError(
+            "FORBIDDEN",
+            "You cannot disable your own admin account.",
+            status.HTTP_403_FORBIDDEN)
 
     role_downgrade = payload.role is not None and payload.role != UserRole.ADMIN.value
     status_downgrade = payload.status is not None and payload.status != UserStatus.ACTIVE
@@ -1714,7 +1874,10 @@ def patch_team_member(
             .count()
         )
         if active_other_admins == 0:
-            raise ApiError("FORBIDDEN", "At least one active admin must remain.", status.HTTP_403_FORBIDDEN)
+            raise ApiError(
+                "FORBIDDEN",
+                "At least one active admin must remain.",
+                status.HTTP_403_FORBIDDEN)
 
     if payload.role:
         if payload.role not in {UserRole.ADMIN.value, UserRole.CUSTOMER.value}:
@@ -1723,6 +1886,13 @@ def patch_team_member(
     if payload.status:
         user.status = payload.status.value
 
-    _add_audit_log(db, admin_user, "TEAM_MEMBER_UPDATED", "TEAM", user.id, payload.model_dump(exclude_none=True))
+    _add_audit_log(
+        db,
+        admin_user,
+        "TEAM_MEMBER_UPDATED",
+        "TEAM",
+        user.id,
+        payload.model_dump(
+            exclude_none=True))
     db.commit()
     return success({"id": user.id, "role": user.role, "status": user.status})
