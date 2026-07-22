@@ -102,20 +102,10 @@ def get_or_create_anonymous_session(
     return anon
 
 
-def _resolve_legacy_user(request: Request, db: Session) -> User | None:
-    user_id = request.cookies.get(settings.user_cookie_name)
-    if not user_id:
-        return None
-    user = db.get(User, user_id)
-    if not user or user.status != UserStatus.ACTIVE.value:
-        return None
-    return user
-
-
 def _resolve_user_from_session_token(request: Request, db: Session) -> tuple[User | None, UserSession | None]:
     session_token = request.cookies.get(settings.session_cookie_name)
     if not session_token:
-        return _resolve_legacy_user(request, db), None
+        return None, None
 
     token_hash = _hash(session_token)
     now = datetime.now(timezone.utc)
@@ -166,15 +156,9 @@ def create_user_session(response: Response, request: Request, db: Session, user:
         max_age=max_age,
         path="/",
     )
-    response.set_cookie(
-        settings.user_cookie_name,
-        user.id,
-        httponly=False,
-        secure=settings.secure_cookies,
-        samesite="none",
-        max_age=max_age,
-        path="/",
-    )
+    # Remove the obsolete, client-readable user-id cookie if it exists.  The
+    # opaque HttpOnly session cookie above is the sole authentication source.
+    response.delete_cookie(settings.user_cookie_name, path="/")
     response.set_cookie(
         settings.csrf_cookie_name,
         csrf_token,
