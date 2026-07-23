@@ -1343,10 +1343,10 @@ def delete_product(
     product = db.get(Product, product_id)
     if not product:
         raise ApiError("NOT_FOUND", "Product not found.", status.HTTP_404_NOT_FOUND)
-    product.archived_at = datetime.now(timezone.utc)
-    _add_audit_log(db, admin_user, "PRODUCT_ARCHIVED", "PRODUCT", product.id)
+    db.delete(product)
+    _add_audit_log(db, admin_user, "PRODUCT_DELETED", "PRODUCT", product.id)
     db.commit()
-    return success({"id": product.id, "archived": True})
+    return success({"id": product.id, "deleted": True})
 
 
 @router.get("/blogs")
@@ -1504,10 +1504,10 @@ def delete_blog(
     post = db.get(BlogPost, blog_id)
     if not post:
         raise ApiError("NOT_FOUND", "Blog not found.", status.HTTP_404_NOT_FOUND)
-    post.archived_at = datetime.now(timezone.utc)
-    _add_audit_log(db, admin_user, "BLOG_ARCHIVED", "BLOG", post.id)
+    db.delete(post)
+    _add_audit_log(db, admin_user, "BLOG_DELETED", "BLOG", post.id)
     db.commit()
-    return success({"id": post.id, "archived": True})
+    return success({"id": post.id, "deleted": True})
 
 
 @router.get("/contact-messages")

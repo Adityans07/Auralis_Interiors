@@ -151,6 +151,20 @@ export async function deleteAdminProduct(id: string) {
   return backendRequest(`/api/admin/products/${id}`, { method: "DELETE" });
 }
 
+export async function archiveAdminProduct(id: string) {
+  return backendRequest(`/api/admin/products/${id}`, {
+    method: "PATCH",
+    body: { archived: true },
+  });
+}
+
+export async function unarchiveAdminProduct(id: string) {
+  return backendRequest(`/api/admin/products/${id}`, {
+    method: "PATCH",
+    body: { archived: false },
+  });
+}
+
 export async function getAdminProductById(id: string) {
   return backendRequest<AdminProduct>(`/api/admin/products/${id}`);
 }
@@ -178,6 +192,20 @@ export async function updateAdminBlog(
 
 export async function deleteAdminBlog(id: string) {
   return backendRequest(`/api/admin/blogs/${id}`, { method: "DELETE" });
+}
+
+export async function archiveAdminBlog(id: string) {
+  return backendRequest(`/api/admin/blogs/${id}`, {
+    method: "PATCH",
+    body: { archived: true },
+  });
+}
+
+export async function unarchiveAdminBlog(id: string) {
+  return backendRequest(`/api/admin/blogs/${id}`, {
+    method: "PATCH",
+    body: { archived: false },
+  });
 }
 
 export async function getAdminBlogById(id: string) {
