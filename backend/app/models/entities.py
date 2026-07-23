@@ -217,6 +217,7 @@ class UserUsage(TimestampMixin, Base):
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True)
     free_generation_used: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    bonus_free_generations: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     total_generations: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     paid_generations: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 

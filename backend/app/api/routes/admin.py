@@ -44,6 +44,7 @@ from app.schemas.admin import (
     BookingUpdateIn,
     ContactMessageUpdateIn,
     CustomerStatusUpdateIn,
+    CustomerUsageUpdateIn,
     DesignRequestUpdateIn,
     PaginationIn,
     ProductIn,
@@ -1020,6 +1021,7 @@ def get_customers(
                     user.email_verified_at),
                 "freeGenerationUsed": bool(
                     usage.free_generation_used) if usage else False,
+                "bonusFreeGenerations": (usage.bonus_free_generations if hasattr(usage, 'bonus_free_generations') else 0) if usage else 0,
                 "totalDesignRequests": db.query(DesignRequest).filter(
                     DesignRequest.user_id == user.id).count(),
                 "totalBookings": db.query(Booking).filter(
@@ -1069,6 +1071,7 @@ def get_customer_detail(
                                  "status": user.status,
                                  "role": user.role,
                                  "usage": {"freeGenerationUsed": bool(usage.free_generation_used) if usage else False,
+                                           "bonusFreeGenerations": (usage.bonus_free_generations if hasattr(usage, 'bonus_free_generations') else 0) if usage else 0,
                                            "totalGenerations": usage.total_generations if usage else 0,
                                            "paidGenerations": usage.paid_generations if usage else 0,
                                            },
@@ -1113,6 +1116,43 @@ def update_customer_status(
                    "CUSTOMER", user.id, {"status": user.status})
     db.commit()
     return success({"id": user.id, "status": user.status})
+
+
+@router.patch("/customers/{customer_id}/usage")
+def update_customer_usage(
+    customer_id: str,
+    payload: CustomerUsageUpdateIn,
+    db: Session = Depends(get_db),
+    admin_user: User = Depends(require_admin),
+):
+    user = db.get(User, customer_id)
+    if not user or user.role != UserRole.CUSTOMER.value:
+        raise ApiError("NOT_FOUND", "Customer not found.", status.HTTP_404_NOT_FOUND)
+
+    usage = db.query(UserUsage).filter(UserUsage.user_id == user.id).one_or_none()
+    if usage is None:
+        usage = UserUsage(user_id=user.id)
+        db.add(usage)
+
+    if payload.action == "reset":
+        usage.free_generation_used = False
+        usage.bonus_free_generations = 0
+        _add_audit_log(db, admin_user, "CUSTOMER_FREE_GEN_RESET", "CUSTOMER", user.id, {})
+    elif payload.action == "grant":
+        amount = max(1, min(payload.amount or 1, 20))
+        usage.bonus_free_generations = amount
+        _add_audit_log(db, admin_user, "CUSTOMER_FREE_GEN_GRANTED", "CUSTOMER", user.id, {"amount": amount})
+    else:
+        raise ApiError("VALIDATION_ERROR", "Invalid action. Use 'reset' or 'grant'.", status.HTTP_400_BAD_REQUEST)
+
+    db.commit()
+    db.refresh(usage)
+    return success({
+        "id": user.id,
+        "freeGenerationUsed": usage.free_generation_used,
+        "bonusFreeGenerations": getattr(usage, "bonus_free_generations", 0),
+        "totalGenerations": usage.total_generations,
+    })
 
 
 @router.post("/customers/{customer_id}/notes")

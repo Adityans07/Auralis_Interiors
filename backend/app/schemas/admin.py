@@ -58,6 +58,11 @@ class CustomerStatusUpdateIn(BaseModel):
     status: UserStatus
 
 
+class CustomerUsageUpdateIn(BaseModel):
+    action: str  # "reset" or "grant"
+    amount: int | None = Field(default=None, ge=1, le=20)
+
+
 class ProductIn(BaseModel):
     name: str = Field(min_length=2, max_length=255)
     slug: str = Field(min_length=2, max_length=255, pattern=SLUG_PATTERN)

@@ -16,6 +16,7 @@ def get_free_generation_status_for_actor(db: Session, context: RequestContext) -
             "requiresPayment": False,
             "hasUsedFreeGeneration": False,
             "generationsUsed": 0,
+            "bonusFreeGenerations": 0,
         }
 
     if context.user_id:
@@ -26,12 +27,15 @@ def get_free_generation_status_for_actor(db: Session, context: RequestContext) -
             db.commit()
             db.refresh(usage)
         used = usage.free_generation_used
+        bonus = getattr(usage, "bonus_free_generations", 0)
+        can_use = (not used) or (bonus > 0)
         return {
-            "canUseFreeGeneration": not used,
+            "canUseFreeGeneration": can_use,
             "freeGenerationUsed": used,
-            "requiresPayment": used,
+            "requiresPayment": not can_use,
             "hasUsedFreeGeneration": used,
             "generationsUsed": usage.total_generations,
+            "bonusFreeGenerations": bonus,
         }
 
     used = context.anonymous_session.free_generation_used
@@ -41,6 +45,7 @@ def get_free_generation_status_for_actor(db: Session, context: RequestContext) -
         "requiresPayment": used,
         "hasUsedFreeGeneration": used,
         "generationsUsed": 1 if used else 0,
+        "bonusFreeGenerations": 0,
     }
 
 
@@ -84,7 +89,13 @@ def consume_free_generation_for_actor(
             usage = UserUsage(user_id=context.user_id)
             db.add(usage)
         if free_generation_applied:
-            usage.free_generation_used = True
+            bonus = getattr(usage, "bonus_free_generations", 0)
+            if not usage.free_generation_used:
+                # Consume the original free generation first
+                usage.free_generation_used = True
+            elif bonus > 0:
+                # Consume a bonus generation
+                usage.bonus_free_generations = bonus - 1
         usage.total_generations += 1
         if paid:
             usage.paid_generations += 1

@@ -91,6 +91,7 @@ export function TryUsExperience() {
 
   const [spaceFile, setSpaceFile] = useState<File | null>(null);
   const [hasUsedFree, setHasUsedFree] = useState(false);
+  const [bonusFreeGenerations, setBonusFreeGenerations] = useState(0);
   const [freeStatusLoading, setFreeStatusLoading] = useState(true);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallError, setPaywallError] = useState<string | null>(null);
@@ -113,9 +114,11 @@ export function TryUsExperience() {
       try {
         const response = await getFreeGenerationStatus();
         if (!active) return;
-        setHasUsedFree(
-          Boolean(response.data.hasUsedFreeGeneration ?? response.data.freeGenerationUsed)
-        );
+        const bonus = Number(response.data.bonusFreeGenerations ?? 0);
+        const canUse = Boolean(response.data.canUseFreeGeneration);
+        setBonusFreeGenerations(bonus);
+        // hasUsedFree drives the paywall — only true when backend says user cannot generate
+        setHasUsedFree(!canUse);
       } catch {
         if (!active) return;
         // Fall back to the current auth hint if backend status cannot be read.
@@ -427,6 +430,7 @@ export function TryUsExperience() {
       <FreeTrialBanner
         isAuthenticated={isAuthenticated}
         hasUsedFree={hasUsedFree}
+        bonusFreeGenerations={bonusFreeGenerations}
         loading={freeStatusLoading}
       />
 

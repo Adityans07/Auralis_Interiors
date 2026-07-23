@@ -128,6 +128,7 @@ export interface AdminCustomerListItem {
   status: string;
   emailVerified: boolean;
   freeGenerationUsed: boolean;
+  bonusFreeGenerations: number;
   totalDesignRequests: number;
   totalBookings: number;
   totalPayments: number;
@@ -135,13 +136,32 @@ export interface AdminCustomerListItem {
   lastLoginAt?: string | null;
 }
 
+export interface AdminCustomerUsage {
+  freeGenerationUsed: boolean;
+  bonusFreeGenerations: number;
+  totalGenerations: number;
+  paidGenerations: number;
+}
+
+export interface AdminCustomerDetailCustomer {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  city?: string | null;
+  status: string;
+  role: string;
+  usage: AdminCustomerUsage;
+  [key: string]: unknown;
+}
+
 export interface AdminCustomerDetail {
-  customer: Record<string, unknown>;
-  designRequests: Array<Record<string, unknown>>;
-  selectedDesigns: Array<Record<string, unknown>>;
-  bookings: Array<Record<string, unknown>>;
-  payments: Array<Record<string, unknown>>;
-  contactHistory: Array<Record<string, unknown>>;
+  customer: AdminCustomerDetailCustomer;
+  designRequests: Array<{ id: string; status: string; createdAt: string }>;
+  selectedDesigns: Array<{ id: string; status: string; createdAt: string }>;
+  bookings: Array<{ id: string; status: string; createdAt: string }>;
+  payments: Array<{ id: string; status: string; amount: number; currency: string; createdAt: string }>;
+  contactHistory: Array<{ id: string; subject?: string; status: string; createdAt: string }>;
   notes: AdminNote[];
 }
 

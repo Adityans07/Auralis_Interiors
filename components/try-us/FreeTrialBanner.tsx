@@ -2,21 +2,26 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Gift, Lock, Sparkles } from "lucide-react";
+import { Gift, Lock, Sparkles, Zap } from "lucide-react";
 
 interface FreeTrialBannerProps {
   isAuthenticated: boolean;
   /** Whether the free generation has been used for the current actor. */
   hasUsedFree: boolean;
+  /** Number of admin-granted bonus generations remaining. */
+  bonusFreeGenerations?: number;
   loading?: boolean;
 }
 
 /**
  * Communicates the free/paid generation state, tailored to auth status.
- * The demo state comes from the customer object (logged in) or localStorage
- * (guest). The backend will own this for real later.
  */
-export function FreeTrialBanner({ isAuthenticated, hasUsedFree, loading = false }: FreeTrialBannerProps) {
+export function FreeTrialBanner({
+  isAuthenticated,
+  hasUsedFree,
+  bonusFreeGenerations = 0,
+  loading = false,
+}: FreeTrialBannerProps) {
   if (loading) {
     return (
       <Banner tone="emerald" icon={<Sparkles className="h-5 w-5 shrink-0" />}>
@@ -25,7 +30,29 @@ export function FreeTrialBanner({ isAuthenticated, hasUsedFree, loading = false 
     );
   }
 
-  // Used → paid notice (same for guest or logged in).
+  // Both original free gen available AND bonus granted (rare admin edge case)
+  if (!hasUsedFree && bonusFreeGenerations > 0) {
+    const remaining = bonusFreeGenerations + 1; // +1 for original unused free gen
+    return (
+      <Banner tone="blue" icon={<Zap className="h-5 w-5 shrink-0" />}>
+        You have{" "}
+        <strong>{remaining} generation{remaining !== 1 ? "s" : ""}</strong> remaining — enjoy your complimentary credits.
+      </Banner>
+    );
+  }
+
+  // User's original free gen was used but has bonus remaining
+  if (hasUsedFree && bonusFreeGenerations > 0) {
+    return (
+      <Banner tone="blue" icon={<Zap className="h-5 w-5 shrink-0" />}>
+        You have{" "}
+        <strong>{bonusFreeGenerations} bonus generation{bonusFreeGenerations !== 1 ? "s" : ""}</strong>{" "}
+        remaining — enjoy your complimentary credits.
+      </Banner>
+    );
+  }
+
+  // All generations exhausted → paywall.
   if (hasUsedFree) {
     return (
       <Banner tone="amber" icon={<Lock className="h-5 w-5 shrink-0" />}>
@@ -35,7 +62,7 @@ export function FreeTrialBanner({ isAuthenticated, hasUsedFree, loading = false 
     );
   }
 
-  // Logged in with free generation still available.
+  // Logged in with original free generation still available.
   if (isAuthenticated) {
     return (
       <Banner tone="emerald" icon={<Sparkles className="h-5 w-5 shrink-0" />}>
@@ -61,13 +88,15 @@ function Banner({
   icon,
   children,
 }: {
-  tone: "amber" | "emerald";
+  tone: "amber" | "emerald" | "blue";
   icon: React.ReactNode;
   children: React.ReactNode;
 }) {
   const cls =
     tone === "amber"
       ? "border-amber-200 bg-amber-50 text-amber-800"
+      : tone === "blue"
+      ? "border-blue-200 bg-blue-50 text-blue-800"
       : "border-emerald-200 bg-emerald-50 text-emerald-800";
   return (
     <motion.div

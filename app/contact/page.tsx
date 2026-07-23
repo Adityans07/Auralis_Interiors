@@ -100,21 +100,22 @@ export default function ContactPage() {
             ))}
           </div>
 
-          {/* Map placeholder */}
-          <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-white/5 bg-void shadow-glow">
-            <div
-              aria-hidden
-              className="absolute inset-0 opacity-20 bg-dark-gradient mix-blend-screen"
+          {/* Map embed */}
+          <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-white/5 shadow-glow">
+            {/* Actual map as background */}
+            <iframe
+              src="https://maps.google.com/maps?q=28.617134,77.374987&z=16&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0, display: "block", position: "absolute", inset: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              title="Auralis Interiors Location"
+              aria-label="Google Maps showing Auralis Interiors location"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold-dark shadow-glow">
-                <MapPin className="h-6 w-6" aria-hidden />
-              </span>
-              <p className="mt-4 text-sm font-medium text-foreground">
-                Map preview
-              </p>
-              <p className="mt-1 text-xs font-light text-muted-foreground">{BRAND.address}</p>
-            </div>
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/20 pointer-events-none" />
           </div>
         </Reveal>
       </div>

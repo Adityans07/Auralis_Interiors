@@ -124,6 +124,17 @@ export async function getAdminCustomerById(id: string) {
   return backendRequest<AdminCustomerDetail>(`/api/admin/customers/${id}`);
 }
 
+export async function updateCustomerUsage(
+  id: string,
+  action: "reset" | "grant",
+  amount?: number
+) {
+  return backendRequest(`/api/admin/customers/${id}/usage`, {
+    method: "PATCH",
+    body: { action, amount },
+  });
+}
+
 export async function getAdminProducts(params?: PaginationParams) {
   return backendRequest<PaginatedResponse<AdminProduct>>(
     `/api/admin/products${toQuery(params)}`
