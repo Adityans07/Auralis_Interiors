@@ -27,6 +27,10 @@ const STATUS_CONFIG: Record<
     label: "Payment required",
     className: "bg-amber-50 text-amber-700 border-amber-200",
   },
+  paid: {
+    label: "Paid",
+    className: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  },
   selected: {
     label: "Selected",
     className: "bg-gold/15 text-gold-dark border-gold/30",
@@ -42,7 +46,7 @@ interface DesignHistoryCardProps {
 }
 
 export function DesignHistoryCard({ request }: DesignHistoryCardProps) {
-  const status = STATUS_CONFIG[request.status];
+  const status = STATUS_CONFIG[request.status] || STATUS_CONFIG.draft;
 
   const selectedDesign = request.selectedDesignId
     ? request.generatedDesigns.find((d) => d.id === request.selectedDesignId)

@@ -56,7 +56,7 @@ function mapDetailToCustomerDesignRequest(payload: any): CustomerDesignRequest {
   return {
     id: String(request.id ?? ""),
     createdAt: String(request.createdAt ?? new Date().toISOString()),
-    status: String(request.status ?? "draft") as CustomerDesignRequest["status"],
+    status: String(request.status ?? "draft").toLowerCase().replace("_", "-") as CustomerDesignRequest["status"],
     designType: (String(request.designType ?? "interior").toLowerCase() === "exterior" ? "exterior" : "interior") as CustomerDesignRequest["designType"],
     spaceType: String(request.spaceType ?? "other") as CustomerDesignRequest["spaceType"],
     style: String(request.style ?? "modern") as CustomerDesignRequest["style"],

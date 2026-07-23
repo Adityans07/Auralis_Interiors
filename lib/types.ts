@@ -354,6 +354,7 @@ export type DesignRequestStatus =
   | "generating"
   | "completed"
   | "payment-required"
+  | "paid"
   | "selected"
   | "failed";
 
