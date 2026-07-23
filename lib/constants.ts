@@ -11,8 +11,8 @@ export const BRAND = {
   tagline:
     "AI-powered interiors designed around your space, budget, and lifestyle.",
   email: "hello@auralisinteriors.com",
-  phone: "+1 (415) 555-0142",
-  address: "24 Marlow Studios, San Francisco, CA 94108",
+  phone: "+91 92669 21220",
+  address: "Noida, UP, India",
   hours: "Mon–Fri · 9:00 AM – 6:00 PM PT",
 } as const;
 
