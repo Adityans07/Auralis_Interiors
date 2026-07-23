@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@studio-freight/lenis": "^0.2.36",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.17",
+    "gsap": "^3.13.0",
     "lucide-react": "^0.454.0",
     "next": "14.2.15",
     "react": "^18.3.1",

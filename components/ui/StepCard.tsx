@@ -19,18 +19,18 @@ export function StepCard({ step, icon, title, description, index = 0 }: StepCard
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative rounded-3xl border border-sand-200 bg-white/70 p-7"
+      className="relative rounded-3xl border border-white/10 bg-white/5 p-7 shadow-soft"
     >
       <div className="flex items-center justify-between">
-        <span className="font-serif text-4xl font-semibold text-sand-300">
+        <span className="font-serif text-4xl font-semibold text-sand-200">
           0{step}
         </span>
-        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sand-100 text-gold-dark">
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-gold-light">
           {icon}
         </span>
       </div>
-      <h3 className="mt-5 text-lg font-semibold text-ink-900">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-ink-500">{description}</p>
+      <h3 className="mt-5 text-lg font-semibold text-sand-50">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-sand-300">{description}</p>
     </motion.div>
   );
 }
