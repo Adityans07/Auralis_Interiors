@@ -66,7 +66,7 @@ export function UserDropdown() {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="focus-ring flex items-center gap-2 rounded-full border border-sand-200 bg-white/70 py-1 pl-1 pr-3 transition-colors hover:border-ink-900/30"
+        className="focus-ring flex items-center gap-2 rounded-full border border-white/10 bg-base/5 py-1 pl-1 pr-3 transition-colors hover:border-white/20/30"
       >
         {customer.avatarUrl ? (
           <Image
@@ -77,15 +77,15 @@ export function UserDropdown() {
             className="h-8 w-8 rounded-full object-cover"
           />
         ) : (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-900 text-xs font-semibold text-gold-light">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-gold-light">
             {initials(customer.name)}
           </span>
         )}
-        <span className="hidden max-w-[8rem] truncate text-sm font-medium text-ink-800 sm:block">
+        <span className="hidden max-w-[8rem] truncate text-sm font-medium text-foreground sm:block">
           {customer.name.split(" ")[0]}
         </span>
         <ChevronDown
-          className={cn("h-4 w-4 text-ink-400 transition-transform", open && "rotate-180")}
+          className={cn("h-4 w-4 text-muted-foreground/80 transition-transform", open && "rotate-180")}
         />
       </button>
 
@@ -97,13 +97,13 @@ export function UserDropdown() {
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ duration: 0.18 }}
             role="menu"
-            className="absolute right-0 mt-2 w-60 overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-soft"
+            className="absolute right-0 mt-2 w-60 overflow-hidden rounded-2xl border border-white/10 bg-base shadow-glow"
           >
-            <div className="border-b border-sand-200 px-4 py-3">
-              <p className="truncate text-sm font-semibold text-ink-900">
+            <div className="border-b border-white/10 px-4 py-3">
+              <p className="truncate text-sm font-semibold text-foreground">
                 {customer.name}
               </p>
-              <p className="truncate text-xs text-ink-500">{customer.email}</p>
+              <p className="truncate text-xs text-muted-foreground">{customer.email}</p>
             </div>
             <ul className="py-1">
               {MENU.map(({ label, href, icon: Icon }) => (
@@ -112,15 +112,15 @@ export function UserDropdown() {
                     href={href}
                     role="menuitem"
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-700 transition-colors hover:bg-sand-100"
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground/90 transition-colors hover:bg-white/10"
                   >
-                    <Icon className="h-4 w-4 text-ink-400" />
+                    <Icon className="h-4 w-4 text-muted-foreground/80" />
                     {label}
                   </Link>
                 </li>
               ))}
             </ul>
-            <div className="border-t border-sand-200 py-1">
+            <div className="border-t border-white/10 py-1">
               <button
                 type="button"
                 onClick={onLogout}

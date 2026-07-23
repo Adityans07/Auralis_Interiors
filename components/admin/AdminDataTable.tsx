@@ -23,10 +23,10 @@ export function AdminDataTable<T>({
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-sand-200 bg-white">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-base">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-sand-200 text-sm">
-          <thead className="bg-sand-50 text-left text-xs uppercase tracking-[0.12em] text-ink-500">
+          <thead className="bg-void text-left text-xs uppercase tracking-[0.12em] text-muted-foreground">
             <tr>
               {columns.map((column) => (
                 <th key={column.key} className={`px-4 py-3 font-medium ${column.className ?? ""}`}>
@@ -37,9 +37,9 @@ export function AdminDataTable<T>({
           </thead>
           <tbody className="divide-y divide-sand-100">
             {rows.map((row) => (
-              <tr key={rowKey(row)} className="align-top hover:bg-sand-50/60">
+              <tr key={rowKey(row)} className="align-top hover:bg-void/60">
                 {columns.map((column) => (
-                  <td key={column.key} className={`px-4 py-3 text-ink-700 ${column.className ?? ""}`}>
+                  <td key={column.key} className={`px-4 py-3 text-foreground/90 ${column.className ?? ""}`}>
                     {column.render(row)}
                   </td>
                 ))}

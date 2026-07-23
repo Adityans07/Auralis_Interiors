@@ -31,27 +31,27 @@ export function Footer() {
   };
 
   return (
-    <footer className="mt-24 bg-ink-950 text-sand-100">
-      <div className="container-wide grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="mt-24 border-t border-white/10 bg-void text-muted-foreground">
+      <div className="container-wide grid gap-12 py-24 md:grid-cols-2 lg:grid-cols-4">
         {/* Brand + newsletter */}
         <div className="lg:col-span-1">
-          <span className="font-serif text-2xl font-semibold text-sand-50">
+          <span className="font-serif text-3xl font-light text-foreground">
             {BRAND.name}
           </span>
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-sand-100/70">
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
             {BRAND.tagline}
           </p>
 
-          <form onSubmit={onSubscribe} className="mt-6">
-            <label htmlFor="newsletter" className="text-xs uppercase tracking-widest text-sand-100/60">
+          <form onSubmit={onSubscribe} className="mt-8">
+            <label htmlFor="newsletter" className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
               Join our newsletter
             </label>
             {subscribed ? (
-              <p className="mt-2 text-sm text-gold-light">
+              <p className="mt-4 text-sm text-gold">
                 Thanks — you&apos;re on the list.
               </p>
             ) : (
-              <div className="mt-2 flex items-center gap-2">
+              <div className="mt-3 flex items-center gap-2">
                 <input
                   id="newsletter"
                   type="email"
@@ -59,12 +59,12 @@ export function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@email.com"
-                  className="h-11 w-full rounded-full border border-white/10 bg-white/5 px-4 text-sm text-sand-50 placeholder:text-sand-100/40 focus-ring"
+                  className="h-12 w-full rounded-full border border-white/10 bg-base/5 px-5 text-sm text-foreground placeholder:text-white/20 focus-ring"
                 />
                 <button
                   type="submit"
                   aria-label="Subscribe"
-                  className="focus-ring flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold text-ink-900 transition-transform hover:scale-105"
+                  className="focus-ring flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gold text-base transition-transform hover:scale-105"
                 >
                   <Send className="h-4 w-4" />
                 </button>
@@ -75,15 +75,15 @@ export function Footer() {
 
         {/* Navigation */}
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-sand-50">
+          <h3 className="text-[10px] font-semibold uppercase tracking-[0.25em] text-foreground">
             Explore
           </h3>
-          <ul className="mt-4 space-y-3">
+          <ul className="mt-6 space-y-4">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-sand-100/70 transition-colors hover:text-gold-light"
+                  className="text-sm text-muted-foreground transition-colors hover:text-gold"
                 >
                   {link.label}
                 </Link>
@@ -94,12 +94,12 @@ export function Footer() {
 
         {/* Services */}
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-sand-50">
+          <h3 className="text-[10px] font-semibold uppercase tracking-[0.25em] text-foreground">
             Services
           </h3>
-          <ul className="mt-4 space-y-3">
+          <ul className="mt-6 space-y-4">
             {SERVICES.map((s) => (
-              <li key={s} className="text-sm text-sand-100/70">
+              <li key={s} className="text-sm text-muted-foreground">
                 {s}
               </li>
             ))}
@@ -108,35 +108,35 @@ export function Footer() {
 
         {/* Contact */}
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-sand-50">
+          <h3 className="text-[10px] font-semibold uppercase tracking-[0.25em] text-foreground">
             Get in touch
           </h3>
-          <ul className="mt-4 space-y-3 text-sm text-sand-100/70">
-            <li className="flex items-start gap-3">
-              <Mail className="mt-0.5 h-4 w-4 text-gold-light" />
-              <a href={`mailto:${BRAND.email}`} className="hover:text-gold-light">
+          <ul className="mt-6 space-y-4 text-sm text-muted-foreground">
+            <li className="flex items-start gap-4">
+              <Mail className="mt-0.5 h-4 w-4 text-gold" />
+              <a href={`mailto:${BRAND.email}`} className="hover:text-gold transition-colors">
                 {BRAND.email}
               </a>
             </li>
-            <li className="flex items-start gap-3">
-              <Phone className="mt-0.5 h-4 w-4 text-gold-light" />
-              <a href={`tel:${BRAND.phone}`} className="hover:text-gold-light">
+            <li className="flex items-start gap-4">
+              <Phone className="mt-0.5 h-4 w-4 text-gold" />
+              <a href={`tel:${BRAND.phone}`} className="hover:text-gold transition-colors">
                 {BRAND.phone}
               </a>
             </li>
-            <li className="flex items-start gap-3">
-              <MapPin className="mt-0.5 h-4 w-4 text-gold-light" />
+            <li className="flex items-start gap-4">
+              <MapPin className="mt-0.5 h-4 w-4 text-gold" />
               <span>{BRAND.address}</span>
             </li>
           </ul>
 
-          <div className="mt-6 flex gap-3">
+          <div className="mt-8 flex gap-4">
             {SOCIALS.map(({ icon: Icon, label, href }) => (
               <a
                 key={label}
                 href={href}
                 aria-label={label}
-                className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-sand-100/80 transition-colors hover:bg-gold hover:text-ink-900"
+                className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-base/5 text-muted-foreground transition-all duration-300 hover:border-gold hover:bg-gold/10 hover:text-gold"
               >
                 <Icon className="h-4 w-4" />
               </a>
@@ -145,10 +145,10 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10">
-        <div className="container-wide flex flex-col items-center justify-between gap-2 py-6 text-xs text-sand-100/50 sm:flex-row">
+      <div className="border-t border-white/10 bg-base">
+        <div className="container-wide flex flex-col items-center justify-between gap-4 py-8 text-xs text-muted-foreground sm:flex-row">
           <p>© {new Date().getFullYear()} {BRAND.name}. All rights reserved.</p>
-          <p>Crafted with AI-assisted design intelligence.</p>
+          <p className="flex items-center gap-1">Crafted with <span className="text-gold">AI</span> intelligence.</p>
         </div>
       </div>
     </footer>

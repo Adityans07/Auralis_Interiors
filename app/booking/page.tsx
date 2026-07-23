@@ -46,8 +46,8 @@ export default function BookingPage() {
         <Reveal>
           <Suspense
             fallback={
-              <div className="rounded-3xl border border-sand-200 bg-white/80 p-8 shadow-soft">
-                <p className="text-sm text-ink-500">Loading booking form…</p>
+              <div className="glass-dark rounded-[2rem] p-8">
+                <p className="text-sm font-light text-muted-foreground">Loading booking form…</p>
               </div>
             }
           >
@@ -57,22 +57,22 @@ export default function BookingPage() {
 
         {/* What to expect */}
         <Reveal index={1}>
-          <aside className="rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft sm:p-8">
-            <h2 className="font-serif text-2xl font-semibold text-ink-900">
+          <aside className="glass-dark rounded-[2rem] p-6 sm:p-10">
+            <h2 className="font-serif text-3xl font-light text-foreground">
               What to expect
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-ink-500">
+            <p className="mt-3 text-sm font-light leading-relaxed text-muted-foreground">
               A calm, considered process — no pressure, just clarity.
             </p>
-            <ul className="mt-6 space-y-6">
+            <ul className="mt-8 space-y-8">
               {EXPECTATIONS.map(({ icon: Icon, title, description }) => (
-                <li key={title} className="flex gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink-900/5 text-ink-800">
+                <li key={title} className="flex gap-5">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10 text-foreground">
                     <Icon className="h-5 w-5" aria-hidden />
                   </span>
                   <div>
-                    <p className="text-sm font-medium text-ink-900">{title}</p>
-                    <p className="mt-1 text-sm leading-relaxed text-ink-600">
+                    <p className="text-sm font-medium text-foreground">{title}</p>
+                    <p className="mt-2 text-sm font-light leading-relaxed text-muted-foreground">
                       {description}
                     </p>
                   </div>

@@ -21,7 +21,7 @@ export default function AdminDesignRequestDetailPage() {
   }, [params?.id]);
 
   if (!data) {
-    return <p className="text-sm text-ink-500">Loading request...</p>;
+    return <p className="text-sm text-muted-foreground">Loading request...</p>;
   }
 
   const request = data.designRequest as Record<string, unknown>;
@@ -32,58 +32,58 @@ export default function AdminDesignRequestDetailPage() {
       <AdminPageHeader title={`Design Request ${String(request.id ?? "")}`} description="Review request details and AI generation outcomes." />
 
       <section className="grid gap-4 lg:grid-cols-2">
-        <article className="rounded-2xl border border-sand-200 bg-white p-5">
-          <h3 className="text-base font-semibold text-ink-900">Request Summary</h3>
-          <dl className="mt-3 grid grid-cols-2 gap-3 text-sm text-ink-700">
+        <article className="rounded-2xl border border-white/10 bg-base p-5">
+          <h3 className="text-base font-semibold text-foreground">Request Summary</h3>
+          <dl className="mt-3 grid grid-cols-2 gap-3 text-sm text-foreground/90">
             <div>
-              <dt className="text-xs uppercase text-ink-500">Status</dt>
+              <dt className="text-xs uppercase text-muted-foreground">Status</dt>
               <dd>
                 <AdminStatusBadge status={String(request.status ?? "DRAFT")} />
               </dd>
             </div>
             <div>
-              <dt className="text-xs uppercase text-ink-500">Design Type</dt>
+              <dt className="text-xs uppercase text-muted-foreground">Design Type</dt>
               <dd>{String(request.designType ?? "-")}</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase text-ink-500">Space Type</dt>
+              <dt className="text-xs uppercase text-muted-foreground">Space Type</dt>
               <dd>{String(request.spaceType ?? "-")}</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase text-ink-500">Style</dt>
+              <dt className="text-xs uppercase text-muted-foreground">Style</dt>
               <dd>{String(request.style ?? "-")}</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase text-ink-500">Location</dt>
+              <dt className="text-xs uppercase text-muted-foreground">Location</dt>
               <dd>{String(request.city ?? "")}, {String(request.country ?? "")}</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase text-ink-500">Budget</dt>
+              <dt className="text-xs uppercase text-muted-foreground">Budget</dt>
               <dd>${Math.round(Number(request.budget ?? 0)).toLocaleString()}</dd>
             </div>
           </dl>
-          <p className="mt-4 text-sm text-ink-700">{String(request.description ?? "No description.")}</p>
+          <p className="mt-4 text-sm text-foreground/90">{String(request.description ?? "No description.")}</p>
         </article>
 
         <AdminImagePreview src={typeof request.uploadedImageUrl === "string" ? request.uploadedImageUrl : null} alt="Uploaded reference" />
       </section>
 
-      <section className="rounded-2xl border border-sand-200 bg-white p-5">
-        <h3 className="text-base font-semibold text-ink-900">Generated Designs ({generatedDesigns.length})</h3>
+      <section className="rounded-2xl border border-white/10 bg-base p-5">
+        <h3 className="text-base font-semibold text-foreground">Generated Designs ({generatedDesigns.length})</h3>
         {generatedDesigns.length ? (
-          <ul className="mt-3 space-y-3 text-sm text-ink-700">
+          <ul className="mt-3 space-y-3 text-sm text-foreground/90">
             {generatedDesigns.map((design) => {
               const item = design as Record<string, unknown>;
               return (
-                <li key={String(item.id)} className="rounded-xl border border-sand-100 bg-sand-50 p-3">
-                  <p className="font-medium text-ink-900">{String(item.title ?? "Untitled")}</p>
-                  <p className="text-xs text-ink-500">{String(item.style ?? "")} · ${Math.round(Number(item.estimatedTotal ?? 0)).toLocaleString()}</p>
+                <li key={String(item.id)} className="rounded-xl border border-sand-100 bg-void p-3">
+                  <p className="font-medium text-foreground">{String(item.title ?? "Untitled")}</p>
+                  <p className="text-xs text-muted-foreground">{String(item.style ?? "")} · ${Math.round(Number(item.estimatedTotal ?? 0)).toLocaleString()}</p>
                 </li>
               );
             })}
           </ul>
         ) : (
-          <p className="mt-2 text-sm text-ink-500">No generated designs yet.</p>
+          <p className="mt-2 text-sm text-muted-foreground">No generated designs yet.</p>
         )}
       </section>
 
@@ -99,11 +99,11 @@ export default function AdminDesignRequestDetailPage() {
       </section>
 
       {data.selectedDesign ? (
-        <section className="rounded-2xl border border-sand-200 bg-white p-5">
-          <h3 className="text-base font-semibold text-ink-900">Selected Design Lead</h3>
-          <p className="mt-2 text-sm text-ink-700">Customer: {String(data.selectedDesign.customerName ?? "-")}</p>
-          <p className="text-sm text-ink-700">Email: {String(data.selectedDesign.customerEmail ?? "-")}</p>
-          <Link href="/admin/selected-designs" className="mt-3 inline-flex text-sm font-medium text-gold-dark hover:text-ink-900">
+        <section className="rounded-2xl border border-white/10 bg-base p-5">
+          <h3 className="text-base font-semibold text-foreground">Selected Design Lead</h3>
+          <p className="mt-2 text-sm text-foreground/90">Customer: {String(data.selectedDesign.customerName ?? "-")}</p>
+          <p className="text-sm text-foreground/90">Email: {String(data.selectedDesign.customerEmail ?? "-")}</p>
+          <Link href="/admin/selected-designs" className="mt-3 inline-flex text-sm font-medium text-gold-dark hover:text-foreground">
             Open leads list
           </Link>
         </section>

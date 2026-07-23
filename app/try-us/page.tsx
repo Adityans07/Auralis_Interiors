@@ -11,37 +11,40 @@ export const metadata: Metadata = {
 
 export default function TryUsPage() {
   return (
-    <>
+    <div className="bg-void min-h-screen">
       {/* Header */}
-      <section className="relative overflow-hidden bg-ink-950 text-sand-50">
-        <div className="pointer-events-none absolute inset-0 bg-luxury-radial opacity-80" />
-        <div className="pointer-events-none absolute -right-16 top-0 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
-        <div className="container-wide relative py-16 md:py-20">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-gold-light">
+      <section className="relative overflow-hidden bg-void text-foreground pt-20">
+        <div className="pointer-events-none absolute inset-0 bg-dark-gradient opacity-80 mix-blend-multiply" />
+        <div className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-gold/10 blur-[100px]" />
+        <div className="container-wide relative py-16 md:py-24 flex flex-col items-center text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-gold/20 bg-gold/5 px-6 py-2 text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
             <Sparkles className="h-3.5 w-3.5" /> AI Design Studio
           </span>
-          <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-tight text-sand-50 sm:text-5xl">
-            Try AI Interior Design
+          <h1 className="mt-8 font-serif text-display-medium font-light leading-[1.1] text-foreground">
+            Reimagine your <br />
+            <span className="italic text-muted-foreground">space</span>
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-sand-100/75">
+          <p className="mt-6 max-w-2xl text-lg font-light leading-relaxed text-muted-foreground">
             Upload your space, set your budget, select your items, and receive
-            personalized design concepts — matched to products available near you.
+            cinematic, personalized design concepts in seconds.
           </p>
         </div>
       </section>
 
       {/* Experience */}
-      <section className="container-wide py-12 md:py-16">
-        <div className="mx-auto max-w-4xl">
+      <section className="container-wide pb-24">
+        <div className="mx-auto max-w-5xl">
           <Suspense
             fallback={
-              <div className="py-24 text-center text-ink-400">Loading the studio…</div>
+              <div className="py-32 text-center text-muted-foreground font-light tracking-widest uppercase text-sm">
+                Initializing Studio...
+              </div>
             }
           >
             <TryUsExperience />
           </Suspense>
         </div>
       </section>
-    </>
+    </div>
   );
 }

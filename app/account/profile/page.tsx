@@ -11,7 +11,7 @@ export default function ProfilePage() {
         description="Keep your contact details and design preferences up to date."
       />
 
-      <div className="rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft sm:p-8">
+      <div className="rounded-3xl border border-white/10 bg-base/5 p-6 shadow-glow sm:p-8">
         <ProfileForm />
       </div>
     </div>

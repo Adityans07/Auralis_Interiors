@@ -80,7 +80,7 @@ export function BlogList() {
         <Reveal>
           <Link
             href={`/blogs/${featured.slug}`}
-            className="group grid overflow-hidden rounded-3xl border border-sand-200 bg-white/80 shadow-soft focus-ring md:grid-cols-2"
+            className="group grid overflow-hidden rounded-[2rem] glass-dark focus-ring md:grid-cols-2"
           >
             <div className="relative aspect-[16/10] overflow-hidden md:aspect-auto md:h-full">
               <Image
@@ -88,26 +88,26 @@ export function BlogList() {
                 alt={featured.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover transition-transform duration-700 group-hover:scale-105 grayscale hover:grayscale-0"
                 priority
               />
-              <span className="absolute left-4 top-4 rounded-full bg-ink-950/80 px-3 py-1 text-xs font-medium text-sand-50 backdrop-blur">
+              <span className="absolute left-6 top-6 rounded-full border border-white/10 bg-black/50 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-white backdrop-blur">
                 {featured.category}
               </span>
             </div>
-            <div className="flex flex-col justify-center p-8 md:p-12">
-              <span className="eyebrow mb-4">Featured</span>
-              <h3 className="text-2xl font-semibold leading-tight text-ink-900 sm:text-3xl">
+            <div className="flex flex-col justify-center p-8 md:p-16">
+              <span className="eyebrow mb-6">Featured</span>
+              <h3 className="font-serif text-3xl font-light leading-tight text-foreground sm:text-5xl">
                 {featured.title}
               </h3>
-              <p className="mt-4 text-base leading-relaxed text-ink-500">
+              <p className="mt-6 text-lg font-light leading-relaxed text-muted-foreground">
                 {featured.excerpt}
               </p>
-              <p className="mt-6 text-xs text-ink-400">
+              <p className="mt-8 text-[10px] uppercase tracking-widest text-muted-foreground/80">
                 {featured.author} · {formatDate(featured.date)} ·{" "}
                 {featured.readTime}
               </p>
-              <span className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-gold-dark transition-colors group-hover:text-ink-900">
+              <span className="mt-8 inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-widest text-gold transition-colors group-hover:text-gold-light">
                 Read article
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>
@@ -117,7 +117,7 @@ export function BlogList() {
       </section>
 
       {/* Filters */}
-      <section className="container-wide mt-16 md:mt-20">
+      <section className="container-wide mt-16 md:mt-24">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => {
@@ -129,10 +129,10 @@ export function BlogList() {
                   onClick={() => setCategory(cat)}
                   aria-pressed={active}
                   className={cn(
-                    "focus-ring rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                    "focus-ring rounded-full border px-5 py-2.5 text-[11px] font-medium uppercase tracking-widest transition-colors",
                     active
-                      ? "border-ink-900 bg-ink-900 text-sand-50"
-                      : "border-sand-200 bg-white text-ink-600 hover:border-ink-900/40 hover:text-ink-900"
+                      ? "border-white/20 bg-white/10 text-foreground"
+                      : "border-white/5 bg-white/5 text-muted-foreground hover:border-white/20 hover:text-foreground"
                   )}
                 >
                   {cat}
@@ -141,22 +141,22 @@ export function BlogList() {
             })}
           </div>
 
-          <label className="relative w-full lg:w-72">
+          <label className="relative w-full lg:w-80">
             <span className="sr-only">Search articles</span>
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
+            <Search className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/50" />
             <input
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search articles"
-              className="h-11 w-full rounded-full border border-sand-200 bg-white pl-10 pr-4 text-sm text-ink-800 focus-ring placeholder:text-ink-400"
+              className="h-12 w-full rounded-full border border-white/5 bg-white/5 pl-12 pr-5 text-sm font-light text-foreground focus-ring placeholder:text-muted-foreground/50 focus:border-gold/50 transition-colors"
             />
           </label>
         </div>
 
         {/* Grid */}
         {filtered.length > 0 ? (
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((post, i) => (
               <BlogCard key={post.id} post={post} index={i} />
             ))}
@@ -165,9 +165,9 @@ export function BlogList() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-16 rounded-3xl border border-dashed border-sand-300 bg-white/60 py-20 text-center"
+            className="mt-16 rounded-[2rem] border border-dashed border-white/10 bg-white/5 py-24 text-center"
           >
-            <p className="text-base text-ink-500">
+            <p className="text-base font-light text-muted-foreground">
               No articles match your search.
             </p>
           </motion.div>
@@ -175,19 +175,18 @@ export function BlogList() {
       </section>
 
       {/* Closing CTA */}
-      <section className="container-wide py-20 md:py-28">
-        <Reveal className="relative overflow-hidden rounded-4xl bg-ink-950 px-6 py-16 text-center text-sand-50 md:px-16 md:py-20">
-          <div className="pointer-events-none absolute inset-0 bg-luxury-radial opacity-80" />
-          <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
+      <section className="container-wide py-24 md:py-32">
+        <Reveal className="glass-dark relative overflow-hidden rounded-[3rem] px-6 py-20 text-center md:px-16 md:py-28">
+          <div className="pointer-events-none absolute inset-0 bg-dark-gradient mix-blend-screen opacity-20" />
           <div className="relative mx-auto max-w-2xl">
-            <h2 className="text-3xl font-semibold text-sand-50 sm:text-4xl md:text-5xl">
+            <h2 className="font-serif text-4xl font-light text-foreground md:text-6xl">
               Stop reading, start designing
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-lg text-sand-100/75">
+            <p className="mx-auto mt-6 max-w-xl text-lg font-light text-muted-foreground">
               Turn inspiration into a real plan. Your first set of personalized
               concepts is completely free — no card required.
             </p>
-            <div className="mt-9 flex justify-center">
+            <div className="mt-10 flex justify-center">
               <AnimatedCTAButton label="Try Us — It's Free" />
             </div>
           </div>

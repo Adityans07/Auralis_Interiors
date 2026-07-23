@@ -9,17 +9,17 @@ export function AdminPriceBreakdown({
 }) {
   const total = items.reduce((sum, item) => sum + item.amount, 0);
   return (
-    <section className="rounded-2xl border border-sand-200 bg-white p-5">
-      <h3 className="text-base font-semibold text-ink-900">Price Breakdown</h3>
+    <section className="rounded-2xl border border-white/10 bg-base p-5">
+      <h3 className="text-base font-semibold text-foreground">Price Breakdown</h3>
       <ul className="mt-3 space-y-2 text-sm">
         {items.map((item) => (
-          <li key={item.label} className="flex items-center justify-between text-ink-700">
+          <li key={item.label} className="flex items-center justify-between text-foreground/90">
             <span>{item.label}</span>
             <span>{formatCurrency(item.amount, currency)}</span>
           </li>
         ))}
       </ul>
-      <div className="mt-4 flex items-center justify-between border-t border-sand-200 pt-3 text-sm font-semibold text-ink-900">
+      <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-sm font-semibold text-foreground">
         <span>Total</span>
         <span>{formatCurrency(total, currency)}</span>
       </div>

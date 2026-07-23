@@ -18,7 +18,7 @@ export default function AdminSettingsPage() {
     <div>
       <AdminPageHeader title="Admin Settings" description="Business and portal configuration." />
       <form
-        className="grid gap-4 rounded-2xl border border-sand-200 bg-white p-5 sm:grid-cols-2"
+        className="grid gap-4 rounded-2xl border border-white/10 bg-base p-5 sm:grid-cols-2"
         onSubmit={async (event) => {
           event.preventDefault();
           setSaving(true);
@@ -40,17 +40,17 @@ export default function AdminSettingsPage() {
           ["bookingAvailabilityNote", "Booking Note"],
           ["aiGenerationMode", "AI Generation Mode"],
         ].map(([key, label]) => (
-          <label key={key} className="text-sm text-ink-700">
+          <label key={key} className="text-sm text-foreground/90">
             {label}
             <input
               value={String((settings as Record<string, unknown>)[key] ?? "")}
               onChange={(event) => setSettings((current) => ({ ...current, [key]: event.target.value }))}
-              className="mt-1 h-10 w-full rounded-xl border border-sand-200 px-3 focus-ring"
+              className="mt-1 h-10 w-full rounded-xl border border-white/10 px-3 focus-ring"
             />
           </label>
         ))}
 
-        <label className="inline-flex items-center gap-2 text-sm text-ink-700">
+        <label className="inline-flex items-center gap-2 text-sm text-foreground/90">
           <input
             type="checkbox"
             checked={Boolean(settings.freeGenerationEnabled)}
@@ -60,7 +60,7 @@ export default function AdminSettingsPage() {
           Free generation enabled
         </label>
 
-        <label className="inline-flex items-center gap-2 text-sm text-ink-700">
+        <label className="inline-flex items-center gap-2 text-sm text-foreground/90">
           <input
             type="checkbox"
             checked={Boolean(settings.maintenanceMode)}

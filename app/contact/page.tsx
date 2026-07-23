@@ -60,7 +60,7 @@ export default function ContactPage() {
     <div className="container-wide py-20 md:py-28">
       <SectionHeading
         eyebrow="Contact"
-        title="Let's design something remarkable"
+        title="Let's design something remarkable."
         description="Whether you have a question, a space, or a bold idea — we'd love to hear from you."
       />
 
@@ -76,23 +76,23 @@ export default function ContactPage() {
             {CONTACT_DETAILS.map(({ icon: Icon, label, value, href }) => (
               <div
                 key={label}
-                className="rounded-3xl border border-sand-200 bg-white/80 p-5 shadow-soft"
+                className="glass-dark rounded-3xl p-5"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-900/5 text-ink-800">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-foreground">
                   <Icon className="h-5 w-5" aria-hidden />
                 </span>
-                <p className="mt-4 text-xs uppercase tracking-widest text-ink-400">
+                <p className="mt-4 text-xs uppercase tracking-widest text-muted-foreground">
                   {label}
                 </p>
                 {href ? (
                   <a
                     href={href}
-                    className="focus-ring mt-1 block text-sm font-medium text-ink-800 transition-colors hover:text-gold-dark"
+                    className="focus-ring mt-2 block text-sm font-light text-foreground transition-colors hover:text-gold-light"
                   >
                     {value}
                   </a>
                 ) : (
-                  <p className="mt-1 text-sm font-medium text-ink-800">
+                  <p className="mt-2 text-sm font-light text-foreground">
                     {value}
                   </p>
                 )}
@@ -101,45 +101,45 @@ export default function ContactPage() {
           </div>
 
           {/* Map placeholder */}
-          <div className="relative aspect-video overflow-hidden rounded-3xl border border-sand-200 bg-gradient-to-br from-sand-100 via-sand-50 to-sand-200 shadow-soft">
+          <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-white/5 bg-void shadow-glow">
             <div
               aria-hidden
-              className="absolute inset-0 opacity-40 [background-image:linear-gradient(to_right,theme(colors.sand.300)_1px,transparent_1px),linear-gradient(to_bottom,theme(colors.sand.300)_1px,transparent_1px)] [background-size:32px_32px]"
+              className="absolute inset-0 opacity-20 bg-dark-gradient mix-blend-screen"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-gold-dark shadow-soft">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold-dark shadow-glow">
                 <MapPin className="h-6 w-6" aria-hidden />
               </span>
-              <p className="mt-3 text-sm font-medium text-ink-700">
+              <p className="mt-4 text-sm font-medium text-foreground">
                 Map preview
               </p>
-              <p className="mt-1 text-xs text-ink-500">{BRAND.address}</p>
+              <p className="mt-1 text-xs font-light text-muted-foreground">{BRAND.address}</p>
             </div>
           </div>
         </Reveal>
       </div>
 
       {/* FAQ */}
-      <div className="mt-20 md:mt-28">
+      <div className="mt-24 md:mt-32">
         <SectionHeading
           eyebrow="FAQ"
           title="Answers to common questions"
           description="A few things clients often ask before reaching out."
         />
-        <div className="mx-auto mt-10 max-w-3xl space-y-3">
+        <div className="mx-auto mt-12 max-w-3xl space-y-4">
           {FAQS.map((faq, i) => (
             <Reveal key={faq.q} index={i} as="div">
-              <details className="group rounded-3xl border border-sand-200 bg-white/80 p-5 shadow-soft [&_summary::-webkit-details-marker]:hidden">
-                <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium text-ink-900">
+              <details className="group rounded-3xl glass-dark p-6 [&_summary::-webkit-details-marker]:hidden">
+                <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium text-foreground">
                   {faq.q}
                   <span
                     aria-hidden
-                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-sand-300 text-ink-500 transition-transform duration-300 group-open:rotate-45"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/20 text-muted-foreground transition-transform duration-300 group-open:rotate-45"
                   >
                     +
                   </span>
                 </summary>
-                <p className="mt-3 text-sm leading-relaxed text-ink-600">
+                <p className="mt-4 text-sm font-light leading-relaxed text-muted-foreground">
                   {faq.a}
                 </p>
               </details>

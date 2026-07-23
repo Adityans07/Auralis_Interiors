@@ -31,24 +31,24 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
+        "fixed top-0 z-50 w-full transition-all duration-500",
         scrolled
-          ? "border-b border-sand-200/70 bg-sand-50/80 backdrop-blur-xl"
+          ? "border-b border-white/10 bg-base/60 backdrop-blur-2xl"
           : "bg-transparent"
       )}
     >
       <nav className="container-wide flex h-20 items-center justify-between">
         <Link href="/" className="focus-ring flex flex-col leading-none">
-          <span className="font-serif text-xl font-semibold text-ink-900">
+          <span className="font-serif text-2xl font-light text-foreground">
             {BRAND.name}
           </span>
-          <span className="text-[0.65rem] uppercase tracking-[0.25em] text-gold-dark">
+          <span className="mt-1 text-[0.55rem] uppercase tracking-[0.3em] text-gold">
             AI Design Studio
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-2 lg:flex">
           {NAV_LINKS.map((link) => {
             const active =
               link.href === "/"
@@ -59,10 +59,10 @@ export function Navbar() {
                 <Link
                   href={link.href}
                   className={cn(
-                    "focus-ring rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                    "focus-ring rounded-full px-5 py-2 text-xs font-semibold uppercase tracking-[0.1em] transition-all duration-300",
                     active
-                      ? "text-ink-900"
-                      : "text-ink-500 hover:text-ink-900"
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {link.label}
@@ -72,23 +72,23 @@ export function Navbar() {
           })}
         </ul>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-4 lg:flex">
           {isAuthenticated ? (
             <UserDropdown />
           ) : (
             <>
               <Link
                 href="/login"
-                className="focus-ring rounded-full px-4 py-2 text-sm font-medium text-ink-600 transition-colors hover:text-ink-900"
+                className="focus-ring rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
               >
                 Login
               </Link>
-              <Button href="/signup" variant="outline" size="sm">
+              <Button href="/signup" variant="outline" size="sm" className="rounded-full uppercase tracking-widest text-xs h-9">
                 Sign Up
               </Button>
             </>
           )}
-          <AnimatedCTAButton className="h-11 px-6 text-sm" />
+          <AnimatedCTAButton className="h-9 px-6 text-xs uppercase tracking-widest rounded-full" />
         </div>
 
         {/* Mobile toggle */}
@@ -97,7 +97,7 @@ export function Navbar() {
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className="focus-ring rounded-full p-2 text-ink-900 lg:hidden"
+          className="focus-ring rounded-full p-2 text-foreground lg:hidden"
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -110,10 +110,10 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-sand-200/70 bg-sand-50/95 backdrop-blur-xl lg:hidden"
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-white/10 bg-base/95 backdrop-blur-2xl lg:hidden"
           >
-            <ul className="container-wide flex flex-col gap-1 py-4">
+            <ul className="container-wide flex flex-col gap-2 py-6">
               {NAV_LINKS.map((link) => {
                 const active =
                   link.href === "/"
@@ -124,10 +124,10 @@ export function Navbar() {
                     <Link
                       href={link.href}
                       className={cn(
-                        "block rounded-2xl px-4 py-3 text-base font-medium transition-colors",
+                        "block rounded-2xl px-4 py-3 text-lg font-serif transition-colors",
                         active
-                          ? "bg-white text-ink-900"
-                          : "text-ink-600 hover:bg-white/60"
+                          ? "bg-base/10 text-foreground"
+                          : "text-muted-foreground hover:bg-base/5 hover:text-foreground"
                       )}
                     >
                       {link.label}
@@ -135,12 +135,12 @@ export function Navbar() {
                   </li>
                 );
               })}
-              <li className="mt-2 px-1">
-                <AnimatedCTAButton className="w-full justify-center" />
+              <li className="mt-4 px-1">
+                <AnimatedCTAButton className="w-full justify-center py-6 text-sm" />
               </li>
 
               {/* Auth section */}
-              <li className="mt-3 border-t border-sand-200 pt-3">
+              <li className="mt-6 border-t border-white/10 pt-6">
                 <MobileAuthLinks
                   isAuthenticated={isAuthenticated}
                   onNavigate={() => setOpen(false)}
@@ -186,7 +186,7 @@ function MobileAuthLinks({
             key={l.href}
             href={l.href}
             onClick={onNavigate}
-            className="block rounded-2xl px-4 py-3 text-base font-medium text-ink-600 transition-colors hover:bg-white/60"
+            className="block rounded-2xl px-4 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-base/60"
           >
             {l.label}
           </Link>

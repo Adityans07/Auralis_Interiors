@@ -13,7 +13,7 @@ const STATUS_CONFIG: Record<
 > = {
   draft: {
     label: "Draft",
-    className: "bg-sand-100 text-ink-600 border-sand-200",
+    className: "bg-white/10 text-muted-foreground border-white/10",
   },
   generating: {
     label: "Generating",
@@ -52,8 +52,8 @@ export function DesignHistoryCard({ request }: DesignHistoryCardProps) {
   const currency = primaryDesign?.currency ?? request.currency;
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-3xl border border-sand-200 bg-white/80 shadow-soft">
-      <div className="relative aspect-[16/10] overflow-hidden bg-sand-100">
+    <article className="flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-base/5 shadow-glow">
+      <div className="relative aspect-[16/10] overflow-hidden bg-white/10">
         {previewImage ? (
           <Image
             src={previewImage}
@@ -79,26 +79,26 @@ export function DesignHistoryCard({ request }: DesignHistoryCardProps) {
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <p className="text-xs font-medium uppercase tracking-[0.15em] text-ink-400">
+        <p className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground/80">
           {request.id}
         </p>
-        <h3 className="mt-1 font-serif text-lg font-semibold text-ink-900">
+        <h3 className="mt-1 font-serif text-lg font-semibold text-foreground">
           {primaryDesign?.title ?? `${humanize(request.spaceType)} concept`}
         </h3>
-        <p className="mt-1 text-sm text-ink-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           {humanize(request.spaceType)} · {humanize(request.style)}
         </p>
 
         <div className="mt-3 flex items-baseline gap-2">
           {primaryDesign ? (
             <>
-              <span className="font-serif text-xl font-semibold text-ink-900">
+              <span className="font-serif text-xl font-semibold text-foreground">
                 {formatCurrency(primaryDesign.estimatedTotal, currency)}
               </span>
-              <span className="text-xs text-ink-400">estimated total</span>
+              <span className="text-xs text-muted-foreground/80">estimated total</span>
             </>
           ) : (
-            <span className="text-sm text-ink-400">No concepts generated yet</span>
+            <span className="text-sm text-muted-foreground/80">No concepts generated yet</span>
           )}
         </div>
 
@@ -108,7 +108,7 @@ export function DesignHistoryCard({ request }: DesignHistoryCardProps) {
           </Button>
           <Link
             href={`/booking?design=${encodeURIComponent(request.id)}`}
-            className="focus-ring rounded-full text-sm font-medium text-ink-600 underline-offset-4 hover:text-ink-900 hover:underline"
+            className="focus-ring rounded-full text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             Book consultation
           </Link>

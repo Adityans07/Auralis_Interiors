@@ -37,16 +37,16 @@ export function PaymentHistoryCard({ payment }: PaymentHistoryCardProps) {
   const isFree = payment.amount === 0 || payment.status === "free";
 
   return (
-    <div className="flex flex-col gap-4 rounded-3xl border border-sand-200 bg-white/80 p-5 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-base/5 p-5 shadow-glow sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sand-100 text-ink-600">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-muted-foreground">
           <Receipt className="h-5 w-5" aria-hidden />
         </span>
         <div className="min-w-0">
-          <p className="text-sm font-medium text-ink-900">
+          <p className="text-sm font-medium text-foreground">
             {payment.description}
           </p>
-          <p className="mt-0.5 text-xs text-ink-400">
+          <p className="mt-0.5 text-xs text-muted-foreground/80">
             {payment.id} · {formatDate(payment.date)}
           </p>
         </div>
@@ -61,7 +61,7 @@ export function PaymentHistoryCard({ payment }: PaymentHistoryCardProps) {
         >
           {status.label}
         </span>
-        <span className="w-20 text-right font-serif text-lg font-semibold text-ink-900 tabular-nums">
+        <span className="w-20 text-right font-serif text-lg font-semibold text-foreground tabular-nums">
           {isFree ? "Free" : formatCurrency(payment.amount, payment.currency)}
         </span>
         <button
@@ -69,7 +69,7 @@ export function PaymentHistoryCard({ payment }: PaymentHistoryCardProps) {
           onClick={() =>
             toast("Invoices are not available in this demo.", "info")
           }
-          className="focus-ring inline-flex items-center gap-1.5 rounded-full border border-sand-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-600 transition-colors hover:text-ink-900"
+          className="focus-ring inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-base px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <FileText className="h-3.5 w-3.5" aria-hidden />
           Invoice

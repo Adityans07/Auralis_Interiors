@@ -18,7 +18,7 @@ export default function ResetPasswordPage() {
           Back to{" "}
           <Link
             href="/login"
-            className="font-medium text-gold-dark hover:text-ink-900"
+            className="font-medium text-gold-dark hover:text-foreground"
           >
             Log in
           </Link>

@@ -16,13 +16,13 @@ export function PriceBreakdown({ products, currency, budget }: PriceBreakdownPro
   const overBudget = budget && budget > 0 ? subtotal > budget : false;
 
   return (
-    <div className="rounded-2xl border border-sand-200 bg-white/70 p-4">
+    <div className="rounded-2xl border border-white/10 bg-void/5 p-4">
       <div className="space-y-2 text-sm">
         {included.length === 0 ? (
-          <p className="text-ink-400">No products included yet.</p>
+          <p className="text-muted-foreground/80">No products included yet.</p>
         ) : (
           included.map((p) => (
-            <div key={p.id} className="flex items-center justify-between text-ink-500">
+            <div key={p.id} className="flex items-center justify-between text-muted-foreground">
               <span className="truncate pr-3">
                 {p.name}
                 {p.quantity > 1 ? ` × ${p.quantity}` : ""}
@@ -35,11 +35,11 @@ export function PriceBreakdown({ products, currency, budget }: PriceBreakdownPro
         )}
       </div>
 
-      <div className="mt-3 flex items-center justify-between border-t border-sand-200 pt-3">
-        <span className="text-sm font-medium text-ink-700">
+      <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
+        <span className="text-sm font-medium text-foreground/90">
           Total ({included.length} item{included.length === 1 ? "" : "s"})
         </span>
-        <span className="font-serif text-xl font-semibold text-ink-900 tabular-nums">
+        <span className="font-serif text-xl font-semibold text-foreground tabular-nums">
           {formatCurrency(subtotal, currency)}
         </span>
       </div>

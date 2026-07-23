@@ -37,14 +37,14 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     // Fallback shown momentarily while redirecting (also works if JS-nav fails).
     return (
       <div className="container-wide flex min-h-[60vh] items-center justify-center py-20">
-        <div className="glass max-w-md rounded-4xl p-10 text-center shadow-soft">
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-900 text-gold-light">
+        <div className="glass max-w-md rounded-4xl p-10 text-center shadow-glow">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-gold-light">
             <Lock className="h-6 w-6" />
           </span>
-          <h1 className="mt-5 text-2xl font-semibold text-ink-900">
+          <h1 className="mt-5 text-2xl font-semibold text-foreground">
             Login required
           </h1>
-          <p className="mt-2 text-sm text-ink-500">
+          <p className="mt-2 text-sm text-muted-foreground">
             Please log in to view your account. We&apos;ll bring you right back
             here.
           </p>
@@ -58,7 +58,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           </div>
           <Link
             href="/"
-            className="mt-4 inline-block text-sm text-ink-400 hover:text-ink-700"
+            className="mt-4 inline-block text-sm text-muted-foreground/80 hover:text-foreground/90"
           >
             Back to home
           </Link>

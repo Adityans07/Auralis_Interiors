@@ -47,7 +47,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-sand-100/70">
+    <div className="min-h-screen bg-void">
       <div className="mx-auto grid max-w-[1500px] gap-4 p-4 lg:grid-cols-[240px_1fr]">
         <div className="hidden lg:block">
           <AdminSidebar />
@@ -64,7 +64,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                     href={link.href}
                     className={cn(
                       "whitespace-nowrap rounded-full border px-3 py-1.5 text-xs",
-                      active ? "border-ink-900 bg-ink-900 text-sand-50" : "border-sand-200 bg-white text-ink-600"
+                      active ? "border-white/20 bg-base/10 text-foreground" : "border-white/10 bg-base text-muted-foreground"
                     )}
                   >
                     {link.label}

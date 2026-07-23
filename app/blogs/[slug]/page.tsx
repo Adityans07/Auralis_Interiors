@@ -102,42 +102,42 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       <header className="container-wide pt-16 md:pt-24">
         <Link
           href="/blogs"
-          className="focus-ring inline-flex items-center gap-1.5 rounded text-sm font-medium text-ink-500 transition-colors hover:text-ink-900"
+          className="focus-ring inline-flex items-center gap-1.5 rounded text-[11px] font-medium uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Journal
         </Link>
 
-        <div className="mt-8 max-w-3xl">
-          <span className="inline-flex rounded-full bg-ink-950/80 px-3 py-1 text-xs font-medium text-sand-50">
+        <div className="mt-8 max-w-4xl">
+          <span className="inline-flex rounded-full border border-white/10 bg-black/50 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-white backdrop-blur">
             {post.category}
           </span>
-          <h1 className="mt-5 text-3xl font-semibold leading-tight text-ink-900 sm:text-4xl md:text-5xl">
+          <h1 className="mt-8 font-serif text-4xl font-light leading-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
             {post.title}
           </h1>
-          <p className="mt-5 text-lg leading-relaxed text-ink-500">
+          <p className="mt-8 text-xl font-light leading-relaxed text-muted-foreground md:text-2xl">
             {post.excerpt}
           </p>
 
-          <div className="mt-8 flex items-center gap-4">
-            <span className="relative h-11 w-11 overflow-hidden rounded-full border border-sand-200">
+          <div className="mt-12 flex items-center gap-4">
+            <span className="relative h-14 w-14 overflow-hidden rounded-full border border-white/10">
               <Image
                 src={authorAvatar}
                 alt={`${post.author} portrait`}
                 fill
-                sizes="44px"
-                className="object-cover"
+                sizes="56px"
+                className="object-cover grayscale"
               />
             </span>
             <div className="text-sm">
-              <p className="font-medium text-ink-900">
+              <p className="font-medium text-foreground">
                 {post.author}
-                <span className="font-normal text-ink-400">
+                <span className="font-light text-muted-foreground/80">
                   {" "}
                   · {post.authorRole}
                 </span>
               </p>
-              <p className="text-ink-400">
+              <p className="text-xs font-light text-muted-foreground/80">
                 {formatDate(post.date)} · {post.readTime}
               </p>
             </div>
@@ -146,22 +146,22 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       </header>
 
       {/* Cover */}
-      <div className="container-wide mt-10">
-        <div className="relative aspect-[16/9] overflow-hidden rounded-3xl border border-sand-200 shadow-soft">
+      <div className="container-wide mt-16">
+        <div className="relative aspect-[16/9] overflow-hidden rounded-[3rem] border border-white/5 shadow-glow">
           <Image
             src={post.coverImage}
             alt={post.title}
             fill
             sizes="(max-width: 1024px) 100vw, 1024px"
-            className="object-cover"
+            className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
             priority
           />
         </div>
       </div>
 
       {/* Body */}
-      <div className="container-wide mt-12 md:mt-16">
-        <div className="mx-auto max-w-3xl space-y-6 text-base leading-relaxed text-ink-700 sm:text-lg">
+      <div className="container-wide mt-16 md:mt-24">
+        <div className="mx-auto max-w-3xl space-y-8 text-lg font-light leading-relaxed text-foreground/90 sm:text-xl">
           {post.content.map((paragraph, i) => (
             <p key={i}>{paragraph}</p>
           ))}
@@ -170,11 +170,11 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
       {/* Related reading */}
       {related.length > 0 && (
-        <section className="container-wide mt-24">
-          <h2 className="text-2xl font-semibold text-ink-900 sm:text-3xl">
+        <section className="container-wide mt-32">
+          <h2 className="font-serif text-3xl font-light text-foreground sm:text-4xl">
             Related reading
           </h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
             {related.map((rel, i) => (
               <BlogCard key={rel.id} post={rel} index={i} />
             ))}
@@ -183,25 +183,24 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       )}
 
       {/* Closing CTA */}
-      <section className="container-wide py-20 md:py-28">
-        <Reveal className="relative overflow-hidden rounded-4xl bg-ink-950 px-6 py-16 text-center text-sand-50 md:px-16 md:py-20">
-          <div className="pointer-events-none absolute inset-0 bg-luxury-radial opacity-80" />
-          <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
+      <section className="container-wide py-24 md:py-32">
+        <Reveal className="glass-dark relative overflow-hidden rounded-[3rem] px-6 py-20 text-center md:px-16 md:py-28">
+          <div className="pointer-events-none absolute inset-0 bg-dark-gradient mix-blend-screen opacity-20" />
           <div className="relative mx-auto max-w-2xl">
-            <h2 className="text-3xl font-semibold text-sand-50 sm:text-4xl md:text-5xl">
+            <h2 className="font-serif text-4xl font-light text-foreground md:text-6xl">
               Ready to see your space reimagined?
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-lg text-sand-100/75">
+            <p className="mx-auto mt-6 max-w-xl text-lg font-light text-muted-foreground">
               Bring these ideas to life with a design tailored to your room,
               your budget, and your location. Your first generation is free.
             </p>
-            <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <AnimatedCTAButton label="Try Us — It's Free" />
               <Button
                 href="/booking"
                 variant="outline"
                 size="lg"
-                className="border-sand-50/30 text-sand-50 hover:border-sand-50/60 hover:bg-white/10"
+                className="border-white/20 text-foreground hover:border-white/40 hover:bg-white/10"
               >
                 Book a consultation
               </Button>

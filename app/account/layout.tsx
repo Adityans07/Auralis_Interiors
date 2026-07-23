@@ -12,7 +12,7 @@ export default function AccountLayout({ children }: { children: ReactNode }) {
           <div className="grid gap-8 md:grid-cols-[220px_1fr] lg:gap-12">
             {/* Sidebar (desktop) / tab bar (mobile) */}
             <aside className="md:sticky md:top-24 md:self-start">
-              <div className="rounded-3xl border border-sand-200 bg-white/80 p-3 shadow-soft md:p-4">
+              <div className="rounded-3xl border border-white/10 bg-base/5 p-3 shadow-glow md:p-4">
                 <AccountSidebar />
               </div>
             </aside>

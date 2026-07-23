@@ -40,8 +40,8 @@ export function DesignResultCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className={cn(
-        "flex flex-col overflow-hidden rounded-3xl border bg-white/80 shadow-soft transition-shadow",
-        isSelected ? "border-gold ring-2 ring-gold/50" : "border-sand-200"
+        "flex flex-col overflow-hidden rounded-3xl border bg-void/5 shadow-glow transition-shadow",
+        isSelected ? "border-gold ring-2 ring-gold/50" : "border-white/10"
       )}
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden">
@@ -53,11 +53,11 @@ export function DesignResultCard({
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink-950/50 to-transparent" />
-        <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink-800 backdrop-blur">
+        <span className="absolute left-4 top-4 rounded-full bg-void/10 px-3 py-1 text-xs font-medium text-foreground backdrop-blur">
           {humanize(design.style)}
         </span>
         {isSelected && (
-          <span className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-gold px-3 py-1 text-xs font-semibold text-ink-900">
+          <span className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-gold px-3 py-1 text-xs font-semibold text-foreground">
             <Check className="h-3.5 w-3.5" /> Selected
           </span>
         )}
@@ -65,22 +65,22 @@ export function DesignResultCard({
 
       <div className="flex flex-1 flex-col p-6">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-xl font-semibold text-ink-900">{design.title}</h3>
+          <h3 className="text-xl font-semibold text-foreground">{design.title}</h3>
         </div>
         <div className="mt-2">
           <BudgetBadge status={design.budgetStatus} />
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-ink-500">
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           {design.description}
         </p>
 
         {/* Live total */}
-        <div className="mt-5 flex items-end justify-between rounded-2xl bg-sand-100/70 px-4 py-3">
+        <div className="mt-5 flex items-end justify-between rounded-2xl bg-base/5 px-4 py-3">
           <div>
-            <p className="text-xs uppercase tracking-wide text-ink-400">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground/80">
               Estimated total
             </p>
-            <p className="font-serif text-2xl font-semibold text-ink-900">
+            <p className="font-serif text-2xl font-semibold text-foreground">
               {formatCurrency(
                 design.products
                   .filter((p) => p.included)
@@ -89,7 +89,7 @@ export function DesignResultCard({
               )}
             </p>
           </div>
-          <p className="text-xs text-ink-500">
+          <p className="text-xs text-muted-foreground">
             {includedCount}/{design.products.length} products
           </p>
         </div>
@@ -99,7 +99,7 @@ export function DesignResultCard({
           type="button"
           onClick={() => setExpanded((v) => !v)}
           aria-expanded={expanded}
-          className="focus-ring mt-4 flex items-center justify-between rounded-xl px-1 py-2 text-sm font-medium text-ink-700"
+          className="focus-ring mt-4 flex items-center justify-between rounded-xl px-1 py-2 text-sm font-medium text-foreground/90"
         >
           Customize products
           <ChevronDown

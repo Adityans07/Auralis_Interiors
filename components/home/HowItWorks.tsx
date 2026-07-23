@@ -5,45 +5,49 @@ import { StepCard } from "@/components/ui/StepCard";
 const STEPS = [
   {
     icon: Upload,
-    title: "Upload or describe your space",
-    description: "Add a photo of your room or exterior — or simply describe it in words.",
+    title: "Upload or describe",
+    description: "Share a photo of your space or use words to describe your vision.",
   },
   {
     icon: SlidersHorizontal,
-    title: "Choose items, style, location & budget",
-    description: "Tell us what you need, the look you love, where you are, and your budget.",
+    title: "Set preferences",
+    description: "Tell us your style, location, and budget parameters.",
   },
   {
     icon: Wand2,
-    title: "Get 3–5 AI design concepts",
-    description: "Receive tailored proposals with real products matched to your area.",
+    title: "AI Generation",
+    description: "Receive 3–5 tailored design proposals with localized products.",
   },
   {
     icon: Handshake,
-    title: "Select a design & finalize with our team",
-    description: "Pick your favorite and our designers help you make it real.",
+    title: "Finalize design",
+    description: "Select your favorite concept and refine it with our human team.",
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section className="container-wide py-20 md:py-28">
-      <SectionHeading
-        eyebrow="How it works"
-        title="From empty space to finished design in four steps"
-        description="A guided, transparent process that blends AI speed with human craft."
-      />
-      <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {STEPS.map((s, i) => (
-          <StepCard
-            key={s.title}
-            step={i + 1}
-            index={i}
-            icon={<s.icon className="h-5 w-5" aria-hidden />}
-            title={s.title}
-            description={s.description}
-          />
-        ))}
+    <section className="relative overflow-hidden bg-void py-32 md:py-48">
+      <div className="absolute top-0 h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      
+      <div className="container-wide relative z-10">
+        <SectionHeading
+          eyebrow="The Process"
+          title="From empty space to masterpiece."
+          description="A seamless, transparent workflow blending the speed of AI with the refinement of human craft."
+        />
+        <div className="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {STEPS.map((s, i) => (
+            <StepCard
+              key={s.title}
+              step={i + 1}
+              index={i}
+              icon={<s.icon className="h-5 w-5" aria-hidden />}
+              title={s.title}
+              description={s.description}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

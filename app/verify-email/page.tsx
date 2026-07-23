@@ -19,7 +19,7 @@ export default function VerifyEmailPage() {
           Wrong account?{" "}
           <Link
             href="/login"
-            className="font-medium text-gold-dark hover:text-ink-900"
+            className="font-medium text-gold-dark hover:text-foreground"
           >
             Log in
           </Link>

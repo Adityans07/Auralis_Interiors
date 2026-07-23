@@ -59,8 +59,8 @@ export function AccountSidebar() {
               className={cn(
                 "focus-ring flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium transition-colors",
                 active
-                  ? "bg-ink-900 text-sand-50 shadow-soft"
-                  : "text-ink-600 hover:bg-ink-900/5 hover:text-ink-900"
+                  ? "bg-white/10 text-foreground shadow-glow"
+                  : "text-muted-foreground hover:bg-white/10/5 hover:text-foreground"
               )}
             >
               <Icon className="h-[18px] w-[18px]" aria-hidden />
@@ -72,7 +72,7 @@ export function AccountSidebar() {
         <button
           type="button"
           onClick={handleLogout}
-          className="focus-ring mt-2 flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium text-ink-600 transition-colors hover:bg-red-50 hover:text-red-700"
+          className="focus-ring mt-2 flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-700"
         >
           <LogOut className="h-[18px] w-[18px]" aria-hidden />
           Log out
@@ -95,8 +95,8 @@ export function AccountSidebar() {
               className={cn(
                 "focus-ring flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
                 active
-                  ? "border-ink-900 bg-ink-900 text-sand-50"
-                  : "border-sand-200 bg-white text-ink-600 hover:text-ink-900"
+                  ? "border-white/20 bg-white/10 text-foreground"
+                  : "border-white/10 bg-base text-muted-foreground hover:text-foreground"
               )}
             >
               <Icon className="h-4 w-4" aria-hidden />
@@ -107,7 +107,7 @@ export function AccountSidebar() {
         <button
           type="button"
           onClick={handleLogout}
-          className="focus-ring flex shrink-0 items-center gap-2 rounded-full border border-sand-200 bg-white px-4 py-2 text-sm font-medium text-ink-600 transition-colors hover:border-red-200 hover:text-red-700"
+          className="focus-ring flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-base px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-red-200 hover:text-red-700"
         >
           <LogOut className="h-4 w-4" aria-hidden />
           Log out

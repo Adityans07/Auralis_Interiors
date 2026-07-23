@@ -14,11 +14,11 @@ const QUICK_BUDGETS = [2000, 5000, 10000, 25000];
 export function BudgetInput({ value, onChange, error }: BudgetInputProps) {
   return (
     <div>
-      <label htmlFor="budget" className="mb-2 block text-sm font-medium text-ink-800">
+      <label htmlFor="budget" className="mb-2 block text-sm font-medium text-foreground">
         Budget <span className="text-gold-dark">*</span>
       </label>
       <div className="relative">
-        <DollarSign className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
+        <DollarSign className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
         <input
           id="budget"
           type="number"
@@ -30,7 +30,7 @@ export function BudgetInput({ value, onChange, error }: BudgetInputProps) {
           placeholder="Enter your budget"
           aria-invalid={!!error}
           aria-describedby={error ? "budget-error" : undefined}
-          className="h-12 w-full rounded-2xl border border-sand-200 bg-white pl-10 pr-4 text-sm text-ink-900 focus-ring"
+          className="h-12 w-full rounded-2xl border border-white/10 bg-void pl-10 pr-4 text-sm text-foreground focus-ring"
         />
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
@@ -42,8 +42,8 @@ export function BudgetInput({ value, onChange, error }: BudgetInputProps) {
             className={
               "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors " +
               (value === b
-                ? "border-ink-900 bg-ink-900 text-sand-50"
-                : "border-sand-300 bg-white text-ink-600 hover:border-ink-900/40")
+                ? "border-white/20 bg-base/10 text-foreground"
+                : "border-white/20 bg-void text-muted-foreground hover:border-white/20")
             }
           >
             {formatCurrency(b)}

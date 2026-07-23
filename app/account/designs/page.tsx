@@ -35,19 +35,19 @@ export default function MyDesignsPage() {
       />
 
       {loading ? (
-        <div className="flex min-h-[30vh] items-center justify-center rounded-3xl border border-sand-200 bg-white/80 shadow-soft">
+        <div className="flex min-h-[30vh] items-center justify-center rounded-3xl border border-white/10 bg-base/5 shadow-glow">
           <Loader2 className="h-6 w-6 animate-spin text-gold-dark" aria-hidden />
           <span className="sr-only">Loading your designs…</span>
         </div>
       ) : requests.length === 0 ? (
-        <div className="rounded-3xl border border-sand-200 bg-white/80 p-12 text-center shadow-soft">
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-900 text-gold-light">
+        <div className="rounded-3xl border border-white/10 bg-base/5 p-12 text-center shadow-glow">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-gold-light">
             <LayoutGrid className="h-6 w-6" aria-hidden />
           </span>
-          <h2 className="mt-5 font-serif text-xl font-semibold text-ink-900">
+          <h2 className="mt-5 font-serif text-xl font-semibold text-foreground">
             You have not created any designs yet.
           </h2>
-          <p className="mx-auto mt-2 max-w-sm text-sm text-ink-500">
+          <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
             Start with a free set of AI-generated concepts tailored to your
             space and budget.
           </p>

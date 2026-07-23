@@ -15,15 +15,15 @@ export function AccountStatCard({
   hint,
 }: AccountStatCardProps) {
   return (
-    <div className="rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft">
-      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-ink-900 text-gold-light">
+    <div className="rounded-3xl border border-white/10 bg-base/5 p-6 shadow-glow">
+      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-gold-light">
         {icon}
       </span>
-      <p className="mt-4 font-serif text-3xl font-semibold text-ink-900">
+      <p className="mt-4 font-serif text-3xl font-semibold text-foreground">
         {value}
       </p>
-      <p className="mt-1 text-sm font-medium text-ink-600">{label}</p>
-      {hint && <p className="mt-1 text-xs text-ink-400">{hint}</p>}
+      <p className="mt-1 text-sm font-medium text-muted-foreground">{label}</p>
+      {hint && <p className="mt-1 text-xs text-muted-foreground/80">{hint}</p>}
     </div>
   );
 }

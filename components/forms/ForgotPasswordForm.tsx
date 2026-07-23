@@ -14,9 +14,9 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 
-const labelClass = "mb-1.5 block text-sm font-medium text-ink-800";
+const labelClass = "mb-1.5 block text-sm font-medium text-foreground";
 const fieldClass =
-  "h-12 w-full rounded-2xl border border-sand-200 bg-white px-4 text-sm text-ink-900 placeholder:text-ink-400 focus-ring";
+  "h-12 w-full rounded-2xl border border-white/10 bg-base px-4 text-sm text-foreground placeholder:text-muted-foreground/80 focus-ring";
 const errorClass = "mt-1 text-sm text-red-600";
 
 export function ForgotPasswordForm() {
@@ -56,15 +56,15 @@ export function ForgotPasswordForm() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="rounded-3xl border border-emerald-200 bg-emerald-50/70 p-8 text-center shadow-soft"
+        className="rounded-3xl border border-emerald-200 bg-emerald-50/70 p-8 text-center shadow-glow"
       >
         <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
           <MailCheck className="h-7 w-7" aria-hidden />
         </span>
-        <h3 className="mt-5 font-serif text-2xl font-semibold text-ink-900">
+        <h3 className="mt-5 font-serif text-2xl font-semibold text-foreground">
           Check your inbox
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-ink-600">
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           {sentMessage}
         </p>
         <Button variant="outline" href="/login" className="mt-6">
@@ -102,11 +102,11 @@ export function ForgotPasswordForm() {
         {isSubmitting ? "Sending…" : "Send reset link"}
       </Button>
 
-      <p className="text-center text-sm text-ink-500">
+      <p className="text-center text-sm text-muted-foreground">
         Remembered it?{" "}
         <Link
           href="/login"
-          className="focus-ring rounded font-medium text-gold-dark hover:text-ink-900"
+          className="focus-ring rounded font-medium text-gold-dark hover:text-foreground"
         >
           Back to login
         </Link>

@@ -35,12 +35,12 @@ export function PasswordStrengthMeter({ password }: { password: string }) {
             key={i}
             className={cn(
               "h-1.5 flex-1 rounded-full transition-colors",
-              i < score ? COLORS[score] : "bg-sand-200"
+              i < score ? COLORS[score] : "bg-white/10"
             )}
           />
         ))}
       </div>
-      <p className="mt-1 text-xs text-ink-500">
+      <p className="mt-1 text-xs text-muted-foreground">
         Password strength: <span className="font-medium">{LABELS[score]}</span>
       </p>
     </div>

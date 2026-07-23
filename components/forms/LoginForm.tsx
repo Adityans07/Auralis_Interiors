@@ -12,9 +12,9 @@ import { PasswordInput } from "@/components/auth/PasswordInput";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
 import { Button } from "@/components/ui/Button";
 
-const labelClass = "mb-1.5 block text-sm font-medium text-ink-800";
+const labelClass = "mb-1.5 block text-sm font-medium text-foreground";
 const fieldClass =
-  "h-12 w-full rounded-2xl border border-sand-200 bg-white px-4 text-sm text-ink-900 placeholder:text-ink-400 focus-ring";
+  "h-12 w-full rounded-2xl border border-white/10 bg-base px-4 text-sm text-foreground placeholder:text-muted-foreground/80 focus-ring";
 const errorClass = "mt-1 text-sm text-red-600";
 
 export function LoginForm() {
@@ -77,19 +77,19 @@ export function LoginForm() {
         <div className="flex items-center justify-between gap-4">
           <label
             htmlFor="login-remember"
-            className="flex cursor-pointer items-center gap-2 text-sm text-ink-700"
+            className="flex cursor-pointer items-center gap-2 text-sm text-foreground/90"
           >
             <input
               id="login-remember"
               type="checkbox"
-              className="h-4 w-4 rounded border-sand-300 text-ink-900 focus-ring"
+              className="h-4 w-4 rounded border-white/20 text-foreground focus-ring"
               {...register("rememberMe")}
             />
             Remember me
           </label>
           <Link
             href="/forgot-password"
-            className="focus-ring rounded text-sm font-medium text-gold-dark hover:text-ink-900"
+            className="focus-ring rounded text-sm font-medium text-gold-dark hover:text-foreground"
           >
             Forgot password?
           </Link>
@@ -107,11 +107,11 @@ export function LoginForm() {
 
       <SocialAuthButtons verb="Continue" />
 
-      <p className="text-center text-sm text-ink-500">
+      <p className="text-center text-sm text-muted-foreground">
         New to Auralis?{" "}
         <Link
           href="/signup"
-          className="focus-ring rounded font-medium text-gold-dark hover:text-ink-900"
+          className="focus-ring rounded font-medium text-gold-dark hover:text-foreground"
         >
           Create account
         </Link>

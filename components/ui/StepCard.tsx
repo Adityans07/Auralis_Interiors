@@ -15,22 +15,24 @@ interface StepCardProps {
 export function StepCard({ step, icon, title, description, index = 0 }: StepCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative rounded-3xl border border-sand-200 bg-white/70 p-7"
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
+      className="glass-dark relative flex flex-col justify-between overflow-hidden rounded-[2rem] p-8 transition-colors hover:bg-white/10"
     >
       <div className="flex items-center justify-between">
-        <span className="font-serif text-4xl font-semibold text-sand-300">
+        <span className="font-serif text-5xl font-light text-white/20">
           0{step}
         </span>
-        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sand-100 text-gold-dark">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold">
           {icon}
         </span>
       </div>
-      <h3 className="mt-5 text-lg font-semibold text-ink-900">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-ink-500">{description}</p>
+      <div className="mt-12">
+        <h3 className="text-xl font-light text-foreground">{title}</h3>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
+      </div>
     </motion.div>
   );
 }

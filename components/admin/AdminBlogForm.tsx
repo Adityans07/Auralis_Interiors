@@ -64,10 +64,10 @@ export function AdminBlogForm({
             .filter(Boolean),
         });
       })}
-      className="grid gap-4 rounded-2xl border border-sand-200 bg-white p-5"
+      className="grid gap-4 rounded-2xl border border-white/10 bg-base p-5"
     >
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="text-sm text-ink-700">
+        <label className="text-sm text-foreground/90">
           Title
           <input
             {...register("title")}
@@ -77,55 +77,55 @@ export function AdminBlogForm({
                 setValue("slug", toSlug(title));
               }
             }}
-            className="mt-1 h-10 w-full rounded-xl border border-sand-200 px-3 focus-ring"
+            className="mt-1 h-10 w-full rounded-xl border border-white/10 px-3 focus-ring"
           />
           {errors.title ? <span className="text-xs text-red-600">{errors.title.message}</span> : null}
         </label>
-        <label className="text-sm text-ink-700">
+        <label className="text-sm text-foreground/90">
           Slug
-          <input {...register("slug")} className="mt-1 h-10 w-full rounded-xl border border-sand-200 px-3 focus-ring" />
+          <input {...register("slug")} className="mt-1 h-10 w-full rounded-xl border border-white/10 px-3 focus-ring" />
           {errors.slug ? <span className="text-xs text-red-600">{errors.slug.message}</span> : null}
         </label>
       </div>
 
-      <label className="text-sm text-ink-700">
+      <label className="text-sm text-foreground/90">
         Excerpt
-        <textarea {...register("excerpt")} rows={3} className="mt-1 w-full rounded-xl border border-sand-200 px-3 py-2 focus-ring" />
+        <textarea {...register("excerpt")} rows={3} className="mt-1 w-full rounded-xl border border-white/10 px-3 py-2 focus-ring" />
         {errors.excerpt ? <span className="text-xs text-red-600">{errors.excerpt.message}</span> : null}
       </label>
 
-      <label className="text-sm text-ink-700">
+      <label className="text-sm text-foreground/90">
         Content
-        <textarea {...register("content")} rows={10} className="mt-1 w-full rounded-xl border border-sand-200 px-3 py-2 focus-ring" />
+        <textarea {...register("content")} rows={10} className="mt-1 w-full rounded-xl border border-white/10 px-3 py-2 focus-ring" />
         {errors.content ? <span className="text-xs text-red-600">{errors.content.message}</span> : null}
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="text-sm text-ink-700">
+        <label className="text-sm text-foreground/90">
           Cover Image URL
-          <input {...register("coverImageUrl")} className="mt-1 h-10 w-full rounded-xl border border-sand-200 px-3 focus-ring" />
+          <input {...register("coverImageUrl")} className="mt-1 h-10 w-full rounded-xl border border-white/10 px-3 focus-ring" />
           {errors.coverImageUrl ? <span className="text-xs text-red-600">{errors.coverImageUrl.message}</span> : null}
         </label>
-        <label className="text-sm text-ink-700">
+        <label className="text-sm text-foreground/90">
           Author Name
-          <input {...register("authorName")} className="mt-1 h-10 w-full rounded-xl border border-sand-200 px-3 focus-ring" />
+          <input {...register("authorName")} className="mt-1 h-10 w-full rounded-xl border border-white/10 px-3 focus-ring" />
           {errors.authorName ? <span className="text-xs text-red-600">{errors.authorName.message}</span> : null}
         </label>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <label className="text-sm text-ink-700">
+        <label className="text-sm text-foreground/90">
           Category
-          <input {...register("category")} className="mt-1 h-10 w-full rounded-xl border border-sand-200 px-3 focus-ring" />
+          <input {...register("category")} className="mt-1 h-10 w-full rounded-xl border border-white/10 px-3 focus-ring" />
         </label>
-        <label className="sm:col-span-2 text-sm text-ink-700">
+        <label className="sm:col-span-2 text-sm text-foreground/90">
           Tags (comma separated)
-          <input {...register("tags")} className="mt-1 h-10 w-full rounded-xl border border-sand-200 px-3 focus-ring" />
+          <input {...register("tags")} className="mt-1 h-10 w-full rounded-xl border border-white/10 px-3 focus-ring" />
         </label>
       </div>
 
-      <label className="inline-flex items-center gap-2 text-sm text-ink-700">
-        <input type="checkbox" {...register("published")} className="h-4 w-4 rounded border-sand-300" />
+      <label className="inline-flex items-center gap-2 text-sm text-foreground/90">
+        <input type="checkbox" {...register("published")} className="h-4 w-4 rounded border-white/20" />
         Published
       </label>
 

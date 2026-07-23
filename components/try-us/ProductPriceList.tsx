@@ -20,7 +20,7 @@ export function ProductPriceList({ products, onToggle, compact }: ProductPriceLi
           key={p.id}
           className={cn(
             "flex items-center gap-3 rounded-2xl border p-3 transition-colors",
-            p.included ? "border-sand-200 bg-white" : "border-sand-200 bg-sand-100/60 opacity-70"
+            p.included ? "border-white/10 bg-void" : "border-white/10 bg-base/5 opacity-70"
           )}
         >
           {!compact && (
@@ -30,8 +30,8 @@ export function ProductPriceList({ products, onToggle, compact }: ProductPriceLi
           )}
 
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-ink-900">{p.name}</p>
-            <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-500">
+            <p className="truncate text-sm font-medium text-foreground">{p.name}</p>
+            <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
               <span>{humanize(p.category)}</span>
               <span aria-hidden>·</span>
               <span>Qty {p.quantity}</span>
@@ -57,7 +57,7 @@ export function ProductPriceList({ products, onToggle, compact }: ProductPriceLi
           </div>
 
           <div className="flex flex-col items-end gap-2">
-            <span className="text-sm font-semibold text-ink-900">
+            <span className="text-sm font-semibold text-foreground">
               {formatCurrency(p.price * p.quantity, p.currency)}
             </span>
             {/* Include / exclude toggle */}
@@ -69,12 +69,12 @@ export function ProductPriceList({ products, onToggle, compact }: ProductPriceLi
               onClick={() => onToggle(p.id)}
               className={cn(
                 "focus-ring relative h-6 w-11 rounded-full transition-colors",
-                p.included ? "bg-ink-900" : "bg-sand-300"
+                p.included ? "bg-base/10" : "bg-sand-300"
               )}
             >
               <span
                 className={cn(
-                  "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform",
+                  "absolute top-0.5 h-5 w-5 rounded-full bg-void shadow transition-transform",
                   p.included ? "translate-x-[22px]" : "translate-x-0.5"
                 )}
               />

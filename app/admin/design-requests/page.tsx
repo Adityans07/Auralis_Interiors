@@ -39,8 +39,8 @@ export default function AdminDesignRequestsPage() {
             header: "Customer",
             render: (row) => (
               <div>
-                <p className="font-medium text-ink-900">{row.customer.name}</p>
-                <p className="text-xs text-ink-500">{row.customer.email ?? "Guest"}</p>
+                <p className="font-medium text-foreground">{row.customer.name}</p>
+                <p className="text-xs text-muted-foreground">{row.customer.email ?? "Guest"}</p>
               </div>
             ),
           },
@@ -55,7 +55,7 @@ export default function AdminDesignRequestsPage() {
             key: "actions",
             header: "Actions",
             render: (row) => (
-              <Link href={`/admin/design-requests/${row.id}`} className="text-sm font-medium text-gold-dark hover:text-ink-900">
+              <Link href={`/admin/design-requests/${row.id}`} className="text-sm font-medium text-gold-dark hover:text-foreground">
                 View
               </Link>
             ),

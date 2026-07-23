@@ -19,7 +19,7 @@ export default function AdminEditBlogPage() {
   }, [params?.id]);
 
   if (!blog) {
-    return <p className="text-sm text-ink-500">Loading blog...</p>;
+    return <p className="text-sm text-muted-foreground">Loading blog...</p>;
   }
 
   return (

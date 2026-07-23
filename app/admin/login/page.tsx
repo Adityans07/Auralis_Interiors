@@ -23,10 +23,10 @@ export default function AdminLoginPage() {
   });
 
   return (
-    <div className="min-h-screen bg-sand-100/70 px-4 py-16">
-      <div className="mx-auto max-w-md rounded-3xl border border-sand-200 bg-white p-8 shadow-soft">
-        <h1 className="text-2xl font-semibold text-ink-900">Admin Login</h1>
-        <p className="mt-1 text-sm text-ink-500">Sign in with an ADMIN account to access the portal.</p>
+    <div className="min-h-screen bg-void px-4 py-16">
+      <div className="mx-auto max-w-md rounded-3xl border border-white/10 bg-base p-8 shadow-glow">
+        <h1 className="text-2xl font-semibold text-foreground">Admin Login</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Sign in with an ADMIN account to access the portal.</p>
 
         <form
           className="mt-6 space-y-4"
@@ -45,22 +45,22 @@ export default function AdminLoginPage() {
             }
           })}
         >
-          <label className="block text-sm text-ink-700">
+          <label className="block text-sm text-foreground/90">
             Email
             <input
               type="email"
               {...register("email")}
-              className="mt-1 h-11 w-full rounded-xl border border-sand-200 px-3 focus-ring"
+              className="mt-1 h-11 w-full rounded-xl border border-white/10 px-3 focus-ring"
             />
             {errors.email ? <span className="text-xs text-red-600">{errors.email.message}</span> : null}
           </label>
 
-          <label className="block text-sm text-ink-700">
+          <label className="block text-sm text-foreground/90">
             Password
             <input
               type="password"
               {...register("password")}
-              className="mt-1 h-11 w-full rounded-xl border border-sand-200 px-3 focus-ring"
+              className="mt-1 h-11 w-full rounded-xl border border-white/10 px-3 focus-ring"
             />
             {errors.password ? <span className="text-xs text-red-600">{errors.password.message}</span> : null}
           </label>

@@ -23,7 +23,7 @@ interface DesignSelectionModalProps {
 }
 
 const fieldClass =
-  "h-11 w-full rounded-2xl border border-sand-200 bg-white px-4 text-sm text-ink-900 focus-ring";
+  "h-11 w-full rounded-2xl border border-white/10 bg-void px-4 text-sm text-foreground focus-ring";
 
 /**
  * Captures contact details for the chosen design and confirms the selection.
@@ -81,20 +81,20 @@ export function DesignSelectionModal({
     <Modal open={open} onClose={close} labelledBy="selection-title">
       <div className="p-6 sm:p-8">
         {/* Selected design summary */}
-        <div className="rounded-2xl border border-sand-200 bg-sand-100/50 p-4">
+        <div className="rounded-2xl border border-white/10 bg-base/5 p-4">
           <p className="text-xs uppercase tracking-widest text-gold-dark">
             Selected design
           </p>
           <div className="mt-1 flex items-center justify-between gap-3">
             <div>
-              <p className="font-serif text-lg font-semibold text-ink-900">
+              <p className="font-serif text-lg font-semibold text-foreground">
                 {design.title}
               </p>
-              <p className="text-xs text-ink-500">
+              <p className="text-xs text-muted-foreground">
                 {humanize(design.style)} · {included.length} products
               </p>
             </div>
-            <span className="font-serif text-xl font-semibold text-ink-900">
+            <span className="font-serif text-xl font-semibold text-foreground">
               {formatCurrency(total, design.currency)}
             </span>
           </div>
@@ -105,10 +105,10 @@ export function DesignSelectionModal({
             <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
               <CheckCircle2 className="h-8 w-8" />
             </span>
-            <h2 id="selection-title" className="mt-4 text-2xl font-semibold text-ink-900">
+            <h2 id="selection-title" className="mt-4 text-2xl font-semibold text-foreground">
               Great choice!
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-ink-500">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Our team will contact you to finalize the deal. In the meantime,
               you can book a consultation or reach out with any questions.
             </p>
@@ -127,10 +127,10 @@ export function DesignSelectionModal({
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4" noValidate>
-            <h2 id="selection-title" className="text-xl font-semibold text-ink-900">
+            <h2 id="selection-title" className="text-xl font-semibold text-foreground">
               Where should we reach you?
             </h2>
-            <p className="-mt-2 text-sm text-ink-500">
+            <p className="-mt-2 text-sm text-muted-foreground">
               Share your details and our design team will follow up to finalize
               everything.
             </p>
@@ -141,12 +141,12 @@ export function DesignSelectionModal({
                 This design will be saved to your account.
               </div>
             ) : (
-              <div className="rounded-2xl border border-sand-200 bg-sand-100/60 px-4 py-3">
-                <p className="flex items-center gap-2 text-sm font-medium text-ink-800">
+              <div className="rounded-2xl border border-white/10 bg-base/5 px-4 py-3">
+                <p className="flex items-center gap-2 text-sm font-medium text-foreground">
                   <UserPlus className="h-4 w-4 text-gold-dark" /> Save this design
                   to your account
                 </p>
-                <p className="mt-1 text-xs text-ink-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Continue as a guest below, or{" "}
                   <Link
                     href="/signup"
@@ -169,7 +169,7 @@ export function DesignSelectionModal({
             )}
 
             <div>
-              <label htmlFor="sel-name" className="mb-1.5 block text-sm font-medium text-ink-800">
+              <label htmlFor="sel-name" className="mb-1.5 block text-sm font-medium text-foreground">
                 Full name *
               </label>
               <input id="sel-name" className={fieldClass} aria-invalid={!!errors.name} {...register("name")} />
@@ -178,14 +178,14 @@ export function DesignSelectionModal({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="sel-email" className="mb-1.5 block text-sm font-medium text-ink-800">
+                <label htmlFor="sel-email" className="mb-1.5 block text-sm font-medium text-foreground">
                   Email *
                 </label>
                 <input id="sel-email" type="email" className={fieldClass} aria-invalid={!!errors.email} {...register("email")} />
                 {errors.email && <p role="alert" className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
               </div>
               <div>
-                <label htmlFor="sel-phone" className="mb-1.5 block text-sm font-medium text-ink-800">
+                <label htmlFor="sel-phone" className="mb-1.5 block text-sm font-medium text-foreground">
                   Phone *
                 </label>
                 <input id="sel-phone" type="tel" className={fieldClass} aria-invalid={!!errors.phone} {...register("phone")} />
@@ -194,7 +194,7 @@ export function DesignSelectionModal({
             </div>
 
             <div>
-              <label htmlFor="sel-time" className="mb-1.5 block text-sm font-medium text-ink-800">
+              <label htmlFor="sel-time" className="mb-1.5 block text-sm font-medium text-foreground">
                 Preferred contact time
               </label>
               <input

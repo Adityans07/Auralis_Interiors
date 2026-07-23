@@ -62,13 +62,13 @@ export default function AdminDashboardPage() {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2">
-        <article className="rounded-2xl border border-sand-200 bg-white p-5">
-          <h3 className="text-base font-semibold text-ink-900">Recent Design Requests</h3>
-          <ul className="mt-3 space-y-2 text-sm text-ink-700">
+        <article className="rounded-2xl border border-white/10 bg-base p-5">
+          <h3 className="text-base font-semibold text-foreground">Recent Design Requests</h3>
+          <ul className="mt-3 space-y-2 text-sm text-foreground/90">
             {data.recent.designRequests.slice(0, 6).map((item) => (
               <li key={item.id} className="flex items-center justify-between gap-3">
                 <span>{item.customerName}</span>
-                <Link className="text-gold-dark hover:text-ink-900" href={`/admin/design-requests/${item.id}`}>
+                <Link className="text-gold-dark hover:text-foreground" href={`/admin/design-requests/${item.id}`}>
                   {item.status}
                 </Link>
               </li>
@@ -76,10 +76,10 @@ export default function AdminDashboardPage() {
           </ul>
         </article>
 
-        <article className="rounded-2xl border border-sand-200 bg-white p-5">
-          <h3 className="text-base font-semibold text-ink-900">Recent Failed AI Generations</h3>
+        <article className="rounded-2xl border border-white/10 bg-base p-5">
+          <h3 className="text-base font-semibold text-foreground">Recent Failed AI Generations</h3>
           {data.recent.failedAiGenerations.length ? (
-            <ul className="mt-3 space-y-2 text-sm text-ink-700">
+            <ul className="mt-3 space-y-2 text-sm text-foreground/90">
               {data.recent.failedAiGenerations.slice(0, 6).map((item) => (
                 <li key={item.id} className="rounded-xl bg-red-50 px-3 py-2 text-red-700">
                   <p className="font-medium">{item.designRequestId}</p>
@@ -88,24 +88,24 @@ export default function AdminDashboardPage() {
               ))}
             </ul>
           ) : (
-            <p className="mt-2 text-sm text-ink-500">No recent failures.</p>
+            <p className="mt-2 text-sm text-muted-foreground">No recent failures.</p>
           )}
         </article>
       </section>
 
-      <section className="rounded-2xl border border-sand-200 bg-white p-5">
-        <h3 className="text-base font-semibold text-ink-900">Quick Actions</h3>
+      <section className="rounded-2xl border border-white/10 bg-base p-5">
+        <h3 className="text-base font-semibold text-foreground">Quick Actions</h3>
         <div className="mt-3 flex flex-wrap gap-2 text-sm">
-          <Link href="/admin/products/new" className="rounded-xl border border-sand-200 px-3 py-2 hover:bg-sand-50">
+          <Link href="/admin/products/new" className="rounded-xl border border-white/10 px-3 py-2 hover:bg-void">
             Add Product
           </Link>
-          <Link href="/admin/blogs/new" className="rounded-xl border border-sand-200 px-3 py-2 hover:bg-sand-50">
+          <Link href="/admin/blogs/new" className="rounded-xl border border-white/10 px-3 py-2 hover:bg-void">
             Create Blog Post
           </Link>
-          <Link href="/admin/bookings" className="rounded-xl border border-sand-200 px-3 py-2 hover:bg-sand-50">
+          <Link href="/admin/bookings" className="rounded-xl border border-white/10 px-3 py-2 hover:bg-void">
             View Pending Bookings
           </Link>
-          <Link href="/admin/selected-designs" className="rounded-xl border border-sand-200 px-3 py-2 hover:bg-sand-50">
+          <Link href="/admin/selected-designs" className="rounded-xl border border-white/10 px-3 py-2 hover:bg-void">
             View New Leads
           </Link>
         </div>

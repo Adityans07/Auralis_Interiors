@@ -44,26 +44,26 @@ export function DesignDetailsModal({
 
           <div className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-sand-100 px-3 py-1 text-xs font-medium text-ink-700">
+              <span className="rounded-full bg-base/10 px-3 py-1 text-xs font-medium text-foreground/90">
                 {humanize(design.style)}
               </span>
               <BudgetBadge status={design.budgetStatus} />
             </div>
 
-            <h2 id="design-details-title" className="mt-3 text-2xl font-semibold text-ink-900">
+            <h2 id="design-details-title" className="mt-3 text-2xl font-semibold text-foreground">
               {design.title}
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-ink-500">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {design.description}
             </p>
 
-            <div className="mt-6 rounded-2xl border border-sand-200 bg-sand-100/50 p-4">
-              <h3 className="flex items-center gap-2 text-sm font-semibold text-ink-800">
+            <div className="mt-6 rounded-2xl border border-white/10 bg-base/5 p-4">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <Lightbulb className="h-4 w-4 text-gold-dark" /> Design concept
               </h3>
               <ul className="mt-3 space-y-2">
                 {design.designNotes.map((note) => (
-                  <li key={note} className="flex items-start gap-2 text-sm text-ink-600">
+                  <li key={note} className="flex items-start gap-2 text-sm text-muted-foreground">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
                     {note}
                   </li>
@@ -71,7 +71,7 @@ export function DesignDetailsModal({
               </ul>
             </div>
 
-            <h3 className="mt-6 text-sm font-semibold text-ink-800">
+            <h3 className="mt-6 text-sm font-semibold text-foreground">
               Products & pricing
             </h3>
             <div className="mt-3 space-y-4">
@@ -86,7 +86,7 @@ export function DesignDetailsModal({
               />
             </div>
 
-            <div className="mt-6 rounded-2xl bg-ink-950 p-4 text-sand-100/80">
+            <div className="mt-6 rounded-2xl bg-void p-4 text-muted-foreground">
               <p className="text-xs font-semibold uppercase tracking-widest text-gold-light">
                 Recommended next steps
               </p>

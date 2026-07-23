@@ -28,7 +28,7 @@ export function AnimatedCTAButton({
       whileHover={{ scale: 1.04 }}
       whileTap={{ scale: 0.97 }}
       className={cn(
-        "group relative inline-flex h-14 items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-gold-dark via-gold to-gold-light px-9 text-base font-semibold text-ink-900 shadow-glow focus-ring",
+        "group relative inline-flex h-14 items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-gold-dark via-gold to-gold-light px-9 text-base font-semibold text-foreground shadow-glow focus-ring",
         className
       )}
     >

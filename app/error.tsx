@@ -26,10 +26,10 @@ export default function Error({
       <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-red-600">
         <AlertTriangle className="h-8 w-8" aria-hidden />
       </span>
-      <h1 className="mt-8 text-2xl font-semibold text-ink-900">
+      <h1 className="mt-8 text-2xl font-semibold text-foreground">
         Something went wrong
       </h1>
-      <p className="mt-3 max-w-md text-ink-500">
+      <p className="mt-3 max-w-md text-muted-foreground">
         We hit an unexpected error while loading this page. You can try again, or
         head back home.
       </p>

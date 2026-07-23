@@ -24,8 +24,8 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="h-full rounded-2xl border border-sand-200 bg-white p-3">
-      <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink-500">Admin Portal</p>
+    <aside className="h-full rounded-2xl border border-white/10 bg-base p-3">
+      <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Admin Portal</p>
       <nav className="space-y-1">
         {ADMIN_NAV_LINKS.map((link) => {
           const active = link.href === "/admin" ? pathname === link.href : pathname.startsWith(link.href);
@@ -35,7 +35,7 @@ export function AdminSidebar() {
               href={link.href}
               className={cn(
                 "block rounded-xl px-3 py-2 text-sm transition-colors",
-                active ? "bg-ink-900 text-sand-50" : "text-ink-600 hover:bg-sand-100 hover:text-ink-900"
+                active ? "bg-base/10 text-foreground" : "text-muted-foreground hover:bg-base/10 hover:text-foreground"
               )}
             >
               {link.label}

@@ -19,6 +19,7 @@ export default function AdminNewProductPage() {
           setSaving(true);
           try {
             await createAdminProduct(payload as never);
+            router.refresh(); // Invalidate cache so changes persist in the list
             router.push("/admin/products");
           } finally {
             setSaving(false);

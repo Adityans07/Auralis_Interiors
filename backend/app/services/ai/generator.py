@@ -91,13 +91,21 @@ def _normalize(parsed: AiDesignResponse, input_data: DesignGenerationIn, candida
     return normalized
 
 
-def _call_openai(prompt: str) -> str | None:
+def _call_openai(prompt: str, image_url: str | None = None) -> str | None:
     if not settings.openai_api_key:
         return None
     client = OpenAI(api_key=settings.openai_api_key)
+    
+    user_content: str | list[dict[str, Any]] = prompt
+    if image_url:
+        user_content = [
+            {"type": "text", "text": prompt},
+            {"type": "image_url", "image_url": {"url": image_url}}
+        ]
+        
     response = client.chat.completions.create(
         model=settings.openai_model_text,
-        messages=[{"role": "system", "content": system_prompt()}, {"role": "user", "content": prompt}],
+        messages=[{"role": "system", "content": system_prompt()}, {"role": "user", "content": user_content}],
         response_format={"type": "json_object"},
         temperature=0.4,
     )
@@ -150,8 +158,15 @@ def generate_design_concepts(input_data: DesignGenerationIn, candidates: list[Pr
         "brief": input_data.model_dump(mode="json"),
         "productCandidates": [candidate_to_dict(candidate) for candidate in candidates],
     }
+    
+    image_url_str = None
+    if input_data.uploadedImage:
+        image_url_str = str(input_data.uploadedImage.imageUrl)
+    elif input_data.uploadedImageUrl:
+        image_url_str = str(input_data.uploadedImageUrl)
+        
     try:
-        raw = _call_openai(user_prompt(payload))
+        raw = _call_openai(user_prompt(payload), image_url=image_url_str)
         if raw:
             try:
                 parsed = AiDesignResponse.model_validate(json.loads(raw))

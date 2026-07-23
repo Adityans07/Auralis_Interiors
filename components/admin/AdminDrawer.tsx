@@ -19,17 +19,17 @@ export function AdminDrawer({
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className={cn("absolute inset-0 bg-ink-900/40 transition-opacity", open ? "opacity-100" : "opacity-0")}
+        className={cn("absolute inset-0 bg-base/10/40 transition-opacity", open ? "opacity-100" : "opacity-0")}
       />
       <aside
         className={cn(
-          "absolute right-0 top-0 h-full w-full max-w-md border-l border-sand-200 bg-white p-5 shadow-soft transition-transform",
+          "absolute right-0 top-0 h-full w-full max-w-md border-l border-white/10 bg-base p-5 shadow-glow transition-transform",
           open ? "translate-x-0" : "translate-x-full"
         )}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-ink-900">{title}</h3>
-          <button type="button" onClick={onClose} className="rounded-lg px-2 py-1 text-sm text-ink-500 hover:bg-sand-100">
+          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+          <button type="button" onClick={onClose} className="rounded-lg px-2 py-1 text-sm text-muted-foreground hover:bg-base/10">
             Close
           </button>
         </div>

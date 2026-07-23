@@ -41,7 +41,7 @@ export default function AdminGeneratedDesignsPage() {
             key: "actions",
             header: "Actions",
             render: (row) => (
-              <Link href={`/admin/design-requests/${row.designRequestId}`} className="text-sm font-medium text-gold-dark hover:text-ink-900">
+              <Link href={`/admin/design-requests/${row.designRequestId}`} className="text-sm font-medium text-gold-dark hover:text-foreground">
                 View request
               </Link>
             ),

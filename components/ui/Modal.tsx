@@ -38,7 +38,7 @@ export function Modal({ open, onClose, children, className, labelledBy }: ModalP
           className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-6"
         >
           <div
-            className="absolute inset-0 bg-ink-950/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-void/60 backdrop-blur-sm"
             onClick={onClose}
             aria-hidden
           />
@@ -51,7 +51,7 @@ export function Modal({ open, onClose, children, className, labelledBy }: ModalP
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              "relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-sand-50 shadow-2xl",
+              "relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-void shadow-2xl",
               className
             )}
           >
@@ -59,7 +59,7 @@ export function Modal({ open, onClose, children, className, labelledBy }: ModalP
               type="button"
               onClick={onClose}
               aria-label="Close dialog"
-              className="focus-ring absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-ink-700 transition-colors hover:bg-white"
+              className="focus-ring absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-base/5 text-foreground/90 transition-colors hover:bg-base"
             >
               <X className="h-5 w-5" />
             </button>

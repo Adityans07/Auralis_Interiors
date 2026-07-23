@@ -32,27 +32,27 @@ export function PaidGenerationModal({
   return (
     <Modal open={open} onClose={onClose} labelledBy="paywall-title">
       <div className="p-8">
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-900 text-gold-light">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-base/10 text-gold-light">
           <Lock className="h-6 w-6" />
         </span>
-        <h2 id="paywall-title" className="mt-5 text-2xl font-semibold text-ink-900">
+        <h2 id="paywall-title" className="mt-5 text-2xl font-semibold text-foreground">
           You&apos;ve used your free design
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-ink-500">
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           Your first AI generation was on us. To create a new set of
           personalized design concepts, continue with a paid design request.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-sand-200 bg-white/70 p-5">
+        <div className="mt-6 rounded-2xl border border-white/10 bg-void/5 p-5">
           <div className="flex items-baseline justify-between">
-            <span className="text-sm font-medium text-ink-700">
+            <span className="text-sm font-medium text-foreground/90">
               Additional design generation
             </span>
-            <span className="font-serif text-2xl font-semibold text-ink-900">
+            <span className="font-serif text-2xl font-semibold text-foreground">
               {amount}
             </span>
           </div>
-          <ul className="mt-4 space-y-2 text-sm text-ink-500">
+          <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             {[
               "3–5 fresh AI design concepts",
               "Location-matched product pricing",
@@ -84,7 +84,7 @@ export function PaidGenerationModal({
             {error}
           </p>
         ) : (
-          <p className="mt-4 text-center text-xs text-ink-400">
+          <p className="mt-4 text-center text-xs text-muted-foreground/80">
             Your payment is processed on a secure checkout page.
           </p>
         )}

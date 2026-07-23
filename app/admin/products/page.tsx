@@ -52,7 +52,7 @@ export default function AdminProductsPage() {
             header: "Actions",
             render: (row) => (
               <div className="flex items-center gap-2">
-                <Link href={`/admin/products/${row.id}/edit`} className="text-sm font-medium text-gold-dark hover:text-ink-900">
+                <Link href={`/admin/products/${row.id}/edit`} className="text-sm font-medium text-gold-dark hover:text-foreground">
                   Edit
                 </Link>
                 <button onClick={() => archiveProduct(row.id)} className="text-sm text-red-600 hover:text-red-700">

@@ -38,13 +38,14 @@ const CAPABILITIES = [
 export function Capabilities() {
   return (
     <section className="relative bg-luxury-radial">
-      <div className="container-wide py-20 md:py-28">
+      <div className="absolute inset-0 bg-void/50 mix-blend-multiply" />
+      <div className="container-wide relative z-10 py-32 md:py-48">
         <SectionHeading
           eyebrow="What we do"
-          title="Intelligent design, grounded in the real world"
+          title="Intelligent design, grounded in reality."
           description="Auralis pairs generative design with practical sourcing so ideas actually come to life."
         />
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {CAPABILITIES.map((c, i) => (
             <FeatureCard
               key={c.title}

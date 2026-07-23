@@ -49,13 +49,13 @@ export default function AccountDashboardPage() {
       <AccountHeader />
 
       {loading ? (
-        <div className="flex min-h-[30vh] items-center justify-center rounded-3xl border border-sand-200 bg-white/80 shadow-soft">
+        <div className="flex min-h-[30vh] items-center justify-center rounded-3xl border border-white/10 bg-base/5 shadow-glow">
           <Loader2 className="h-6 w-6 animate-spin text-gold-dark" aria-hidden />
           <span className="sr-only">Loading your dashboard…</span>
         </div>
       ) : !overview ? (
-        <div className="rounded-3xl border border-sand-200 bg-white/80 p-8 text-center shadow-soft">
-          <p className="text-sm text-ink-500">
+        <div className="rounded-3xl border border-white/10 bg-base/5 p-8 text-center shadow-glow">
+          <p className="text-sm text-muted-foreground">
             We couldn&apos;t load your dashboard right now. Please try again
             later.
           </p>
@@ -93,16 +93,16 @@ export default function AccountDashboardPage() {
 
           {/* Selected design highlight */}
           {overview.selectedDesignTitle && (
-            <div className="flex flex-col gap-4 rounded-3xl border border-gold/30 bg-gold/10 p-6 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 rounded-3xl border border-gold/30 bg-gold/10 p-6 shadow-glow sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-3">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-ink-900 text-gold-light">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-gold-light">
                   <Star className="h-5 w-5" aria-hidden />
                 </span>
                 <div>
                   <p className="text-xs font-medium uppercase tracking-[0.15em] text-gold-dark">
                     Selected design
                   </p>
-                  <p className="mt-0.5 font-serif text-lg font-semibold text-ink-900">
+                  <p className="mt-0.5 font-serif text-lg font-semibold text-foreground">
                     {overview.selectedDesignTitle}
                   </p>
                 </div>
@@ -114,12 +114,12 @@ export default function AccountDashboardPage() {
           )}
 
           {/* Recent activity */}
-          <section className="rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft sm:p-8">
-            <h2 className="font-serif text-xl font-semibold text-ink-900">
+          <section className="rounded-3xl border border-white/10 bg-base/5 p-6 shadow-glow sm:p-8">
+            <h2 className="font-serif text-xl font-semibold text-foreground">
               Recent activity
             </h2>
             {overview.recentActivity.length === 0 ? (
-              <p className="mt-3 text-sm text-ink-500">
+              <p className="mt-3 text-sm text-muted-foreground">
                 No recent activity yet.
               </p>
             ) : (
@@ -128,12 +128,12 @@ export default function AccountDashboardPage() {
                   const Icon = ACTIVITY_ICONS[activity.type] ?? Star;
                   return (
                     <li key={activity.id} className="flex items-start gap-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sand-100 text-ink-600">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-muted-foreground">
                         <Icon className="h-4 w-4" aria-hidden />
                       </span>
                       <div className="min-w-0">
-                        <p className="text-sm text-ink-800">{activity.label}</p>
-                        <p className="mt-0.5 text-xs text-ink-400">
+                        <p className="text-sm text-foreground">{activity.label}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground/80">
                           {formatDate(activity.date)}
                         </p>
                       </div>
@@ -143,22 +143,22 @@ export default function AccountDashboardPage() {
               </ul>
             )}
 
-            <div className="mt-6 flex flex-wrap gap-3 border-t border-sand-200 pt-6">
+            <div className="mt-6 flex flex-wrap gap-3 border-t border-white/10 pt-6">
               <Link
                 href="/account/designs"
-                className="focus-ring rounded-full text-sm font-medium text-ink-700 underline-offset-4 hover:text-ink-900 hover:underline"
+                className="focus-ring rounded-full text-sm font-medium text-foreground/90 underline-offset-4 hover:text-foreground hover:underline"
               >
                 My designs
               </Link>
               <Link
                 href="/account/bookings"
-                className="focus-ring rounded-full text-sm font-medium text-ink-700 underline-offset-4 hover:text-ink-900 hover:underline"
+                className="focus-ring rounded-full text-sm font-medium text-foreground/90 underline-offset-4 hover:text-foreground hover:underline"
               >
                 Bookings
               </Link>
               <Link
                 href="/account/billing"
-                className="focus-ring rounded-full text-sm font-medium text-ink-700 underline-offset-4 hover:text-ink-900 hover:underline"
+                className="focus-ring rounded-full text-sm font-medium text-foreground/90 underline-offset-4 hover:text-foreground hover:underline"
               >
                 Billing
               </Link>

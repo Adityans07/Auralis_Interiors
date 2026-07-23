@@ -9,17 +9,17 @@ interface LocationInputProps {
 }
 
 const fieldClass =
-  "h-12 w-full rounded-2xl border border-sand-200 bg-white px-4 text-sm text-ink-900 focus-ring";
+  "h-12 w-full rounded-2xl border border-white/10 bg-void px-4 text-sm text-foreground focus-ring";
 
 export function LocationInput({ value, onChange, cityError }: LocationInputProps) {
   const set = (patch: Partial<LocationInfo>) => onChange({ ...value, ...patch });
 
   return (
     <fieldset>
-      <legend className="mb-2 block text-sm font-medium text-ink-800">
+      <legend className="mb-2 block text-sm font-medium text-foreground">
         Location <span className="text-gold-dark">*</span>
       </legend>
-      <p className="mb-3 text-xs text-ink-400">
+      <p className="mb-3 text-xs text-muted-foreground/80">
         We use this to match products available near you.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">

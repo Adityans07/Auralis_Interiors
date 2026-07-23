@@ -34,8 +34,8 @@ export default function AdminCustomersPage() {
             header: "Name",
             render: (row) => (
               <div>
-                <p className="font-medium text-ink-900">{row.name}</p>
-                <p className="text-xs text-ink-500">{row.email}</p>
+                <p className="font-medium text-foreground">{row.name}</p>
+                <p className="text-xs text-muted-foreground">{row.email}</p>
               </div>
             ),
           },
@@ -51,7 +51,7 @@ export default function AdminCustomersPage() {
             key: "actions",
             header: "Actions",
             render: (row) => (
-              <Link href={`/admin/customers/${row.id}`} className="text-sm font-medium text-gold-dark hover:text-ink-900">
+              <Link href={`/admin/customers/${row.id}`} className="text-sm font-medium text-gold-dark hover:text-foreground">
                 View
               </Link>
             ),

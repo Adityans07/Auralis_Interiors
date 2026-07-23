@@ -10,10 +10,10 @@ import { submitContact } from "@/lib/services/api";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
-const labelClass = "mb-2 block text-sm font-medium text-ink-800";
+const labelClass = "mb-2 block text-sm font-medium text-foreground";
 const fieldClass =
-  "h-11 w-full rounded-2xl border border-sand-200 bg-white px-4 text-sm text-ink-900 placeholder:text-ink-400 focus-ring";
-const errorClass = "mt-1.5 text-sm text-red-600";
+  "h-11 w-full rounded-2xl border border-white/10 bg-white/5 px-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus-ring transition-colors focus:border-gold/50";
+const errorClass = "mt-1.5 text-sm text-red-400";
 
 export function ContactForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -55,18 +55,18 @@ export function ContactForm() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="rounded-3xl border border-emerald-200 bg-emerald-50/70 p-8 text-center shadow-soft"
+        className="glass-dark rounded-[2rem] p-8 text-center"
       >
-        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400">
           <CheckCircle2 className="h-7 w-7" aria-hidden />
         </span>
-        <h3 className="mt-5 font-serif text-2xl font-semibold text-ink-900">
+        <h3 className="mt-6 font-serif text-3xl font-light text-foreground">
           Message sent
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-ink-600">
+        <p className="mt-3 text-sm font-light leading-relaxed text-muted-foreground">
           {successMessage}
         </p>
-        <Button variant="outline" className="mt-6" onClick={sendAnother}>
+        <Button variant="outline" className="mt-8 rounded-full" onClick={sendAnother}>
           Send another
         </Button>
       </motion.div>
@@ -77,9 +77,9 @@ export function ContactForm() {
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft sm:p-8"
+      className="glass-dark rounded-[2rem] p-6 sm:p-10"
     >
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2">
         <div>
           <label htmlFor="contact-name" className={labelClass}>
             Full name
@@ -114,7 +114,7 @@ export function ContactForm() {
 
         <div>
           <label htmlFor="contact-phone" className={labelClass}>
-            Phone <span className="text-ink-400">(optional)</span>
+            Phone <span className="text-muted-foreground/50">(optional)</span>
           </label>
           <input
             id="contact-phone"
@@ -146,7 +146,7 @@ export function ContactForm() {
         </div>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-6">
         <label htmlFor="contact-message" className={labelClass}>
           Message
         </label>
@@ -164,7 +164,7 @@ export function ContactForm() {
       </div>
 
       {submitError && (
-        <p className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+        <p className="mt-6 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
           {submitError}
         </p>
       )}
@@ -173,7 +173,7 @@ export function ContactForm() {
         type="submit"
         size="lg"
         disabled={isSubmitting}
-        className="mt-6 w-full"
+        className="mt-8 w-full rounded-full"
       >
         {isSubmitting ? "Sending…" : "Send message"}
       </Button>

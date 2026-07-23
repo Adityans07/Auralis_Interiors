@@ -12,9 +12,9 @@ import { PasswordStrengthMeter } from "@/components/auth/PasswordStrengthMeter";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
 import { Button } from "@/components/ui/Button";
 
-const labelClass = "mb-1.5 block text-sm font-medium text-ink-800";
+const labelClass = "mb-1.5 block text-sm font-medium text-foreground";
 const fieldClass =
-  "h-12 w-full rounded-2xl border border-sand-200 bg-white px-4 text-sm text-ink-900 placeholder:text-ink-400 focus-ring";
+  "h-12 w-full rounded-2xl border border-white/10 bg-base px-4 text-sm text-foreground placeholder:text-muted-foreground/80 focus-ring";
 const errorClass = "mt-1 text-sm text-red-600";
 
 export function SignupForm() {
@@ -130,27 +130,27 @@ export function SignupForm() {
       <div>
         <label
           htmlFor="signup-terms"
-          className="flex cursor-pointer items-start gap-2.5 text-sm text-ink-700"
+          className="flex cursor-pointer items-start gap-2.5 text-sm text-foreground/90"
         >
           <input
             id="signup-terms"
             type="checkbox"
             aria-invalid={!!errors.agreeTerms}
-            className="mt-0.5 h-4 w-4 rounded border-sand-300 text-ink-900 focus-ring"
+            className="mt-0.5 h-4 w-4 rounded border-white/20 text-foreground focus-ring"
             {...register("agreeTerms")}
           />
           <span>
             I agree to the{" "}
             <Link
               href="/contact"
-              className="focus-ring rounded font-medium text-gold-dark hover:text-ink-900"
+              className="focus-ring rounded font-medium text-gold-dark hover:text-foreground"
             >
               Terms
             </Link>{" "}
             and{" "}
             <Link
               href="/contact"
-              className="focus-ring rounded font-medium text-gold-dark hover:text-ink-900"
+              className="focus-ring rounded font-medium text-gold-dark hover:text-foreground"
             >
               Privacy Policy
             </Link>
@@ -164,12 +164,12 @@ export function SignupForm() {
 
       <label
         htmlFor="signup-marketing"
-        className="flex cursor-pointer items-start gap-2.5 text-sm text-ink-700"
+        className="flex cursor-pointer items-start gap-2.5 text-sm text-foreground/90"
       >
         <input
           id="signup-marketing"
           type="checkbox"
-          className="mt-0.5 h-4 w-4 rounded border-sand-300 text-ink-900 focus-ring"
+          className="mt-0.5 h-4 w-4 rounded border-white/20 text-foreground focus-ring"
           {...register("marketingOptIn")}
         />
         <span>Send me design inspiration and occasional updates.</span>
@@ -186,11 +186,11 @@ export function SignupForm() {
 
       <SocialAuthButtons verb="Sign up" />
 
-      <p className="text-center text-sm text-ink-500">
+      <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="focus-ring rounded font-medium text-gold-dark hover:text-ink-900"
+          className="focus-ring rounded font-medium text-gold-dark hover:text-foreground"
         >
           Log in
         </Link>

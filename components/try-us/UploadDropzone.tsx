@@ -61,19 +61,19 @@ export function UploadDropzone({ previewUrl, fileName, onChange }: UploadDropzon
   return (
     <div>
       {previewUrl ? (
-        <div className="relative overflow-hidden rounded-3xl border border-sand-200">
+        <div className="relative overflow-hidden rounded-3xl border border-white/10">
           <div className="relative aspect-video w-full">
             <Image src={previewUrl} alt={fileName ?? "Uploaded space"} fill className="object-cover" unoptimized />
           </div>
-          <div className="flex items-center justify-between gap-3 bg-white/80 px-4 py-3">
-            <span className="flex items-center gap-2 truncate text-sm text-ink-600">
+          <div className="flex items-center justify-between gap-3 bg-void/5 px-4 py-3">
+            <span className="flex items-center gap-2 truncate text-sm text-muted-foreground">
               <ImageIcon className="h-4 w-4 shrink-0" />
               <span className="truncate">{fileName}</span>
             </span>
             <button
               type="button"
               onClick={remove}
-              className="focus-ring inline-flex items-center gap-1 rounded-full bg-ink-900/5 px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-ink-900/10"
+              className="focus-ring inline-flex items-center gap-1 rounded-full bg-base/10/5 px-3 py-1.5 text-xs font-medium text-foreground/90 hover:bg-base/10/10"
             >
               <X className="h-3.5 w-3.5" /> Remove
             </button>
@@ -94,16 +94,16 @@ export function UploadDropzone({ previewUrl, fileName, onChange }: UploadDropzon
             "focus-ring flex w-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed px-6 py-12 text-center transition-colors",
             dragging
               ? "border-gold bg-gold/5"
-              : "border-sand-300 bg-white/50 hover:border-gold/60 hover:bg-white/70"
+              : "border-white/20 bg-void/50 hover:border-gold/60 hover:bg-void/5"
           )}
         >
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-900 text-gold-light">
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-base/10 text-gold-light">
             <UploadCloud className="h-7 w-7" />
           </span>
-          <span className="text-base font-medium text-ink-900">
+          <span className="text-base font-medium text-foreground">
             Drag & drop a photo of your space
           </span>
-          <span className="text-sm text-ink-500">
+          <span className="text-sm text-muted-foreground">
             or <span className="font-medium text-gold-dark underline">browse files</span> · JPG, PNG, WEBP · up to {MAX_IMAGE_SIZE_MB} MB
           </span>
         </motion.button>

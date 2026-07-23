@@ -10,9 +10,9 @@ import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
-const labelClass = "mb-2 block text-sm font-medium text-ink-800";
+const labelClass = "mb-2 block text-sm font-medium text-foreground";
 const fieldClass =
-  "h-12 w-full rounded-2xl border border-sand-200 bg-white px-4 text-sm text-ink-900 placeholder:text-ink-400 focus-ring";
+  "h-12 w-full rounded-2xl border border-white/10 bg-base px-4 text-sm text-foreground placeholder:text-muted-foreground/80 focus-ring";
 const errorClass = "mt-1.5 text-sm text-red-600";
 
 export function ProfileForm() {
@@ -112,7 +112,7 @@ export function ProfileForm() {
 
         <div>
           <label htmlFor="profile-style" className={labelClass}>
-            Preferred style <span className="text-ink-400">(optional)</span>
+            Preferred style <span className="text-muted-foreground/80">(optional)</span>
           </label>
           <select
             id="profile-style"
@@ -134,7 +134,7 @@ export function ProfileForm() {
 
         <div>
           <label htmlFor="profile-city" className={labelClass}>
-            City <span className="text-ink-400">(optional)</span>
+            City <span className="text-muted-foreground/80">(optional)</span>
           </label>
           <input
             id="profile-city"
@@ -149,7 +149,7 @@ export function ProfileForm() {
 
         <div>
           <label htmlFor="profile-state" className={labelClass}>
-            State / region <span className="text-ink-400">(optional)</span>
+            State / region <span className="text-muted-foreground/80">(optional)</span>
           </label>
           <input
             id="profile-state"
@@ -164,7 +164,7 @@ export function ProfileForm() {
 
         <div>
           <label htmlFor="profile-country" className={labelClass}>
-            Country <span className="text-ink-400">(optional)</span>
+            Country <span className="text-muted-foreground/80">(optional)</span>
           </label>
           <input
             id="profile-country"
@@ -182,7 +182,7 @@ export function ProfileForm() {
         <div>
           <label htmlFor="profile-contact-time" className={labelClass}>
             Preferred contact time{" "}
-            <span className="text-ink-400">(optional)</span>
+            <span className="text-muted-foreground/80">(optional)</span>
           </label>
           <input
             id="profile-contact-time"
@@ -200,7 +200,7 @@ export function ProfileForm() {
 
       <div className="mt-5">
         <label htmlFor="profile-address" className={labelClass}>
-          Address <span className="text-ink-400">(optional)</span>
+          Address <span className="text-muted-foreground/80">(optional)</span>
         </label>
         <textarea
           id="profile-address"

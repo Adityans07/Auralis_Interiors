@@ -20,25 +20,25 @@ export function LoadingGenerationAnimation() {
   }, []);
 
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center py-16 text-center">
+    <div className="mx-auto flex max-w-md flex-col items-center py-24 text-center">
       <motion.div
         animate={{ rotate: 360 }}
-        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
         className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-tr from-gold-dark via-gold to-gold-light shadow-glow"
       >
-        <span className="flex h-20 w-20 items-center justify-center rounded-full bg-sand-50">
+        <span className="flex h-20 w-20 items-center justify-center rounded-full bg-base">
           <Sparkles className="h-8 w-8 text-gold-dark" />
         </span>
       </motion.div>
 
-      <h2 className="mt-8 text-2xl font-semibold text-ink-900">
+      <h2 className="mt-10 font-serif text-3xl font-light text-foreground">
         Designing your space
       </h2>
-      <p className="mt-2 text-sm text-ink-500">
-        Our AI is composing personalized concepts — this only takes a moment.
+      <p className="mt-3 text-sm font-light text-muted-foreground">
+        Our AI is composing cinematic concepts — this only takes a moment.
       </p>
 
-      <ul className="mt-8 w-full space-y-3 text-left">
+      <ul className="mt-12 w-full space-y-4 text-left">
         {GENERATION_STEPS.map((label, i) => {
           const done = i < step;
           const active = i === step;
@@ -47,16 +47,16 @@ export function LoadingGenerationAnimation() {
               key={label}
               initial={{ opacity: 0.4 }}
               animate={{ opacity: done || active ? 1 : 0.4 }}
-              className="flex items-center gap-3 rounded-2xl border border-sand-200 bg-white/70 px-4 py-3"
+              className="glass-dark flex items-center gap-4 rounded-2xl p-4"
             >
               <span
                 className={
-                  "flex h-7 w-7 items-center justify-center rounded-full " +
+                  "flex h-8 w-8 items-center justify-center rounded-full " +
                   (done
-                    ? "bg-emerald-500 text-white"
+                    ? "bg-emerald-500/20 text-emerald-400"
                     : active
-                    ? "bg-ink-900 text-gold-light"
-                    : "bg-sand-200 text-ink-400")
+                    ? "bg-gold/20 text-gold"
+                    : "bg-base/5 text-muted-foreground/50")
                 }
               >
                 {done ? (
@@ -67,7 +67,7 @@ export function LoadingGenerationAnimation() {
                   <span className="text-xs">{i + 1}</span>
                 )}
               </span>
-              <span className="text-sm font-medium text-ink-700">{label}</span>
+              <span className="text-sm font-light text-foreground">{label}</span>
             </motion.li>
           );
         })}

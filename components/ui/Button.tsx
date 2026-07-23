@@ -7,12 +7,12 @@ type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-ink-900 text-sand-50 hover:bg-ink-800 shadow-soft hover:shadow-lg",
+    "bg-white/10 text-foreground hover:bg-ink-800 shadow-glow hover:shadow-lg",
   secondary:
-    "bg-gold text-ink-900 hover:bg-gold-light shadow-soft",
+    "bg-gold text-foreground hover:bg-gold-light shadow-glow",
   outline:
-    "border border-ink-900/20 text-ink-900 hover:border-ink-900/50 hover:bg-white/60",
-  ghost: "text-ink-800 hover:bg-ink-900/5",
+    "border border-white/20/20 text-foreground hover:border-white/20/50 hover:bg-base/60",
+  ghost: "text-foreground hover:bg-white/10/5",
 };
 
 const sizes: Record<Size, string> = {

@@ -77,23 +77,23 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-6 rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft sm:p-8">
+      <div className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-base/5 p-6 shadow-glow sm:p-8">
         <div>
-          <h1 className="font-serif text-2xl font-semibold text-ink-900 sm:text-3xl">
+          <h1 className="font-serif text-2xl font-semibold text-foreground sm:text-3xl">
             Settings
           </h1>
-          <p className="mt-2 text-sm text-ink-500">
+          <p className="mt-2 text-sm text-muted-foreground">
             Manage your password, email preferences, and account.
           </p>
         </div>
       </div>
 
       {/* Change password */}
-      <section className="rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft sm:p-8">
-        <h2 className="font-serif text-xl font-semibold text-ink-900">
+      <section className="rounded-3xl border border-white/10 bg-base/5 p-6 shadow-glow sm:p-8">
+        <h2 className="font-serif text-xl font-semibold text-foreground">
           Change password
         </h2>
-        <p className="mt-1 text-sm text-ink-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           Use at least 8 characters for your new password.
         </p>
 
@@ -130,16 +130,16 @@ export default function SettingsPage() {
       </section>
 
       {/* Email preferences */}
-      <section className="rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft sm:p-8">
-        <h2 className="font-serif text-xl font-semibold text-ink-900">
+      <section className="rounded-3xl border border-white/10 bg-base/5 p-6 shadow-glow sm:p-8">
+        <h2 className="font-serif text-xl font-semibold text-foreground">
           Email preferences
         </h2>
         <div className="mt-5 flex items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-ink-800">
+            <p className="text-sm font-medium text-foreground">
               Product updates &amp; design inspiration
             </p>
-            <p className="mt-0.5 text-sm text-ink-500">
+            <p className="mt-0.5 text-sm text-muted-foreground">
               Occasional emails about new features and curated ideas.
             </p>
           </div>
@@ -151,12 +151,12 @@ export default function SettingsPage() {
             onClick={toggleMarketing}
             className={cn(
               "focus-ring relative h-6 w-11 shrink-0 rounded-full transition-colors",
-              marketingOptIn ? "bg-ink-900" : "bg-sand-300"
+              marketingOptIn ? "bg-white/10" : "bg-sand-300"
             )}
           >
             <span
               className={cn(
-                "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform",
+                "absolute top-0.5 h-5 w-5 rounded-full bg-base shadow transition-transform",
                 marketingOptIn ? "translate-x-[22px]" : "translate-x-0.5"
               )}
             />
@@ -165,7 +165,7 @@ export default function SettingsPage() {
       </section>
 
       {/* Danger zone */}
-      <section className="rounded-3xl border border-red-200 bg-red-50/60 p-6 shadow-soft sm:p-8">
+      <section className="rounded-3xl border border-red-200 bg-red-50/60 p-6 shadow-glow sm:p-8">
         <h2 className="flex items-center gap-2 font-serif text-xl font-semibold text-red-700">
           <AlertTriangle className="h-5 w-5" aria-hidden /> Danger zone
         </h2>
@@ -188,7 +188,7 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setConfirmingDelete(false)}
-              className="focus-ring inline-flex items-center rounded-full border border-sand-200 bg-white px-4 py-2 text-sm font-medium text-ink-700 transition-colors hover:text-ink-900"
+              className="focus-ring inline-flex items-center rounded-full border border-white/10 bg-base px-4 py-2 text-sm font-medium text-foreground/90 transition-colors hover:text-foreground"
             >
               Cancel
             </button>
@@ -197,7 +197,7 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={() => setConfirmingDelete(true)}
-            className="focus-ring mt-5 inline-flex items-center rounded-full border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100"
+            className="focus-ring mt-5 inline-flex items-center rounded-full border border-red-300 bg-base px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100"
           >
             Delete account
           </button>
@@ -205,13 +205,13 @@ export default function SettingsPage() {
       </section>
 
       {/* Log out */}
-      <section className="rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft sm:p-8">
+      <section className="rounded-3xl border border-white/10 bg-base/5 p-6 shadow-glow sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="font-serif text-xl font-semibold text-ink-900">
+            <h2 className="font-serif text-xl font-semibold text-foreground">
               Log out
             </h2>
-            <p className="mt-1 text-sm text-ink-500">
+            <p className="mt-1 text-sm text-muted-foreground">
               Sign out of your account on this device.
             </p>
           </div>

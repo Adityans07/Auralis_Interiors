@@ -48,7 +48,7 @@ export default function AdminContactMessagesPage() {
               <select
                 value={row.status}
                 onChange={(event) => updateStatus(row.id, event.target.value)}
-                className="h-9 rounded-lg border border-sand-200 bg-white px-2 text-xs focus-ring"
+                className="h-9 rounded-lg border border-white/10 bg-base px-2 text-xs focus-ring"
               >
                 {STATUS_OPTIONS.map((status) => (
                   <option key={status} value={status}>

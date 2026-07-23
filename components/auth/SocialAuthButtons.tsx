@@ -47,9 +47,9 @@ export function SocialAuthButtons({ verb = "Continue" }: { verb?: string }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-4">
-        <span className="h-px flex-1 bg-sand-200" />
-        <span className="text-xs uppercase tracking-widest text-ink-400">or</span>
-        <span className="h-px flex-1 bg-sand-200" />
+        <span className="h-px flex-1 bg-white/10" />
+        <span className="text-xs uppercase tracking-widest text-muted-foreground/80">or</span>
+        <span className="h-px flex-1 bg-white/10" />
       </div>
       <div className="grid gap-3">
         <Button type="button" variant="outline" size="lg" className="w-full" onClick={onSocial}>

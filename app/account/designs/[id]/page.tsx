@@ -48,11 +48,11 @@ export default function DesignRequestDetailPage() {
 
   if (!request) {
     return (
-      <div className="rounded-3xl border border-sand-200 bg-white/80 p-12 text-center shadow-soft">
-        <h1 className="font-serif text-2xl font-semibold text-ink-900">
+      <div className="rounded-3xl border border-white/10 bg-base/5 p-12 text-center shadow-glow">
+        <h1 className="font-serif text-2xl font-semibold text-foreground">
           Design request not found.
         </h1>
-        <p className="mx-auto mt-2 max-w-sm text-sm text-ink-500">
+        <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
           This design request may have been removed or the link is incorrect.
         </p>
         <div className="mt-6">
@@ -73,22 +73,22 @@ export default function DesignRequestDetailPage() {
     <div className="space-y-8">
       <Link
         href="/account/designs"
-        className="focus-ring inline-flex items-center gap-2 rounded-full text-sm font-medium text-ink-600 hover:text-ink-900"
+        className="focus-ring inline-flex items-center gap-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden /> Back to my designs
       </Link>
 
       {/* Request details */}
-      <section className="rounded-3xl border border-sand-200 bg-white/80 p-6 shadow-soft sm:p-8">
+      <section className="rounded-3xl border border-white/10 bg-base/5 p-6 shadow-glow sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.15em] text-ink-400">
+            <p className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground/80">
               {request.id}
             </p>
-            <h1 className="mt-1 font-serif text-2xl font-semibold text-ink-900">
+            <h1 className="mt-1 font-serif text-2xl font-semibold text-foreground">
               {humanize(request.spaceType)} · {humanize(request.style)}
             </h1>
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-ink-500">
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" aria-hidden /> {locationLabel}
             </p>
           </div>
@@ -97,60 +97,60 @@ export default function DesignRequestDetailPage() {
           </Button>
         </div>
 
-        <dl className="mt-6 grid gap-4 border-t border-sand-200 pt-6 sm:grid-cols-2 lg:grid-cols-4">
+        <dl className="mt-6 grid gap-4 border-t border-white/10 pt-6 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <dt className="text-xs uppercase tracking-wide text-ink-400">
+            <dt className="text-xs uppercase tracking-wide text-muted-foreground/80">
               Design type
             </dt>
-            <dd className="mt-1 text-sm font-medium text-ink-800">
+            <dd className="mt-1 text-sm font-medium text-foreground">
               {humanize(request.designType)}
             </dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-wide text-ink-400">
+            <dt className="text-xs uppercase tracking-wide text-muted-foreground/80">
               Space
             </dt>
-            <dd className="mt-1 text-sm font-medium text-ink-800">
+            <dd className="mt-1 text-sm font-medium text-foreground">
               {humanize(request.spaceType)}
             </dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-wide text-ink-400">
+            <dt className="text-xs uppercase tracking-wide text-muted-foreground/80">
               Style
             </dt>
-            <dd className="mt-1 text-sm font-medium text-ink-800">
+            <dd className="mt-1 text-sm font-medium text-foreground">
               {humanize(request.style)}
             </dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-wide text-ink-400">
+            <dt className="text-xs uppercase tracking-wide text-muted-foreground/80">
               Budget
             </dt>
-            <dd className="mt-1 text-sm font-medium text-ink-800">
+            <dd className="mt-1 text-sm font-medium text-foreground">
               {formatCurrency(request.budget, request.currency)}
             </dd>
           </div>
         </dl>
 
         <div className="mt-6">
-          <dt className="text-xs uppercase tracking-wide text-ink-400">
+          <dt className="text-xs uppercase tracking-wide text-muted-foreground/80">
             Description
           </dt>
-          <dd className="mt-1 text-sm leading-relaxed text-ink-600">
+          <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">
             {request.description || "No description provided."}
           </dd>
         </div>
 
         {request.selectedItems.length > 0 && (
           <div className="mt-6">
-            <p className="text-xs uppercase tracking-wide text-ink-400">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground/80">
               Selected items
             </p>
             <ul className="mt-2 flex flex-wrap gap-2">
               {request.selectedItems.map((item) => (
                 <li
                   key={item.id}
-                  className="inline-flex items-center rounded-full border border-sand-200 bg-sand-50 px-3 py-1 text-xs font-medium text-ink-600"
+                  className="inline-flex items-center rounded-full border border-white/10 bg-void px-3 py-1 text-xs font-medium text-muted-foreground"
                 >
                   {item.label}
                 </li>
@@ -162,13 +162,13 @@ export default function DesignRequestDetailPage() {
 
       {/* Generated concepts */}
       <section className="space-y-5">
-        <h2 className="font-serif text-xl font-semibold text-ink-900">
+        <h2 className="font-serif text-xl font-semibold text-foreground">
           Design concepts
         </h2>
 
         {request.generatedDesigns.length === 0 ? (
-          <div className="rounded-3xl border border-sand-200 bg-white/80 p-8 text-center shadow-soft">
-            <p className="text-sm text-ink-500">
+          <div className="rounded-3xl border border-white/10 bg-base/5 p-8 text-center shadow-glow">
+            <p className="text-sm text-muted-foreground">
               No design concepts have been generated for this request yet.
             </p>
           </div>
@@ -180,12 +180,12 @@ export default function DesignRequestDetailPage() {
                 <article
                   key={design.id}
                   className={cn(
-                    "overflow-hidden rounded-3xl border bg-white/80 shadow-soft",
-                    isSelected ? "border-gold/50 ring-1 ring-gold/40" : "border-sand-200"
+                    "overflow-hidden rounded-3xl border bg-base/5 shadow-glow",
+                    isSelected ? "border-gold/50 ring-1 ring-gold/40" : "border-white/10"
                   )}
                 >
                   <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-                    <div className="relative aspect-[16/10] overflow-hidden bg-sand-100 lg:aspect-auto">
+                    <div className="relative aspect-[16/10] overflow-hidden bg-white/10 lg:aspect-auto">
                       {design.previewImage ? (
                         <Image
                           src={design.previewImage}
@@ -209,10 +209,10 @@ export default function DesignRequestDetailPage() {
                     <div className="p-5 lg:py-6 lg:pr-6">
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <h3 className="font-serif text-lg font-semibold text-ink-900">
+                          <h3 className="font-serif text-lg font-semibold text-foreground">
                             {design.title}
                           </h3>
-                          <p className="mt-0.5 text-sm text-ink-500">
+                          <p className="mt-0.5 text-sm text-muted-foreground">
                             {humanize(design.style)}
                           </p>
                         </div>
@@ -220,7 +220,7 @@ export default function DesignRequestDetailPage() {
                       </div>
 
                       {design.description && (
-                        <p className="mt-3 text-sm leading-relaxed text-ink-600">
+                        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                           {design.description}
                         </p>
                       )}

@@ -49,11 +49,11 @@ export function ItemSelector({ designType, selected, onChange, error }: ItemSele
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-ink-500">
+        <p className="text-sm text-muted-foreground">
           Select the items you&apos;d like included.{" "}
           <span className="text-gold-dark">*</span>
         </p>
-        <span className="rounded-full bg-ink-900 px-3 py-1 text-xs font-medium text-sand-50">
+        <span className="rounded-full bg-base/10 px-3 py-1 text-xs font-medium text-foreground">
           {selected.length} selected
         </span>
       </div>
@@ -65,7 +65,7 @@ export function ItemSelector({ designType, selected, onChange, error }: ItemSele
           const CatIcon = CATEGORY_ICON[category];
           return (
             <div key={category}>
-              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-ink-700">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-foreground/90">
                 <CatIcon className="h-4 w-4 text-gold-dark" />
                 {ITEM_CATEGORY_LABELS[category]}
               </h3>
@@ -82,8 +82,8 @@ export function ItemSelector({ designType, selected, onChange, error }: ItemSele
                       className={cn(
                         "focus-ring relative flex items-center justify-between gap-2 rounded-2xl border px-4 py-3 text-left text-sm font-medium transition-all",
                         isSelected
-                          ? "border-ink-900 bg-ink-900 text-sand-50 shadow-soft"
-                          : "border-sand-200 bg-white text-ink-700 hover:border-ink-900/40"
+                          ? "border-white/20 bg-base/10 text-foreground shadow-glow"
+                          : "border-white/10 bg-void text-foreground/90 hover:border-white/20"
                       )}
                     >
                       <span>{item.label}</span>
@@ -91,8 +91,8 @@ export function ItemSelector({ designType, selected, onChange, error }: ItemSele
                         className={cn(
                           "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
                           isSelected
-                            ? "border-gold bg-gold text-ink-900"
-                            : "border-sand-300"
+                            ? "border-gold bg-gold text-foreground"
+                            : "border-white/20"
                         )}
                       >
                         {isSelected && <Check className="h-3.5 w-3.5" />}

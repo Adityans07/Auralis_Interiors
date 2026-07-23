@@ -19,7 +19,7 @@ export default function AdminCustomerDetailPage() {
   }, [params?.id]);
 
   if (!data) {
-    return <p className="text-sm text-ink-500">Loading customer profile...</p>;
+    return <p className="text-sm text-muted-foreground">Loading customer profile...</p>;
   }
 
   const customer = data.customer as Record<string, unknown>;
@@ -42,20 +42,20 @@ export default function AdminCustomerDetailPage() {
           }}
         />
 
-        <article className="rounded-2xl border border-sand-200 bg-white p-5 lg:col-span-2">
-          <h3 className="text-base font-semibold text-ink-900">Usage Summary</h3>
+        <article className="rounded-2xl border border-white/10 bg-base p-5 lg:col-span-2">
+          <h3 className="text-base font-semibold text-foreground">Usage Summary</h3>
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl bg-sand-50 p-3">
-              <p className="text-xs uppercase text-ink-500">Design Requests</p>
-              <p className="text-lg font-semibold text-ink-900">{data.designRequests.length}</p>
+            <div className="rounded-xl bg-void p-3">
+              <p className="text-xs uppercase text-muted-foreground">Design Requests</p>
+              <p className="text-lg font-semibold text-foreground">{data.designRequests.length}</p>
             </div>
-            <div className="rounded-xl bg-sand-50 p-3">
-              <p className="text-xs uppercase text-ink-500">Bookings</p>
-              <p className="text-lg font-semibold text-ink-900">{data.bookings.length}</p>
+            <div className="rounded-xl bg-void p-3">
+              <p className="text-xs uppercase text-muted-foreground">Bookings</p>
+              <p className="text-lg font-semibold text-foreground">{data.bookings.length}</p>
             </div>
-            <div className="rounded-xl bg-sand-50 p-3">
-              <p className="text-xs uppercase text-ink-500">Payments</p>
-              <p className="text-lg font-semibold text-ink-900">{data.payments.length}</p>
+            <div className="rounded-xl bg-void p-3">
+              <p className="text-xs uppercase text-muted-foreground">Payments</p>
+              <p className="text-lg font-semibold text-foreground">{data.payments.length}</p>
             </div>
           </div>
         </article>

@@ -60,10 +60,10 @@ export default function AdminBlogsPage() {
             header: "Actions",
             render: (row) => (
               <div className="flex items-center gap-2">
-                <Link href={`/admin/blogs/${row.id}/edit`} className="text-sm font-medium text-gold-dark hover:text-ink-900">
+                <Link href={`/admin/blogs/${row.id}/edit`} className="text-sm font-medium text-gold-dark hover:text-foreground">
                   Edit
                 </Link>
-                <button className="text-sm text-ink-600 hover:text-ink-900" onClick={() => togglePublished(row)}>
+                <button className="text-sm text-muted-foreground hover:text-foreground" onClick={() => togglePublished(row)}>
                   {row.published ? "Unpublish" : "Publish"}
                 </button>
                 <button className="text-sm text-red-600 hover:text-red-700" onClick={() => archive(row.id)}>

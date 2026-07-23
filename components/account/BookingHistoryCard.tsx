@@ -32,13 +32,13 @@ export function BookingHistoryCard({ booking }: BookingHistoryCardProps) {
   const status = STATUS_CONFIG[booking.status];
 
   return (
-    <article className="rounded-3xl border border-sand-200 bg-white/80 p-5 shadow-soft sm:p-6">
+    <article className="rounded-3xl border border-white/10 bg-base/5 p-5 shadow-glow sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-xs font-medium uppercase tracking-[0.15em] text-ink-400">
+          <p className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground/80">
             {booking.id}
           </p>
-          <h3 className="mt-1 font-serif text-lg font-semibold text-ink-900">
+          <h3 className="mt-1 font-serif text-lg font-semibold text-foreground">
             {booking.projectType === "consultation"
               ? "Design Consultation"
               : `${humanize(booking.projectType)} Project`}
@@ -54,25 +54,25 @@ export function BookingHistoryCard({ booking }: BookingHistoryCardProps) {
         </span>
       </div>
 
-      <dl className="mt-4 grid gap-3 text-sm text-ink-600 sm:grid-cols-2">
+      <dl className="mt-4 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
         <div className="flex items-center gap-2">
-          <CalendarDays className="h-4 w-4 text-ink-400" aria-hidden />
+          <CalendarDays className="h-4 w-4 text-muted-foreground/80" aria-hidden />
           <dt className="sr-only">Date</dt>
           <dd>{formatDate(booking.preferredDate)}</dd>
         </div>
         <div className="flex items-center gap-2">
-          <Clock className="h-4 w-4 text-ink-400" aria-hidden />
+          <Clock className="h-4 w-4 text-muted-foreground/80" aria-hidden />
           <dt className="sr-only">Time</dt>
           <dd>{booking.preferredTime}</dd>
         </div>
         <div className="flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-ink-400" aria-hidden />
+          <MapPin className="h-4 w-4 text-muted-foreground/80" aria-hidden />
           <dt className="sr-only">Location</dt>
           <dd>{booking.location}</dd>
         </div>
         {booking.designReference && (
           <div className="flex items-center gap-2">
-            <Tag className="h-4 w-4 text-ink-400" aria-hidden />
+            <Tag className="h-4 w-4 text-muted-foreground/80" aria-hidden />
             <dt className="sr-only">Design reference</dt>
             <dd className="truncate">{booking.designReference}</dd>
           </div>
@@ -80,7 +80,7 @@ export function BookingHistoryCard({ booking }: BookingHistoryCardProps) {
       </dl>
 
       {booking.message && (
-        <p className="mt-4 rounded-2xl border border-sand-200 bg-sand-50 px-4 py-3 text-sm text-ink-500">
+        <p className="mt-4 rounded-2xl border border-white/10 bg-void px-4 py-3 text-sm text-muted-foreground">
           {booking.message}
         </p>
       )}

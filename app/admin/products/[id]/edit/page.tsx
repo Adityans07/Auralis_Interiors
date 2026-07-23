@@ -21,7 +21,7 @@ export default function AdminEditProductPage() {
   }, [params?.id]);
 
   if (!product) {
-    return <p className="text-sm text-ink-500">Loading product...</p>;
+    return <p className="text-sm text-muted-foreground">Loading product...</p>;
   }
 
   return (
@@ -34,6 +34,7 @@ export default function AdminEditProductPage() {
           setSaving(true);
           try {
             await updateAdminProduct(product.id, payload as never);
+            router.refresh(); // Invalidate cache so changes persist in the list
             router.push("/admin/products");
           } finally {
             setSaving(false);

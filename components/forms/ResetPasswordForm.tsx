@@ -52,15 +52,15 @@ export function ResetPasswordForm() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="rounded-3xl border border-emerald-200 bg-emerald-50/70 p-8 text-center shadow-soft"
+        className="rounded-3xl border border-emerald-200 bg-emerald-50/70 p-8 text-center shadow-glow"
       >
         <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
           <ShieldCheck className="h-7 w-7" aria-hidden />
         </span>
-        <h3 className="mt-5 font-serif text-2xl font-semibold text-ink-900">
+        <h3 className="mt-5 font-serif text-2xl font-semibold text-foreground">
           Password reset
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-ink-600">
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           Your password has been reset.
         </p>
         <Button href="/login" className="mt-6">

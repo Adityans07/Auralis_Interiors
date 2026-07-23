@@ -56,7 +56,7 @@ type Phase = "form" | "generating" | "results";
 const STEPS = ["Space", "Preferences", "Items", "Review"] as const;
 
 const fieldClass =
-  "h-12 w-full rounded-2xl border border-sand-200 bg-white px-4 text-sm text-ink-900 focus-ring";
+  "h-12 w-full rounded-2xl border border-white/10 bg-void px-4 text-sm text-foreground focus-ring";
 
 function initialFormData(style?: DesignStyle): TryUsFormData {
   return {
@@ -340,10 +340,10 @@ export function TryUsExperience() {
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <span className="eyebrow mb-2">Your concepts</span>
-            <h2 className="text-3xl font-semibold text-ink-900">
+            <h2 className="text-3xl font-semibold text-foreground">
               {results.length} designs, tailored to you
             </h2>
-            <p className="mt-2 text-sm text-ink-500">
+            <p className="mt-2 text-sm text-muted-foreground">
               Toggle products to fit your budget, explore the details, then
               select your favorite.
             </p>
@@ -370,7 +370,7 @@ export function TryUsExperience() {
           <motion.div
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-6 flex items-center gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-5 py-4 text-sm text-ink-800"
+            className="mt-6 flex items-center gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-5 py-4 text-sm text-foreground"
           >
             <Check className="h-5 w-5 text-gold-dark" />
             Great choice — your selection is saved. Our team will contact you to
@@ -439,8 +439,8 @@ export function TryUsExperience() {
                 className={cn(
                   "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition-colors",
                   state === "done" && "bg-emerald-500 text-white",
-                  state === "current" && "bg-ink-900 text-gold-light",
-                  state === "todo" && "bg-sand-200 text-ink-400"
+                  state === "current" && "bg-base/10 text-gold-light",
+                  state === "todo" && "bg-white/10 text-muted-foreground/80"
                 )}
                 aria-current={state === "current" ? "step" : undefined}
               >
@@ -449,20 +449,20 @@ export function TryUsExperience() {
               <span
                 className={cn(
                   "hidden text-sm font-medium sm:block",
-                  state === "current" ? "text-ink-900" : "text-ink-400"
+                  state === "current" ? "text-foreground" : "text-muted-foreground/80"
                 )}
               >
                 {label}
               </span>
               {i < STEPS.length - 1 && (
-                <span className="mx-1 hidden h-px flex-1 bg-sand-200 sm:block" />
+                <span className="mx-1 hidden h-px flex-1 bg-white/10 sm:block" />
               )}
             </li>
           );
         })}
       </ol>
 
-      <div className="mt-8 rounded-3xl border border-sand-200 bg-white/70 p-6 shadow-soft sm:p-8">
+      <div className="mt-8 rounded-3xl border border-white/10 bg-void/5 p-6 shadow-glow sm:p-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
@@ -547,8 +547,8 @@ function StepSpace({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-ink-900">Tell us about your space</h2>
-        <p className="mt-1 text-sm text-ink-500">
+        <h2 className="text-2xl font-semibold text-foreground">Tell us about your space</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Upload a photo or describe it — whichever is easier.
         </p>
       </div>
@@ -567,13 +567,13 @@ function StepSpace({
         }}
       />
 
-      <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-ink-400">
-        <span className="h-px flex-1 bg-sand-200" /> or describe it{" "}
-        <span className="h-px flex-1 bg-sand-200" />
+      <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground/80">
+        <span className="h-px flex-1 bg-white/10" /> or describe it{" "}
+        <span className="h-px flex-1 bg-white/10" />
       </div>
 
       <div>
-        <label htmlFor="description" className="mb-2 flex items-center gap-2 text-sm font-medium text-ink-800">
+        <label htmlFor="description" className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
           <ImageIcon className="h-4 w-4 text-gold-dark" /> Describe your space
         </label>
         <textarea
@@ -582,13 +582,13 @@ function StepSpace({
           value={form.description ?? ""}
           onChange={(e) => update({ description: e.target.value })}
           placeholder="e.g. A north-facing living room, ~18m², bare walls, lots of daylight…"
-          className="w-full rounded-2xl border border-sand-200 bg-white px-4 py-3 text-sm text-ink-900 focus-ring"
+          className="w-full rounded-2xl border border-white/10 bg-void px-4 py-3 text-sm text-foreground focus-ring"
         />
       </div>
 
       {/* Design type */}
       <div>
-        <span className="mb-2 block text-sm font-medium text-ink-800">
+        <span className="mb-2 block text-sm font-medium text-foreground">
           Design type <span className="text-gold-dark">*</span>
         </span>
         <div className="grid grid-cols-2 gap-3">
@@ -601,15 +601,15 @@ function StepSpace({
               className={cn(
                 "rounded-2xl border p-4 text-left transition-all",
                 form.designType === dt.value
-                  ? "border-ink-900 bg-ink-900 text-sand-50"
-                  : "border-sand-200 bg-white hover:border-ink-900/40"
+                  ? "border-white/20 bg-base/10 text-foreground"
+                  : "border-white/10 bg-void hover:border-white/20"
               )}
             >
               <span className="block text-sm font-semibold">{dt.label}</span>
               <span
                 className={cn(
                   "mt-1 block text-xs",
-                  form.designType === dt.value ? "text-sand-100/70" : "text-ink-500"
+                  form.designType === dt.value ? "text-muted-foreground" : "text-muted-foreground"
                 )}
               >
                 {dt.description}
@@ -622,7 +622,7 @@ function StepSpace({
       {/* Space type + size + condition */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="spaceType" className="mb-2 block text-sm font-medium text-ink-800">
+          <label htmlFor="spaceType" className="mb-2 block text-sm font-medium text-foreground">
             Space type <span className="text-gold-dark">*</span>
           </label>
           <select
@@ -639,7 +639,7 @@ function StepSpace({
           </select>
         </div>
         <div>
-          <label htmlFor="approxSize" className="mb-2 block text-sm font-medium text-ink-800">
+          <label htmlFor="approxSize" className="mb-2 block text-sm font-medium text-foreground">
             Approximate size (optional)
           </label>
           <input
@@ -653,7 +653,7 @@ function StepSpace({
       </div>
 
       <div>
-        <label htmlFor="condition" className="mb-2 block text-sm font-medium text-ink-800">
+        <label htmlFor="condition" className="mb-2 block text-sm font-medium text-foreground">
           Existing condition notes (optional)
         </label>
         <input
@@ -690,15 +690,15 @@ function StepPreferences({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-ink-900">Your preferences</h2>
-        <p className="mt-1 text-sm text-ink-500">
+        <h2 className="text-2xl font-semibold text-foreground">Your preferences</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Set the style, budget and location so we can tailor your concepts.
         </p>
       </div>
 
       {/* Style */}
       <div>
-        <span className="mb-2 block text-sm font-medium text-ink-800">
+        <span className="mb-2 block text-sm font-medium text-foreground">
           Preferred style <span className="text-gold-dark">*</span>
         </span>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
@@ -711,8 +711,8 @@ function StepPreferences({
               className={cn(
                 "rounded-2xl border px-3 py-2.5 text-sm font-medium transition-all",
                 form.style === s.value
-                  ? "border-ink-900 bg-ink-900 text-sand-50"
-                  : "border-sand-200 bg-white text-ink-700 hover:border-ink-900/40"
+                  ? "border-white/20 bg-base/10 text-foreground"
+                  : "border-white/10 bg-void text-foreground/90 hover:border-white/20"
               )}
             >
               {s.label}
@@ -724,7 +724,7 @@ function StepPreferences({
       {/* Mood + colors */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <span className="mb-2 block text-sm font-medium text-ink-800">Mood</span>
+          <span className="mb-2 block text-sm font-medium text-foreground">Mood</span>
           <div className="flex flex-wrap gap-2">
             {MOOD_OPTIONS.map((m) => (
               <button
@@ -735,8 +735,8 @@ function StepPreferences({
                 className={cn(
                   "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
                   form.mood === m.value
-                    ? "border-gold bg-gold text-ink-900"
-                    : "border-sand-300 bg-white text-ink-600 hover:border-ink-900/40"
+                    ? "border-gold bg-gold text-foreground"
+                    : "border-white/20 bg-void text-muted-foreground hover:border-white/20"
                 )}
               >
                 {m.label}
@@ -745,7 +745,7 @@ function StepPreferences({
           </div>
         </div>
         <div>
-          <label htmlFor="colors" className="mb-2 block text-sm font-medium text-ink-800">
+          <label htmlFor="colors" className="mb-2 block text-sm font-medium text-foreground">
             Color preferences
           </label>
           <input
@@ -772,7 +772,7 @@ function StepPreferences({
 
       {/* Timeline */}
       <div>
-        <span className="mb-2 block text-sm font-medium text-ink-800">Timeline</span>
+        <span className="mb-2 block text-sm font-medium text-foreground">Timeline</span>
         <div className="flex flex-wrap gap-2">
           {TIMELINE_OPTIONS.map((t) => (
             <button
@@ -783,8 +783,8 @@ function StepPreferences({
               className={cn(
                 "rounded-full border px-4 py-2 text-sm font-medium transition-colors",
                 form.timeline === t.value
-                  ? "border-ink-900 bg-ink-900 text-sand-50"
-                  : "border-sand-300 bg-white text-ink-600 hover:border-ink-900/40"
+                  ? "border-white/20 bg-base/10 text-foreground"
+                  : "border-white/20 bg-void text-muted-foreground hover:border-white/20"
               )}
             >
               {t.label}
@@ -827,14 +827,14 @@ function StepReview({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-ink-900">Review & generate</h2>
-        <p className="mt-1 text-sm text-ink-500">
+        <h2 className="text-2xl font-semibold text-foreground">Review & generate</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Confirm your brief. You can go back to edit anything.
         </p>
       </div>
 
       {/* Space preview / description */}
-      <div className="rounded-2xl border border-sand-200 bg-white p-4">
+      <div className="rounded-2xl border border-white/10 bg-void p-4">
         {form.imagePreviewUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -844,26 +844,26 @@ function StepReview({
           />
         ) : null}
         {form.description ? (
-          <p className="text-sm text-ink-600">
-            <span className="font-medium text-ink-800">Description: </span>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">Description: </span>
             {form.description}
           </p>
         ) : !form.imagePreviewUrl ? (
-          <p className="text-sm text-ink-400">No image or description provided.</p>
+          <p className="text-sm text-muted-foreground/80">No image or description provided.</p>
         ) : null}
       </div>
 
       <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
         {rows.map((r) => (
-          <div key={r.label} className="flex items-center justify-between border-b border-sand-200 pb-2">
-            <dt className="text-sm text-ink-400">{r.label}</dt>
-            <dd className="text-sm font-medium text-ink-900">{r.value}</dd>
+          <div key={r.label} className="flex items-center justify-between border-b border-white/10 pb-2">
+            <dt className="text-sm text-muted-foreground/80">{r.label}</dt>
+            <dd className="text-sm font-medium text-foreground">{r.value}</dd>
           </div>
         ))}
       </dl>
 
       <div>
-        <p className="mb-2 text-sm text-ink-400">
+        <p className="mb-2 text-sm text-muted-foreground/80">
           Selected items ({form.selectedItems.length})
         </p>
         <div className="flex flex-wrap gap-2">
@@ -871,19 +871,19 @@ function StepReview({
             form.selectedItems.map((i) => (
               <span
                 key={i.id}
-                className="rounded-full bg-sand-100 px-3 py-1 text-xs font-medium text-ink-700"
+                className="rounded-full bg-base/10 px-3 py-1 text-xs font-medium text-foreground/90"
               >
                 {i.label}
               </span>
             ))
           ) : (
-            <span className="text-sm text-ink-400">None selected.</span>
+            <span className="text-sm text-muted-foreground/80">None selected.</span>
           )}
         </div>
       </div>
 
       <div>
-        <label htmlFor="extraNotes" className="mb-2 block text-sm font-medium text-ink-800">
+        <label htmlFor="extraNotes" className="mb-2 block text-sm font-medium text-foreground">
           Extra notes (optional)
         </label>
         <textarea
@@ -892,7 +892,7 @@ function StepReview({
           value={form.extraNotes ?? ""}
           onChange={(e) => update({ extraNotes: e.target.value })}
           placeholder="Anything else we should know before generating your designs?"
-          className="w-full rounded-2xl border border-sand-200 bg-white px-4 py-3 text-sm text-ink-900 focus-ring"
+          className="w-full rounded-2xl border border-white/10 bg-void px-4 py-3 text-sm text-foreground focus-ring"
         />
       </div>
     </div>
