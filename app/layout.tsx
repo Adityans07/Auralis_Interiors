@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ToastProvider } from "@/components/ui/Toast";
+import { SmoothScrollProvider } from "@/components/layout/SmoothScrollProvider";
 import { AppChrome } from "@/components/layout/AppChrome";
 import { BRAND } from "@/lib/constants";
 
