@@ -24,7 +24,7 @@ const config: Record<
 };
 
 export function BudgetBadge({ status }: { status: BudgetStatus }) {
-  const { label, className, icon: Icon } = config[status];
+  const { label, className, icon: Icon } = config[status] || config["premium-option"];
   return (
     <span
       className={cn(

@@ -29,7 +29,7 @@ interface BookingHistoryCardProps {
 }
 
 export function BookingHistoryCard({ booking }: BookingHistoryCardProps) {
-  const status = STATUS_CONFIG[booking.status];
+  const status = STATUS_CONFIG[booking.status] || STATUS_CONFIG.pending;
 
   return (
     <article className="rounded-3xl border border-white/10 bg-base/5 p-5 shadow-glow sm:p-6">

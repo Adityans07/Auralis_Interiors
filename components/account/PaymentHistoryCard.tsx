@@ -33,7 +33,7 @@ interface PaymentHistoryCardProps {
 
 export function PaymentHistoryCard({ payment }: PaymentHistoryCardProps) {
   const { toast } = useToast();
-  const status = STATUS_CONFIG[payment.status];
+  const status = STATUS_CONFIG[payment.status] || STATUS_CONFIG.pending;
   const isFree = payment.amount === 0 || payment.status === "free";
 
   return (
