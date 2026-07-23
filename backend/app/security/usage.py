@@ -3,12 +3,21 @@ from __future__ import annotations
 from fastapi import status
 from sqlalchemy.orm import Session
 
-from app.models.entities import Payment, PaymentStatus, UserUsage
+from app.models.entities import Payment, PaymentStatus, UserUsage, UserRole
 from app.security.session import RequestContext
 from app.utils.responses import ApiError
 
 
 def get_free_generation_status_for_actor(db: Session, context: RequestContext) -> dict[str, bool | int]:
+    if context.user and context.user.role == UserRole.ADMIN:
+        return {
+            "canUseFreeGeneration": True,
+            "freeGenerationUsed": False,
+            "requiresPayment": False,
+            "hasUsedFreeGeneration": False,
+            "generationsUsed": 0,
+        }
+
     if context.user_id:
         usage = db.query(UserUsage).filter(UserUsage.user_id == context.user_id).one_or_none()
         if usage is None:
@@ -66,6 +75,9 @@ def consume_free_generation_for_actor(
     free_generation_applied: bool,
     paid: bool,
 ) -> None:
+    if context.user and context.user.role == UserRole.ADMIN:
+        return
+
     if context.user_id:
         usage = db.query(UserUsage).filter(UserUsage.user_id == context.user_id).one_or_none()
         if usage is None:
