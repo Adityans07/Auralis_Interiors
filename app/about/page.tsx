@@ -88,28 +88,32 @@ const PROCESS = [
 
 const TEAM = [
   {
-    name: "Elena Márquez",
-    role: "Head of Design",
-    seed: "auralis-team-elena",
-    bio: "Fifteen years shaping residential interiors from Barcelona to San Francisco.",
+    name: "Aditya Raj",
+    role: "Director",
+    seed: "auralis-team-Aditya",
+    bio: "The Brain Behind Auralis. Aditya is a visionary entrepreneur and AI enthusiast who co-founded Auralis Interiors to revolutionize the interior design industry.",
+    photo: "https://auralis-public-bucket.s3.eu-north-1.amazonaws.com/IMG_20230407_183633.jpg",
   },
   {
-    name: "Devin Okafor",
-    role: "Lead AI Engineer",
-    seed: "auralis-team-devin",
-    bio: "Builds the generative models that turn a photo into a room full of options.",
+    name: "Anand Raj",
+    role: "Director",
+    seed: "auralis-team-Anand",
+    bio: "The Visionary Behind Auralis. Anand is a passionate designer and technologist who leads the creative direction of Auralis Interiors.",
+    photo: "https://auralis-public-bucket.s3.eu-north-1.amazonaws.com/IMG_20220730_115524.jpg",
   },
   {
-    name: "Priya Nair",
+    name: "Priya Sharma",
     role: "Landscape Lead",
     seed: "auralis-team-priya",
     bio: "Brings gardens, patios, and facades to life with a climate-first eye.",
+    photo: "https://cdn.pixabay.com/photo/2023/06/24/15/10/ai-generated-8085421_1280.jpg",
   },
   {
-    name: "Marcus Lindqvist",
+    name: "Abhishek Singh",
     role: "Client Success",
-    seed: "auralis-team-marcus",
+    seed: "auralis-team-Abhishek",
     bio: "Guides every client from first concept to the day the last cushion lands.",
+    photo: "https://img.magnific.com/premium-photo/young-man-thinking-with-pensive-expression-modern-minimalist-company-ai-generated_1194-573956.jpg"
   },
 ];
 
@@ -264,7 +268,7 @@ export default function AboutPage() {
               >
                 <div className="relative aspect-[4/5] overflow-hidden rounded-2xl m-2">
                   <Image
-                    src={`https://picsum.photos/seed/${member.seed}/600/750`}
+                    src={`${member.photo}`}
                     alt={`Portrait of ${member.name}, ${member.role} at ${BRAND.name}`}
                     fill
                     sizes="(max-width: 768px) 50vw, 25vw"
