@@ -220,10 +220,9 @@ PRODUCT_CATEGORIES = {
     "table-lamps": {"category": "lighting", "subcategory": "Table Lamp", "room_types": ["bedroom", "desk", "side-table"]},
     "ceiling-lights": {"category": "lighting", "subcategory": "Ceiling Light", "room_types": ["any"]},
     "track-lights": {"category": "lighting", "subcategory": "Track Light", "room_types": ["kitchen", "gallery", "office"]},
-    "exterior-lighting": {"category": "lighting", "subcategory": "Exterior Light", "room_types": ["patio", "garden", "exterior"]},
     # Decor & Soft Furnishings
     "rugs": {"category": "decor", "subcategory": "Rug", "room_types": ["living-room", "bedroom", "dining-room"]},
-    "curtains": {"category": "home_textiles", "subcategory": "Curtain", "room_types": ["living-room", "bedroom"]},
+    "curent": {"category": "home_textiles", "subcategory": "Curtain", "room_types": ["living-room", "bedroom"]},
     "blinds": {"category": "home_textiles", "subcategory": "Blind", "room_types": ["living-room", "bedroom"]},
     "throw-pillows": {"category": "home_textiles", "subcategory": "Throw Pillow", "room_types": ["sofa", "bed", "chair"]},
     "throws": {"category": "home_textiles", "subcategory": "Throw Blanket", "room_types": ["sofa", "bed"]},
@@ -239,8 +238,6 @@ PRODUCT_CATEGORIES = {
     "wall-panels": {"category": "building_materials", "subcategory": "Wall Panel", "room_types": ["living-room", "bedroom", "bathroom"]},
     "doors": {"category": "building_materials", "subcategory": "Door", "room_types": ["entryway", "bedroom", "bathroom"]},
     "windows": {"category": "building_materials", "subcategory": "Window", "room_types": ["living-room", "bedroom", "bathroom"]},
-    "fencing": {"category": "building_materials", "subcategory": "Fence", "room_types": ["garden", "patio", "exterior"]},
-    "garden-decor": {"category": "decor", "subcategory": "Garden Decor", "room_types": ["garden", "patio", "exterior"]},
 }
 
 STYLE_OPTIONS = [
@@ -611,7 +608,7 @@ def create_comprehensive_products() -> list:
             "material": "Engineered Wood",
             "color": "Espresso",
             "dimensions": "36\" W x 18\" D x 54\" H",
-            "base_price": 12999,
+            "base_score": 12999,
         },
         {
             "key": "dressers",
@@ -1320,8 +1317,8 @@ def create_comprehensive_products() -> list:
             # Generate dimensions with slight variation
             dimensions = template["dimensions"]
 
-            # Generate SKU/slug - include template key and variation index to ensure uniqueness
-            name_for_slug = f"{template['name']} {color} {style} {template['key']} {i}"
+            # Generate SKU/slug
+            name_for_slug = f"{template['name']} {color} {style}"
             slug = slugify(name_for_slug)
 
             # Select random Indian city
@@ -1361,7 +1358,6 @@ def create_comprehensive_products() -> list:
             product = {
                 "key": category_key,
                 "name": f"{template['name']} - {color}",
-                "slug": slug,
                 "description": description,
                 "features": features,
                 "style": style,
@@ -1454,7 +1450,7 @@ def main() -> None:
         product_count = 0
 
         for product_data in products_data:
-            slug = product_data["slug"]
+            slug = slugify(f"{product_data['name']}-{product_data['city']}")
             product = db.query(Product).filter(Product.slug == slug).one_or_none()
 
             data = {
