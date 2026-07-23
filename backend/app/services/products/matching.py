@@ -167,6 +167,6 @@ def search_matching_products(db: Session, input_data: ProductsSearchIn, per_item
             flattened.append(candidate)
             seen.add(candidate.id)
     return {
-        "products": flattened[:40],
+        "products": flattened[:12],
         "groupedByItemType": {key: [candidate_to_dict(c) for c in value] for key, value in grouped.items()},
     }

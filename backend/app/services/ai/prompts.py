@@ -11,7 +11,7 @@ def system_prompt() -> str:
             "Use only products from the provided productCandidates list.",
             "If the user provides an image, carefully analyze its structural layout, windows, doors, lighting, and architecture.",
             "Ensure that your 'imagePrompt' explicitly describes these spatial constraints and layout details so that the generated image redesign resembles the user's original room architecture.",
-            "Return valid JSON only with 3 to 5 design options.",
+            "Return valid JSON only with exactly 3 design options.",
             "Include product quantities and a product-level price breakdown by productId.",
             "Do not invent products, prices, vendors, or availability.",
             "One premium option may exceed budget, but it must be labeled PREMIUM_OPTION.",

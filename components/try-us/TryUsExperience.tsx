@@ -220,12 +220,16 @@ export function TryUsExperience() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       setPhase("form");
-      if (error instanceof ApiRequestError && error.code === "PAYMENT_REQUIRED") {
-        setPaywallOpen(true);
-        setPaywallError("Your free generation has been used. Complete payment to continue.");
+      if (error instanceof ApiRequestError) {
+        if (error.code === "PAYMENT_REQUIRED") {
+          setPaywallOpen(true);
+          setPaywallError("Your free generation has been used. Complete payment to continue.");
+          return;
+        }
+        setErrors({ generate: error.message || "Something went wrong. Please try again." });
         return;
       }
-      setErrors({ generate: "Something went wrong. Please try again." });
+      setErrors({ generate: error instanceof Error ? error.message : "Something went wrong. Please try again." });
     }
   };
 

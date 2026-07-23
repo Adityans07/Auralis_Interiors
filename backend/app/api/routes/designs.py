@@ -18,6 +18,7 @@ from app.models.entities import (
     GeneratedDesign,
     GeneratedDesignProduct,
     Payment,
+    UserRole,
 )
 from app.schemas.api import DesignGenerationIn, ProductsSearchIn, SelectDesignIn
 from app.security.rate_limit import assert_rate_limit
@@ -40,7 +41,8 @@ def generate_designs(
     db: Session = Depends(get_db),
     context: RequestContext = Depends(get_request_context),
 ):
-    assert_rate_limit(request, "design-generate", 5, 3600)
+    if not (context.user and context.user.role == UserRole.ADMIN):
+        assert_rate_limit(request, "design-generate", 5, 3600)
     payment_id = payload.paymentId
     if not payment_id and payload.stripeCheckoutSessionId:
         payment = (

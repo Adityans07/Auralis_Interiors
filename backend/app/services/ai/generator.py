@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any
 import httpx
+import concurrent.futures
 
 from openai import OpenAI
 
@@ -166,52 +167,68 @@ def generate_design_concepts(input_data: DesignGenerationIn, candidates: list[Pr
         image_url_str = str(input_data.uploadedImageUrl)
         
     try:
-        raw = _call_openai(user_prompt(payload), image_url=image_url_str)
+        try:
+            raw = _call_openai(user_prompt(payload), image_url=image_url_str)
+        except Exception:
+            raw = None
+            
         if raw:
             try:
                 parsed = AiDesignResponse.model_validate(json.loads(raw))
                 normalized = _normalize(parsed, input_data, candidates)
                 if len(normalized) >= 3:
-                    # Generate images for each concept if image model is configured
-                    if settings.openai_api_key and settings.openai_model_image:
-                        for concept in normalized:
-                            prompt = concept.get("imagePrompt", "")
-                            if not prompt:
-                                # Fallback to a combination of title and description if no imagePrompt
-                                prompt = f"{concept.get('title', '')} {concept.get('description', '')}"
-                            image_url = _generate_and_upload_image(prompt)
-                            if image_url:
-                                concept["previewImageUrl"] = image_url
+                    # if settings.openai_api_key and settings.openai_model_image:
+                    #     def _gen_img_for_concept(concept):
+                    #         prompt = concept.get("imagePrompt", "")
+                    #         if not prompt:
+                    #             prompt = f"{concept.get('title', '')} {concept.get('description', '')}"
+                    #         return _generate_and_upload_image(prompt)
+                    #     
+                    #     with concurrent.futures.ThreadPoolExecutor() as executor:
+                    #         images = list(executor.map(_gen_img_for_concept, normalized))
+                    #         for concept, img_url in zip(normalized, images):
+                    #             if img_url:
+                    #                 concept["previewImageUrl"] = img_url
                     return normalized
             except Exception:
-                repaired = _call_openai(repair_prompt(raw))
-                if repaired:
-                    parsed = AiDesignResponse.model_validate(json.loads(repaired))
-                    normalized = _normalize(parsed, input_data, candidates)
-                    if len(normalized) >= 3:
-                        # Generate images for each concept if image model is configured
-                        if settings.openai_api_key and settings.openai_model_image:
-                            for concept in normalized:
-                                prompt = concept.get("imagePrompt", "")
-                                if not prompt:
-                                    # Fallback to a combination of title and description if no imagePrompt
-                                    prompt = f"{concept.get('title', '')} {concept.get('description', '')}"
-                                image_url = _generate_and_upload_image(prompt)
-                                if image_url:
-                                    concept["previewImageUrl"] = image_url
-                        return normalized
+                try:
+                    repaired = _call_openai(repair_prompt(raw))
+                    if repaired:
+                        parsed = AiDesignResponse.model_validate(json.loads(repaired))
+                        normalized = _normalize(parsed, input_data, candidates)
+                        if len(normalized) >= 3:
+                            # if settings.openai_api_key and settings.openai_model_image:
+                            #     def _gen_img_for_concept(concept):
+                            #         prompt = concept.get("imagePrompt", "")
+                            #         if not prompt:
+                            #             prompt = f"{concept.get('title', '')} {concept.get('description', '')}"
+                            #         return _generate_and_upload_image(prompt)
+                            #     
+                            #     with concurrent.futures.ThreadPoolExecutor() as executor:
+                            #         images = list(executor.map(_gen_img_for_concept, normalized))
+                            #         for concept, img_url in zip(normalized, images):
+                            #             if img_url:
+                            #                 concept["previewImageUrl"] = img_url
+                            return normalized
+                except Exception:
+                    pass
+                    
         # If we get here, fall back to the fallback method
         fallback_result = _fallback(input_data, candidates)
-        # Generate images for each fallback concept if image model is configured
-        if settings.openai_api_key and settings.openai_model_image:
-            for concept in fallback_result:
-                prompt = concept.get("imagePrompt", "")
-                if not prompt:
-                    # Fallback to a combination of title and description if no imagePrompt
-                    prompt = f"{concept.get('title', '')} {concept.get('description', '')}"
-                image_url = _generate_and_upload_image(prompt)
-                if image_url:
-                    concept["previewImageUrl"] = image_url
+        # if settings.openai_api_key and settings.openai_model_image:
+        #     def _gen_img_for_concept(concept):
+        #         prompt = concept.get("imagePrompt", "")
+        #         if not prompt:
+        #             prompt = f"{concept.get('title', '')} {concept.get('description', '')}"
+        #         return _generate_and_upload_image(prompt)
+        #         
+        #     with concurrent.futures.ThreadPoolExecutor() as executor:
+        #         images = list(executor.map(_gen_img_for_concept, fallback_result))
+        #         for concept, img_url in zip(fallback_result, images):
+        #             if img_url:
+        #                 concept["previewImageUrl"] = img_url
         return fallback_result
+    except ApiError:
+        raise
     except Exception as exc:
-        raise ApiError("AI_GENERATION_FAILED", "The AI design generator could not complete this request.", 502) from exc
+        raise ApiError("AI_GENERATION_FAILED", f"The AI design generator could not complete this request. ({exc})", 502) from exc
