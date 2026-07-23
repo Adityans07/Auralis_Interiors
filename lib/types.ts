@@ -250,6 +250,7 @@ export interface FreeGenerationStatus {
   canUseFreeGeneration?: boolean;
   freeGenerationUsed?: boolean;
   requiresPayment?: boolean;
+  bonusFreeGenerations?: number;
 }
 
 export interface UploadedImageRef {
