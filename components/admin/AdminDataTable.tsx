@@ -5,6 +5,7 @@ interface Column<T> {
   header: string;
   className?: string;
   render: (row: T) => React.ReactNode;
+  filterNode?: React.ReactNode;
 }
 
 export function AdminDataTable<T>({
@@ -30,7 +31,14 @@ export function AdminDataTable<T>({
             <tr>
               {columns.map((column) => (
                 <th key={column.key} className={`px-4 py-3 font-medium ${column.className ?? ""}`}>
-                  {column.header}
+                  <div className="flex flex-col gap-2">
+                    <span>{column.header}</span>
+                    {column.filterNode && (
+                      <div className="mt-1 font-normal normal-case tracking-normal">
+                        {column.filterNode}
+                      </div>
+                    )}
+                  </div>
                 </th>
               ))}
             </tr>

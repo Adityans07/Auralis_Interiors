@@ -15,11 +15,40 @@ export default function AdminProductsPage() {
   const [search, setSearch] = useState("");
   const [showArchived, setShowArchived] = useState(false);
 
+  // Column Filters
+  const [category, setCategory] = useState("");
+  const [itemType, setItemType] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [location, setLocation] = useState("");
+  const [stockStatus, setStockStatus] = useState("");
+  const [tags, setTags] = useState("");
+  const [vendor, setVendor] = useState("");
+
   useEffect(() => {
-    getAdminProducts({ page: 1, pageSize: 50, search, includeArchived: showArchived }).then((response) => {
-      setItems(response.data.items);
-    });
-  }, [search, showArchived]);
+    const timer = setTimeout(() => {
+      const params: Record<string, string | number | boolean | undefined> = {
+        page: 1,
+        pageSize: 50,
+        search: search || undefined,
+        includeArchived: showArchived,
+        category: category || undefined,
+        itemType: itemType || undefined,
+        location: location || undefined,
+        vendor: vendor || undefined,
+        tags: tags || undefined,
+        stockStatus: stockStatus || undefined,
+      };
+      if (minPrice) params.minPrice = parseFloat(minPrice);
+      if (maxPrice) params.maxPrice = parseFloat(maxPrice);
+
+      getAdminProducts(params).then((response) => {
+        setItems(response.data.items);
+      });
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search, showArchived, category, itemType, minPrice, maxPrice, location, stockStatus, tags, vendor]);
 
   const toggleArchiveProduct = async (row: AdminProduct) => {
     if (row.archivedAt) {
@@ -37,6 +66,8 @@ export default function AdminProductsPage() {
     setItems((current) => current.filter((item) => item.id !== id));
   };
 
+  const inputClass = "h-8 w-full rounded border border-white/10 bg-void/50 px-2 text-xs text-foreground focus-ring placeholder:text-muted-foreground/50";
+
   return (
     <div>
       <AdminPageHeader
@@ -46,7 +77,7 @@ export default function AdminProductsPage() {
         actionHref="/admin/products/new"
       />
       <div className="flex flex-col sm:flex-row gap-4 mb-6 items-start sm:items-center justify-between">
-        <AdminSearchFilters search={search} onSearchChange={setSearch} placeholder="Search name, vendor, category, city" />
+        <AdminSearchFilters search={search} onSearchChange={setSearch} placeholder="Search anything globally..." />
         <label className="flex items-center gap-2 text-sm text-foreground/90 cursor-pointer">
           <input 
             type="checkbox" 
@@ -61,16 +92,69 @@ export default function AdminProductsPage() {
       <AdminDataTable
         rows={items}
         rowKey={(row) => row.id}
-        emptyTitle="No products found"
+        emptyTitle="No products found matching filters"
         columns={[
-          { key: "name", header: "Product", render: (row) => row.name },
-          { key: "category", header: "Category", render: (row) => row.category },
-          { key: "itemType", header: "Item Type", render: (row) => row.itemType },
-          { key: "price", header: "Price", render: (row) => `${row.currency} ${Math.round(row.price).toLocaleString()}` },
-          { key: "location", header: "Location", render: (row) => `${row.city}, ${row.country}` },
-          { key: "stock", header: "Stock", render: (row) => <AdminStatusBadge status={row.archivedAt ? "ARCHIVED" : row.stockStatus} /> },
-          { key: "tags", header: "Style Tags", render: (row) => row.styleTags.slice(0, 2).join(", ") || "-" },
-          { key: "vendor", header: "Vendor", render: (row) => row.vendorName ?? "-" },
+          { 
+            key: "name", 
+            header: "Product", 
+            render: (row) => row.name,
+            filterNode: <input placeholder="Filter name (use global search)" disabled className={`${inputClass} opacity-50 cursor-not-allowed`} />
+          },
+          { 
+            key: "category", 
+            header: "Category", 
+            render: (row) => row.category,
+            filterNode: <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Filter..." className={inputClass} />
+          },
+          { 
+            key: "itemType", 
+            header: "Item Type", 
+            render: (row) => row.itemType,
+            filterNode: <input value={itemType} onChange={(e) => setItemType(e.target.value)} placeholder="Filter..." className={inputClass} />
+          },
+          { 
+            key: "price", 
+            header: "Price", 
+            render: (row) => `${row.currency} ${Math.round(row.price).toLocaleString()}`,
+            filterNode: (
+              <div className="flex gap-1 items-center">
+                <input type="number" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} placeholder="Min" className={`${inputClass} w-14`} />
+                <span className="text-muted-foreground">-</span>
+                <input type="number" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder="Max" className={`${inputClass} w-14`} />
+              </div>
+            )
+          },
+          { 
+            key: "location", 
+            header: "Location", 
+            render: (row) => `${row.city}, ${row.country}`,
+            filterNode: <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Filter city/country..." className={inputClass} />
+          },
+          { 
+            key: "stock", 
+            header: "Stock", 
+            render: (row) => <AdminStatusBadge status={row.archivedAt ? "ARCHIVED" : row.stockStatus} />,
+            filterNode: (
+              <select value={stockStatus} onChange={(e) => setStockStatus(e.target.value)} className={inputClass}>
+                <option value="">All</option>
+                <option value="IN_STOCK">In Stock</option>
+                <option value="LIMITED">Limited</option>
+                <option value="OUT_OF_STOCK">Out of Stock</option>
+              </select>
+            )
+          },
+          { 
+            key: "tags", 
+            header: "Style Tags", 
+            render: (row) => row.styleTags.slice(0, 2).join(", ") || "-",
+            filterNode: <input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Filter tags..." className={inputClass} />
+          },
+          { 
+            key: "vendor", 
+            header: "Vendor", 
+            render: (row) => row.vendorName ?? "-",
+            filterNode: <input value={vendor} onChange={(e) => setVendor(e.target.value)} placeholder="Filter vendor..." className={inputClass} />
+          },
           {
             key: "actions",
             header: "Actions",

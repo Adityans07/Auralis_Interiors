@@ -5,7 +5,7 @@ from decimal import Decimal
 from typing import Any
 
 from fastapi import APIRouter, Depends, Query, Request, status
-from sqlalchemy import and_, func, or_
+from sqlalchemy import and_, func, or_, cast, String
 from sqlalchemy.orm import Session, joinedload
 
 from app.core.config import settings
@@ -1152,6 +1152,11 @@ def get_products(
     city: str | None = Query(default=None),
     stockStatus: StockStatus | None = Query(default=None),
     includeArchived: bool = Query(default=False),
+    minPrice: float | None = Query(default=None),
+    maxPrice: float | None = Query(default=None),
+    location: str | None = Query(default=None),
+    vendor: str | None = Query(default=None),
+    tags: str | None = Query(default=None),
     db: Session = Depends(get_db),
     _admin: User = Depends(require_admin),
 ):
@@ -1167,6 +1172,16 @@ def get_products(
         query = query.filter(Product.city.ilike(f"%{city}%"))
     if stockStatus:
         query = query.filter(Product.stock_status == stockStatus)
+    if minPrice is not None:
+        query = query.filter(Product.price >= minPrice)
+    if maxPrice is not None:
+        query = query.filter(Product.price <= maxPrice)
+    if location:
+        query = query.filter(or_(Product.city.ilike(f"%{location}%"), Product.country.ilike(f"%{location}%")))
+    if vendor:
+        query = query.filter(Product.vendor_name.ilike(f"%{vendor}%"))
+    if tags:
+        query = query.filter(cast(Product.style_tags, String).ilike(f"%{tags}%"))
     if params.search:
         needle = f"%{params.search}%"
         query = query.filter(or_(Product.name.ilike(needle),
