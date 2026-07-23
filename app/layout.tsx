@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ToastProvider } from "@/components/ui/Toast";
+import { SmoothScrollProvider } from "@/components/layout/SmoothScrollProvider";
 import { AppChrome } from "@/components/layout/AppChrome";
 import { BRAND } from "@/lib/constants";
 
@@ -52,7 +53,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="min-h-screen bg-sand-50">
+      <body className="min-h-screen bg-[#09080b] text-sand-50">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink-900 focus:px-4 focus:py-2 focus:text-sm focus:text-sand-50"
@@ -61,7 +62,9 @@ export default function RootLayout({
         </a>
         <AuthProvider>
           <ToastProvider>
-            <AppChrome>{children}</AppChrome>
+            <SmoothScrollProvider>
+              <AppChrome>{children}</AppChrome>
+            </SmoothScrollProvider>
           </ToastProvider>
         </AuthProvider>
       </body>

@@ -17,38 +17,44 @@ export function Navbar() {
   const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    let lastScrollY = 0;
+    const onScroll = () => {
+      const current = window.scrollY;
+      setScrolled(current > 18);
+      setVisible(current <= 80 || current < lastScrollY);
+      lastScrollY = current;
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close mobile menu on route change.
   useEffect(() => setOpen(false), [pathname]);
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
+        "sticky top-0 z-50 w-full transition-transform duration-300",
+        visible ? "translate-y-0" : "-translate-y-full",
         scrolled
-          ? "border-b border-sand-200/70 bg-sand-50/80 backdrop-blur-xl"
+          ? "border-b border-white/10 bg-[#0f0d11]/90 backdrop-blur-xl"
           : "bg-transparent"
       )}
     >
-      <nav className="container-wide flex h-20 items-center justify-between">
+      <nav className="container-wide flex h-20 items-center justify-between gap-4">
         <Link href="/" className="focus-ring flex flex-col leading-none">
-          <span className="font-serif text-xl font-semibold text-ink-900">
+          <span className="font-serif text-xl font-semibold text-sand-50">
             {BRAND.name}
           </span>
-          <span className="text-[0.65rem] uppercase tracking-[0.25em] text-gold-dark">
+          <span className="text-[0.65rem] uppercase tracking-[0.32em] text-sand-200">
             AI Design Studio
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-2 lg:flex">
           {NAV_LINKS.map((link) => {
             const active =
               link.href === "/"
@@ -61,8 +67,8 @@ export function Navbar() {
                   className={cn(
                     "focus-ring rounded-full px-4 py-2 text-sm font-medium transition-colors",
                     active
-                      ? "text-ink-900"
-                      : "text-ink-500 hover:text-ink-900"
+                      ? "bg-white/10 text-sand-50 shadow-soft"
+                      : "text-sand-300 hover:text-sand-50 hover:bg-white/5"
                   )}
                 >
                   {link.label}
@@ -79,11 +85,11 @@ export function Navbar() {
             <>
               <Link
                 href="/login"
-                className="focus-ring rounded-full px-4 py-2 text-sm font-medium text-ink-600 transition-colors hover:text-ink-900"
+                className="focus-ring rounded-full px-4 py-2 text-sm font-medium text-sand-300 transition-colors hover:bg-white/5 hover:text-sand-50"
               >
                 Login
               </Link>
-              <Button href="/signup" variant="outline" size="sm">
+              <Button href="/signup" variant="outline" size="sm" className="border-white/15 text-sand-50 hover:border-white/25 hover:bg-white/5">
                 Sign Up
               </Button>
             </>
@@ -91,29 +97,27 @@ export function Navbar() {
           <AnimatedCTAButton className="h-11 px-6 text-sm" />
         </div>
 
-        {/* Mobile toggle */}
         <button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen((value) => !value)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className="focus-ring rounded-full p-2 text-ink-900 lg:hidden"
+          className="focus-ring rounded-full border border-white/10 bg-white/5 p-2 text-sand-50 lg:hidden"
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {open && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-sand-200/70 bg-sand-50/95 backdrop-blur-xl lg:hidden"
+            transition={{ duration: 0.28, ease: "easeInOut" }}
+            className="overflow-hidden border-t border-white/10 bg-[#09080b]/95 backdrop-blur-xl lg:hidden"
           >
-            <ul className="container-wide flex flex-col gap-1 py-4">
+            <ul className="container-wide flex flex-col gap-2 py-4">
               {NAV_LINKS.map((link) => {
                 const active =
                   link.href === "/"
@@ -124,10 +128,10 @@ export function Navbar() {
                     <Link
                       href={link.href}
                       className={cn(
-                        "block rounded-2xl px-4 py-3 text-base font-medium transition-colors",
+                        "block rounded-3xl px-4 py-3 text-base font-medium transition-colors",
                         active
-                          ? "bg-white text-ink-900"
-                          : "text-ink-600 hover:bg-white/60"
+                          ? "bg-white/10 text-sand-50"
+                          : "text-sand-300 hover:bg-white/10 hover:text-sand-50"
                       )}
                     >
                       {link.label}
@@ -138,13 +142,8 @@ export function Navbar() {
               <li className="mt-2 px-1">
                 <AnimatedCTAButton className="w-full justify-center" />
               </li>
-
-              {/* Auth section */}
-              <li className="mt-3 border-t border-sand-200 pt-3">
-                <MobileAuthLinks
-                  isAuthenticated={isAuthenticated}
-                  onNavigate={() => setOpen(false)}
-                />
+              <li className="mt-3 border-t border-white/10 pt-4">
+                <MobileAuthLinks isAuthenticated={isAuthenticated} onNavigate={() => setOpen(false)} />
               </li>
             </ul>
           </motion.div>
@@ -180,21 +179,21 @@ function MobileAuthLinks({
 
   if (isAuthenticated) {
     return (
-      <div className="flex flex-col gap-1">
-        {MOBILE_ACCOUNT_LINKS.map((l) => (
+      <div className="flex flex-col gap-2">
+        {MOBILE_ACCOUNT_LINKS.map((link) => (
           <Link
-            key={l.href}
-            href={l.href}
+            key={link.href}
+            href={link.href}
             onClick={onNavigate}
-            className="block rounded-2xl px-4 py-3 text-base font-medium text-ink-600 transition-colors hover:bg-white/60"
+            className="block rounded-3xl px-4 py-3 text-base font-medium text-sand-200 transition-colors hover:bg-white/10 hover:text-sand-50"
           >
-            {l.label}
+            {link.label}
           </Link>
         ))}
         <button
           type="button"
           onClick={onLogout}
-          className="mt-1 block rounded-2xl px-4 py-3 text-left text-base font-medium text-red-600 transition-colors hover:bg-red-50"
+          className="focus-ring mt-2 rounded-3xl bg-rose-700/10 px-4 py-3 text-left text-base font-medium text-rose-200 transition-colors hover:bg-rose-700/20 hover:text-rose-100"
         >
           Log out
         </button>
@@ -203,8 +202,8 @@ function MobileAuthLinks({
   }
 
   return (
-    <div className="flex flex-col gap-2 px-1">
-      <Button href="/login" variant="outline" className="w-full justify-center" onClick={onNavigate}>
+    <div className="flex flex-col gap-3 px-1">
+      <Button href="/login" variant="outline" className="w-full justify-center text-sand-100 hover:bg-white/10" onClick={onNavigate}>
         Login
       </Button>
       <Button href="/signup" variant="primary" className="w-full justify-center" onClick={onNavigate}>

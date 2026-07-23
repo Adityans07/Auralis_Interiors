@@ -8,25 +8,42 @@
     --font-serif: "Playfair Display", Georgia, serif;
   }
 
-  * {
-    @apply border-sand-200/60;
-  }
-
   html {
     scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: radial-gradient(circle at top left, rgba(214, 179, 122, 0.16), transparent 22%), radial-gradient(circle at 80% 10%, rgba(255, 219, 176, 0.12), transparent 18%), linear-gradient(180deg, #09080b 0%, #111015 48%, #141418 100%);
   }
 
   body {
-    @apply bg-sand-50 text-ink-800 antialiased;
+    @apply min-h-screen bg-[#09080b] text-sand-50 antialiased;
     font-feature-settings: "ss01", "cv01";
+    overflow-x: hidden;
   }
 
-  h1, h2, h3, h4 {
-    @apply font-serif tracking-tight text-ink-900;
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif tracking-tight;
   }
 
   ::selection {
-    @apply bg-gold/30 text-ink-900;
+    background: rgba(214, 179, 122, 0.32);
+    color: #111114;
   }
 }
 
@@ -36,35 +53,61 @@
   }
 
   .glass {
-    @apply border border-white/40 bg-white/60 backdrop-blur-xl;
+    @apply rounded-[2rem] border border-white/10 bg-white/10 backdrop-blur-2xl shadow-soft;
   }
 
   .glass-dark {
-    @apply border border-white/10 bg-white/5 backdrop-blur-xl;
+    @apply rounded-[2rem] border border-white/10 bg-slate-950/30 backdrop-blur-2xl shadow-soft;
+  }
+
+  .glass-panel {
+    @apply rounded-[2rem] border border-white/10 bg-white/10 backdrop-blur-2xl shadow-premium;
   }
 
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-gold-dark;
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-gold-light;
+    letter-spacing: 0.24em;
   }
 
-  /* Focus ring used across interactive elements for accessibility */
   .focus-ring {
-    @apply outline-none ring-offset-2 ring-offset-sand-50 focus-visible:ring-2 focus-visible:ring-gold;
+    @apply outline-none ring-2 ring-gold/30 ring-offset-2 ring-offset-[#09080b] focus-visible:ring-gold;
+  }
+
+  .glass-accent {
+    @apply rounded-4xl border border-white/10 bg-white/12 backdrop-blur-xl shadow-soft;
+  }
+
+  .shadow-premium {
+    box-shadow: 0 30px 90px -40px rgba(0, 0, 0, 0.55), 0 12px 30px -20px rgba(0, 0, 0, 0.38);
   }
 }
 
-/* Custom scrollbar for a premium feel */
+@layer utilities {
+  .text-stroke {
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.16);
+  }
+
+  .magnetic {
+    transition: transform 0.22s ease;
+  }
+
+  .magnetic:hover {
+    transform: translateY(-2px) scale(1.01);
+  }
+}
+
+/* Custom scrollbar for premium feel */
 ::-webkit-scrollbar {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: theme("colors.sand.100");
+  background: rgba(255, 255, 255, 0.04);
 }
 ::-webkit-scrollbar-thumb {
-  background: theme("colors.sand.300");
+  background: rgba(214, 179, 122, 0.32);
   border-radius: 9999px;
-  border: 2px solid theme("colors.sand.100");
+  border: 2px solid rgba(255, 255, 255, 0.06);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: theme("colors.sand.400");
+  background: rgba(214, 179, 122, 0.45);
 }
