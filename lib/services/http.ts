@@ -39,6 +39,10 @@ function sanitizeBaseUrl(url: string): string {
 }
 
 export function getBackendBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    return ""; // Leverage Next.js rewrites in the browser to fix cross-site cookies
+  }
+
   const envValue = process.env.NEXT_PUBLIC_BACKEND_URL;
   if (!envValue || !envValue.trim()) {
     return DEFAULT_BACKEND_BASE_URL;
