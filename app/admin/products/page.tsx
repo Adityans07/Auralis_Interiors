@@ -25,6 +25,18 @@ export default function AdminProductsPage() {
   const [tags, setTags] = useState("");
   const [vendor, setVendor] = useState("");
 
+  const clearFilters = () => {
+    setSearch("");
+    setCategory("");
+    setItemType("");
+    setMinPrice("");
+    setMaxPrice("");
+    setLocation("");
+    setStockStatus("");
+    setTags("");
+    setVendor("");
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       const params: Record<string, string | number | boolean | undefined> = {
@@ -78,15 +90,23 @@ export default function AdminProductsPage() {
       />
       <div className="flex flex-col sm:flex-row gap-4 mb-6 items-start sm:items-center justify-between">
         <AdminSearchFilters search={search} onSearchChange={setSearch} placeholder="Search anything globally..." />
-        <label className="flex items-center gap-2 text-sm text-foreground/90 cursor-pointer">
-          <input 
-            type="checkbox" 
-            checked={showArchived} 
-            onChange={(e) => setShowArchived(e.target.checked)}
-            className="h-4 w-4 rounded border-white/20 bg-void/50 text-gold-dark focus:ring-gold-dark/50"
-          />
-          Show Archived
-        </label>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={clearFilters}
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Clear Filters
+          </button>
+          <label className="flex items-center gap-2 text-sm text-foreground/90 cursor-pointer">
+            <input 
+              type="checkbox" 
+              checked={showArchived} 
+              onChange={(e) => setShowArchived(e.target.checked)}
+              className="h-4 w-4 rounded border-white/20 bg-void/50 text-gold-dark focus:ring-gold-dark/50"
+            />
+            Show Archived
+          </label>
+        </div>
       </div>
 
       <AdminDataTable
@@ -118,9 +138,9 @@ export default function AdminProductsPage() {
             render: (row) => `${row.currency} ${Math.round(row.price).toLocaleString()}`,
             filterNode: (
               <div className="flex gap-1 items-center">
-                <input type="number" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} placeholder="Min" className={`${inputClass} w-14`} />
+                <input type="text" value={minPrice} onChange={(e) => setMinPrice(e.target.value.replace(/[^0-9.]/g, ''))} placeholder="Min" className={`${inputClass} w-16`} />
                 <span className="text-muted-foreground">-</span>
-                <input type="number" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder="Max" className={`${inputClass} w-14`} />
+                <input type="text" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value.replace(/[^0-9.]/g, ''))} placeholder="Max" className={`${inputClass} w-16`} />
               </div>
             )
           },
