@@ -52,8 +52,6 @@ export function AdminProductForm({
       country: initial?.country ?? "",
       postalCode: initial?.postalCode ?? "",
       stockStatus: initial?.stockStatus ?? "IN_STOCK",
-      vendorName: initial?.vendorName ?? "",
-      vendorUrl: initial?.vendorUrl ?? "",
     }),
     [initial]
   );
@@ -78,7 +76,7 @@ export function AdminProductForm({
           try {
             const uploaded = await uploadImage(file, {
               location: values.city,
-              vendor: values.vendorName,
+              vendor: values.brand,
               productName: values.name,
             });
             finalImageUrl = uploaded.data.imageUrl;
@@ -102,8 +100,6 @@ export function AdminProductForm({
           brand: values.brand || null,
           material: values.material || null,
           color: values.color || null,
-          vendorName: values.vendorName || null,
-          vendorUrl: values.vendorUrl || null,
           currency: values.currency.toUpperCase(),
         });
       })}
@@ -121,7 +117,6 @@ export function AdminProductForm({
         ["country", "Country"],
         ["postalCode", "Postal Code"],
         ["brand", "Brand"],
-        ["vendorName", "Vendor"],
       ].map(([key, label]) => (
         <label key={key} className="text-sm text-foreground/90">
           {label}
@@ -193,10 +188,7 @@ export function AdminProductForm({
         </select>
       </label>
 
-      <label className="text-sm text-foreground/90">
-        Vendor URL
-        <input {...register("vendorUrl")} className="mt-1 h-10 w-full rounded-xl border border-white/10 px-3 focus-ring bg-void/50" />
-      </label>
+
 
       <div className="sm:col-span-2 flex justify-end mt-4">
         <Button type="submit" disabled={isSubmitting || uploading}>

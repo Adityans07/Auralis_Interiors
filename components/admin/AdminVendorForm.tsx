@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Save, ArrowLeft, Loader2, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { uploadImage } from "@/lib/services/api";
 import { createAdminVendor, updateAdminVendor } from "@/lib/services/adminService";
@@ -83,8 +84,8 @@ export function AdminVendorForm({ initialData }: AdminVendorFormProps) {
     if (!file) return;
 
     try {
-      const response = await uploadImage(file, { folder: "vendors" });
-      setValue(field, response.url, { shouldValidate: true });
+      const response = await uploadImage(file, { vendor: watch("name") || "vendor_upload" });
+      setValue(field, response.data.imageUrl, { shouldValidate: true });
     } catch (err: any) {
       setError(err.message || "Failed to upload image");
     }
@@ -125,7 +126,7 @@ export function AdminVendorForm({ initialData }: AdminVendorFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 max-w-4xl mx-auto">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button as={Link} href="/admin/vendors" variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+          <Button href="/admin/vendors" variant="ghost" size="icon" className="h-8 w-8 rounded-full">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <h1 className="text-2xl font-bold tracking-tight">
@@ -219,7 +220,7 @@ export function AdminVendorForm({ initialData }: AdminVendorFormProps) {
                 <div className="mt-1 flex items-center gap-4">
                   <div className="relative h-16 w-16 overflow-hidden rounded-xl border border-white/10 bg-void/50 flex items-center justify-center">
                     {logoUrl ? (
-                      <img src={logoUrl} alt="Logo" className="h-full w-full object-cover" />
+                      <Image src={logoUrl} alt="Logo" fill className="object-cover" />
                     ) : (
                       <ImageIcon className="h-6 w-6 text-muted-foreground/50" />
                     )}
@@ -240,7 +241,7 @@ export function AdminVendorForm({ initialData }: AdminVendorFormProps) {
                 <div className="mt-1 space-y-4">
                   <div className="relative h-24 w-full overflow-hidden rounded-xl border border-white/10 bg-void/50 flex items-center justify-center">
                     {bannerUrl ? (
-                      <img src={bannerUrl} alt="Banner" className="h-full w-full object-cover" />
+                      <Image src={bannerUrl} alt="Banner" fill className="object-cover" />
                     ) : (
                       <ImageIcon className="h-8 w-8 text-muted-foreground/50" />
                     )}
