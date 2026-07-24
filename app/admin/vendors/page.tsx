@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Plus, Store, MoreVertical, Edit2, Trash2, ExternalLink } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
@@ -64,7 +65,7 @@ export default function AdminVendorsPage() {
           <p className="text-sm text-muted-foreground mt-2 max-w-md">
             Get started by adding your first vendor to organize products.
           </p>
-          <Button as={Link} href="/admin/vendors/new" className="mt-6">
+          <Button href="/admin/vendors/new" className="mt-6">
             <Plus className="mr-2 h-4 w-4" /> Add Vendor
           </Button>
         </div>
@@ -80,9 +81,9 @@ export default function AdminVendorsPage() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/5 text-xl font-bold uppercase overflow-hidden">
+                  <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/5 text-xl font-bold uppercase overflow-hidden">
                     {vendor.logoUrl ? (
-                      <img src={vendor.logoUrl} alt={vendor.name} className="h-full w-full object-cover" />
+                      <Image src={vendor.logoUrl} alt={vendor.name} fill className="object-cover" />
                     ) : (
                       vendor.name.substring(0, 2)
                     )}
@@ -105,7 +106,6 @@ export default function AdminVendorsPage() {
 
               <div className="mt-auto pt-4 flex items-center gap-2 border-t border-white/10">
                 <Button
-                  as={Link}
                   href={`/admin/vendors/${vendor.id}`}
                   variant="primary"
                   className="w-full text-xs h-9"
@@ -114,7 +114,6 @@ export default function AdminVendorsPage() {
                 </Button>
                 <div className="flex gap-1">
                   <Button
-                    as={Link}
                     href={`/admin/vendors/${vendor.id}/edit`}
                     variant="ghost"
                     size="icon"
@@ -140,7 +139,7 @@ export default function AdminVendorsPage() {
       {vendorToDelete && (
         <AdminConfirmDialog
           title="Delete Vendor"
-          message={`Are you sure you want to delete ${vendorToDelete.name}? This vendor contains ${vendorToDelete.productCount} products. Deleting it will permanently remove all associated products.`}
+          description={`Are you sure you want to delete ${vendorToDelete.name}? This vendor contains ${vendorToDelete.productCount} products. Deleting it will permanently remove all associated products.`}
           confirmLabel="Delete Everything"
           onConfirm={handleDelete}
           onCancel={() => setVendorToDelete(null)}

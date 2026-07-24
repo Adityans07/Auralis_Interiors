@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "secondary" | "outline" | "ghost";
-type Size = "sm" | "md" | "lg";
+type Size = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
   primary:
@@ -19,6 +19,7 @@ const sizes: Record<Size, string> = {
   sm: "h-9 px-4 text-sm",
   md: "h-11 px-6 text-sm",
   lg: "h-14 px-8 text-base",
+  icon: "h-9 w-9 p-0 flex items-center justify-center",
 };
 
 const base =
