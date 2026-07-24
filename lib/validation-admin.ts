@@ -14,7 +14,7 @@ export const adminProductSchema = z.object({
   description: z.string().trim().min(10),
   price: z.coerce.number().positive("Price must be positive."),
   currency: z.string().trim().length(3).transform((value) => value.toUpperCase()),
-  imageUrl: z.string().url("Enter a valid image URL."),
+  imageUrl: z.string().min(1, "Please upload an image."),
   brand: z.string().optional().or(z.literal("")),
   material: z.string().optional().or(z.literal("")),
   color: z.string().optional().or(z.literal("")),
@@ -27,7 +27,7 @@ export const adminProductSchema = z.object({
   country: z.string().trim().min(2),
   postalCode: z.string().optional().or(z.literal("")),
   stockStatus: z.enum(["IN_STOCK", "LIMITED", "OUT_OF_STOCK"]),
-  vendorName: z.string().optional().or(z.literal("")),
+  vendorName: z.string().trim().min(2, "Vendor name is required."),
   vendorUrl: z.string().url().optional().or(z.literal("")),
 });
 

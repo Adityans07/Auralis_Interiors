@@ -76,7 +76,11 @@ export function AdminProductForm({
           setUploading(true);
           setUploadError(null);
           try {
-            const uploaded = await uploadImage(file);
+            const uploaded = await uploadImage(file, {
+              location: values.city,
+              vendor: values.vendorName,
+              productName: values.name,
+            });
             finalImageUrl = uploaded.data.imageUrl;
             setValue("imageUrl", finalImageUrl); // Update the form value just in case
           } catch (err: any) {
@@ -154,7 +158,7 @@ export function AdminProductForm({
             if (!data.previewUrl) {
               // If removed, we should probably clear the image URL so validation fails if it's required
               setValue("imageUrl", "");
-            } else if (!data.file && data.previewUrl.startsWith("http")) {
+            } else {
               setValue("imageUrl", data.previewUrl);
             }
           }}

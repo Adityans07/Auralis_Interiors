@@ -23,10 +23,15 @@ def create_presigned_upload(content_type: str, size: int) -> dict:
 	)
 
 
-async def upload_file(file: UploadFile) -> dict:
+async def upload_file(
+	file: UploadFile,
+	location: str | None = None,
+	vendor: str | None = None,
+	product_name: str | None = None
+) -> dict:
 	provider = settings.storage_provider
 	if _is_s3_compatible(provider):
-		return await s3.upload_file(file)
+		return await s3.upload_file(file, location, vendor, product_name)
 	raise ApiError(
 		"UPLOAD_FAILED",
 		f"Storage provider '{provider}' is not implemented for direct uploads.",
