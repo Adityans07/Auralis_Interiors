@@ -11,7 +11,7 @@ export const ADMIN_NAV_LINKS = [
   { label: "Selected Designs", href: "/admin/selected-designs" },
   { label: "Bookings", href: "/admin/bookings" },
   { label: "Customers", href: "/admin/customers" },
-  { label: "Products", href: "/admin/products" },
+  { label: "Vendors", href: "/admin/vendors" },
   { label: "Blogs", href: "/admin/blogs" },
   { label: "Contact Messages", href: "/admin/contact-messages" },
   { label: "Payments", href: "/admin/payments" },

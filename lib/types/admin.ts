@@ -165,8 +165,30 @@ export interface AdminCustomerDetail {
   notes: AdminNote[];
 }
 
+export interface AdminVendor {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl?: string | null;
+  bannerUrl?: string | null;
+  websiteUrl?: string | null;
+  description?: string | null;
+  contactPerson?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  status: "ACTIVE" | "INACTIVE";
+  productCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type AdminVendorPayload = Omit<AdminVendor, "id" | "productCount" | "createdAt" | "updatedAt">;
+
+
 export interface AdminProduct {
   id: string;
+  vendorId: string;
   name: string;
   slug: string;
   category: string;

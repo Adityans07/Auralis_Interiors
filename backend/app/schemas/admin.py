@@ -64,6 +64,7 @@ class CustomerUsageUpdateIn(BaseModel):
 
 
 class ProductIn(BaseModel):
+    vendorId: str = Field(min_length=32, max_length=64)
     name: str = Field(min_length=2, max_length=255)
     slug: str = Field(min_length=2, max_length=255, pattern=SLUG_PATTERN)
     category: str = Field(min_length=2, max_length=120)
@@ -99,6 +100,7 @@ class ProductIn(BaseModel):
 
 
 class ProductPatchIn(BaseModel):
+    vendorId: str | None = Field(default=None, min_length=32, max_length=64)
     name: str | None = Field(default=None, min_length=2, max_length=255)
     slug: str | None = Field(default=None, min_length=2, max_length=255, pattern=SLUG_PATTERN)
     category: str | None = Field(default=None, min_length=2, max_length=120)

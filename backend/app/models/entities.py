@@ -50,6 +50,11 @@ class StockStatus(str, enum.Enum):
     OUT_OF_STOCK = "OUT_OF_STOCK"
 
 
+class VendorStatus(str, enum.Enum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+
+
 class SelectedDesignStatus(str, enum.Enum):
     NEW = "NEW"
     CONTACTED = "CONTACTED"
@@ -344,10 +349,30 @@ class GeneratedDesignProduct(TimestampMixin, Base):
     product: Mapped[Product | None] = relationship(back_populates="generated_design_products")
 
 
+class Vendor(TimestampMixin, Base):
+    __tablename__ = "vendors"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
+    name: Mapped[str] = mapped_column(String(255), index=True)
+    slug: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    logo_url: Mapped[str | None] = mapped_column(Text)
+    banner_url: Mapped[str | None] = mapped_column(Text)
+    website_url: Mapped[str | None] = mapped_column(Text)
+    description: Mapped[str | None] = mapped_column(Text)
+    contact_person: Mapped[str | None] = mapped_column(String(255))
+    email: Mapped[str | None] = mapped_column(String(320))
+    phone: Mapped[str | None] = mapped_column(String(80))
+    address: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[VendorStatus] = mapped_column(Enum(VendorStatus), default=VendorStatus.ACTIVE, index=True)
+
+    products: Mapped[list["Product"]] = relationship(back_populates="vendor", cascade="all, delete-orphan")
+
+
 class Product(TimestampMixin, Base):
     __tablename__ = "products"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
+    vendor_id: Mapped[str] = mapped_column(ForeignKey("vendors.id", ondelete="CASCADE"), index=True)
     name: Mapped[str] = mapped_column(String(255))
     slug: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     category: Mapped[str] = mapped_column(String(120), index=True)
@@ -372,6 +397,7 @@ class Product(TimestampMixin, Base):
     vendor_url: Mapped[str | None] = mapped_column(Text)
     archived_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), index=True)
 
+    vendor: Mapped[Vendor] = relationship(back_populates="products")
     generated_design_products: Mapped[list[GeneratedDesignProduct]] = relationship(back_populates="product")
 
 

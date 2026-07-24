@@ -16,6 +16,8 @@ import type {
   AdminProductPayload,
   AdminSelectedDesignListItem,
   AdminSettings,
+  AdminVendor,
+  AdminVendorPayload,
   PaginatedResponse,
   PaginationParams,
 } from "@/lib/types/admin";
@@ -245,7 +247,35 @@ export async function getAdminAiLogs(params?: PaginationParams) {
 }
 
 export async function getAdminSettings() {
-  return backendRequest<AdminSettings>(`/api/admin/settings`);
+  return backendRequest<AdminSettings>("/api/admin/settings");
+}
+
+export async function getAdminVendors(params?: PaginationParams) {
+  return backendRequest<PaginatedResponse<AdminVendor>>(`/api/admin/vendors${toQuery(params)}`);
+}
+
+export async function getAdminVendorById(id: string) {
+  return backendRequest<AdminVendor>(`/api/admin/vendors/${id}`);
+}
+
+export async function createAdminVendor(payload: AdminVendorPayload) {
+  return backendRequest<AdminVendor>("/api/admin/vendors", {
+    method: "POST",
+    body: payload,
+  });
+}
+
+export async function updateAdminVendor(id: string, payload: Partial<AdminVendorPayload>) {
+  return backendRequest<AdminVendor>(`/api/admin/vendors/${id}`, {
+    method: "PATCH",
+    body: payload,
+  });
+}
+
+export async function deleteAdminVendor(id: string) {
+  return backendRequest(`/api/admin/vendors/${id}`, {
+    method: "DELETE",
+  });
 }
 
 export async function updateAdminSettings(payload: Partial<AdminSettings>) {

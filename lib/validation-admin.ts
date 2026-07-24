@@ -27,8 +27,6 @@ export const adminProductSchema = z.object({
   country: z.string().trim().min(2),
   postalCode: z.string().optional().or(z.literal("")),
   stockStatus: z.enum(["IN_STOCK", "LIMITED", "OUT_OF_STOCK"]),
-  vendorName: z.string().trim().min(2, "Vendor name is required."),
-  vendorUrl: z.string().url().optional().or(z.literal("")),
 });
 
 export type AdminProductSchema = z.infer<typeof adminProductSchema>;

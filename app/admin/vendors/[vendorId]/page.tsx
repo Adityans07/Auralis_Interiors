@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { AdminDataTable } from "@/components/admin/AdminDataTable";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminSearchFilters } from "@/components/admin/AdminSearchFilters";
 import { AdminStatusBadge } from "@/components/admin/AdminStatusBadge";
-import { deleteAdminProduct, archiveAdminProduct, unarchiveAdminProduct, getAdminProducts } from "@/lib/services/adminService";
-import type { AdminProduct } from "@/lib/types/admin";
+import { deleteAdminProduct, archiveAdminProduct, unarchiveAdminProduct, getAdminProducts, getAdminVendorById } from "@/lib/services/adminService";
+import type { AdminProduct, AdminVendor } from "@/lib/types/admin";
 import { Button } from "@/components/ui/Button";
 
-export default function AdminProductsPage() {
+export default function AdminVendorProductsPage() {
+  const { vendorId } = useParams();
+  const [vendorDetails, setVendorDetails] = useState<AdminVendor | null>(null);
   const [items, setItems] = useState<AdminProduct[]>([]);
   const [search, setSearch] = useState("");
   const [showArchived, setShowArchived] = useState(false);
@@ -38,6 +41,16 @@ export default function AdminProductsPage() {
   };
 
   useEffect(() => {
+    if (vendorId) {
+      getAdminVendorById(vendorId as string).then((res) => {
+        setVendorDetails(res.data);
+      }).catch(console.error);
+    }
+  }, [vendorId]);
+
+  useEffect(() => {
+    if (!vendorId) return;
+    
     const timer = setTimeout(() => {
       const params: Record<string, string | number | boolean | undefined> = {
         page: 1,
@@ -48,6 +61,7 @@ export default function AdminProductsPage() {
         itemType: itemType || undefined,
         location: location || undefined,
         vendor: vendor || undefined,
+        vendorId: vendorId as string,
         tags: tags || undefined,
         stockStatus: stockStatus || undefined,
       };
@@ -60,7 +74,7 @@ export default function AdminProductsPage() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, showArchived, category, itemType, minPrice, maxPrice, location, stockStatus, tags, vendor]);
+  }, [search, showArchived, category, itemType, minPrice, maxPrice, location, stockStatus, tags, vendor, vendorId]);
 
   const toggleArchiveProduct = async (row: AdminProduct) => {
     if (row.archivedAt) {
@@ -83,10 +97,10 @@ export default function AdminProductsPage() {
   return (
     <div>
       <AdminPageHeader
-        title="Products"
-        description="Manage inventory that powers AI recommendations."
+        title={vendorDetails ? `${vendorDetails.name} Products` : "Products"}
+        description={`Manage inventory for ${vendorDetails?.name || "this vendor"}.`}
         actionLabel="Add Product"
-        actionHref="/admin/products/new"
+        actionHref={`/admin/vendors/${vendorId}/products/new`}
       />
       <div className="flex flex-col sm:flex-row gap-4 mb-6 items-start sm:items-center justify-between">
         <AdminSearchFilters search={search} onSearchChange={setSearch} placeholder="Search anything globally..." />
@@ -180,7 +194,7 @@ export default function AdminProductsPage() {
             header: "Actions",
             render: (row) => (
               <div className="flex items-center gap-2">
-                <Link href={`/admin/products/${row.id}/edit`} className="text-sm font-medium text-gold-dark hover:text-foreground">
+                <Link href={`/admin/vendors/${vendorId}/products/${row.id}/edit`} className="text-sm font-medium text-gold-dark hover:text-foreground">
                   Edit
                 </Link>
                 <button onClick={() => toggleArchiveProduct(row)} className="text-sm text-muted-foreground hover:text-foreground">

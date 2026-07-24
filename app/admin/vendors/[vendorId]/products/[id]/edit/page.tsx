@@ -8,7 +8,7 @@ import { getAdminProductById, updateAdminProduct } from "@/lib/services/adminSer
 import type { AdminProduct } from "@/lib/types/admin";
 
 export default function AdminEditProductPage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ vendorId: string; id: string }>();
   const router = useRouter();
   const [product, setProduct] = useState<AdminProduct | null>(null);
   const [saving, setSaving] = useState(false);
@@ -33,9 +33,9 @@ export default function AdminEditProductPage() {
         onSubmit={async (payload) => {
           setSaving(true);
           try {
-            await updateAdminProduct(product.id, payload as never);
+            await updateAdminProduct(product.id, { ...payload, vendorId: params.vendorId } as never);
             router.refresh(); // Invalidate cache so changes persist in the list
-            router.push("/admin/products");
+            router.push(`/admin/vendors/${params.vendorId}`);
           } finally {
             setSaving(false);
           }

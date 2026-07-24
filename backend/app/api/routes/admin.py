@@ -1196,6 +1196,7 @@ def get_products(
     maxPrice: float | None = Query(default=None),
     location: str | None = Query(default=None),
     vendor: str | None = Query(default=None),
+    vendorId: str | None = Query(default=None),
     tags: str | None = Query(default=None),
     db: Session = Depends(get_db),
     _admin: User = Depends(require_admin),
@@ -1220,6 +1221,8 @@ def get_products(
         query = query.filter(or_(Product.city.ilike(f"%{location}%"), Product.country.ilike(f"%{location}%")))
     if vendor:
         query = query.filter(Product.vendor_name.ilike(f"%{vendor}%"))
+    if vendorId:
+        query = query.filter(Product.vendor_id == vendorId)
     if tags:
         query = query.filter(cast(Product.style_tags, String).ilike(f"%{tags}%"))
     if params.search:
@@ -1249,6 +1252,7 @@ def get_products(
                     "stockStatus": record.stock_status.value,
                     "styleTags": record.style_tags,
                     "vendor": record.vendor_name,
+                    "vendorId": record.vendor_id,
                     "updatedAt": record.updated_at.isoformat(),
                     "archivedAt": record.archived_at.isoformat() if record.archived_at else None,
                 }
@@ -1273,6 +1277,7 @@ def create_product(
             status.HTTP_409_CONFLICT)
 
     product = Product(
+        vendor_id=payload.vendorId,
         name=payload.name,
         slug=payload.slug,
         category=payload.category,
@@ -1338,6 +1343,7 @@ def get_product_detail(
             "stockStatus": product.stock_status.value,
             "vendorName": product.vendor_name,
             "vendorUrl": product.vendor_url,
+            "vendorId": product.vendor_id,
             "archivedAt": product.archived_at.isoformat() if product.archived_at else None,
             "notes": _load_notes(db, AdminNoteEntityType.PRODUCT, product.id),
         }
@@ -1376,6 +1382,7 @@ def patch_product(
         "stockStatus": "stock_status",
         "vendorName": "vendor_name",
         "vendorUrl": "vendor_url",
+        "vendorId": "vendor_id",
     }
     for key, value in updates.items():
         if key == "archived":
