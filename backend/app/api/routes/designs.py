@@ -28,6 +28,7 @@ from app.services.ai.generator import generate_design_concepts
 from app.services.email.send import notify_admin, send_email
 from app.services.products.matching import search_matching_products
 from app.services.storage.s3 import upload_file, public_url
+from app.services.ai.image_worker import spawn_image_worker
 from app.utils.responses import ApiError, success
 from app.utils.serializers import design_request_to_client, generated_design_to_client
 
@@ -113,7 +114,7 @@ def generate_designs(
         )
         matches = search_matching_products(db, product_input)
         concepts = generate_design_concepts(payload, matches["products"])
-        if len(concepts) < 3:
+        if len(concepts) < 2:
             raise ApiError("AI_GENERATION_FAILED", "The AI generator returned too few valid concepts.", 502)
 
         for index, concept in enumerate(concepts, start=1):
@@ -189,6 +190,9 @@ def generate_designs(
         .filter(DesignRequest.id == design_request.id)
         .one()
     )
+    
+    spawn_image_worker(completed.id)
+    
     return success(
         {
             "designRequestId": completed.id,
@@ -198,6 +202,24 @@ def generate_designs(
             "designs": [generated_design_to_client(design) for design in sorted(completed.generated_designs, key=lambda d: d.rank)],
         }
     )
+
+
+@router.get("/{design_request_id}/images-status")
+def get_images_status(
+    design_request_id: str,
+    db: Session = Depends(get_db),
+    context: RequestContext = Depends(get_request_context),
+):
+    req = db.query(DesignRequest).filter(DesignRequest.id == design_request_id).first()
+    if not req:
+        raise ApiError("NOT_FOUND", "Design request not found", 404)
+        
+    assert_owns_design_request(db, context, req.id)
+    
+    return success({
+        "imageGenerationStatus": req.image_generation_status,
+        "designs": [{"id": d.id, "previewImageUrl": d.preview_image_url} for d in req.generated_designs]
+    })
 
 
 @router.get("/{design_request_id}/status")

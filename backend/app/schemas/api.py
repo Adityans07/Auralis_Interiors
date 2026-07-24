@@ -3,12 +3,21 @@ from __future__ import annotations
 from pydantic import BaseModel, EmailStr, Field, HttpUrl, field_validator, model_validator
 
 
+SUPPORTED_CITIES = {"Noida", "Prayagraj", "Patna", "Jaipur", "Chandigarh", "Kolkata"}
+
 class LocationIn(BaseModel):
     city: str
     state: str | None = None
     country: str
     postalCode: str | None = None
     zip: str | None = None
+
+    @field_validator("city")
+    @classmethod
+    def validate_city(cls, value: str) -> str:
+        if value not in SUPPORTED_CITIES:
+            raise ValueError(f"City must be one of {', '.join(SUPPORTED_CITIES)}")
+        return value
 
 
 class SelectedItemIn(BaseModel):
@@ -57,11 +66,9 @@ class DesignGenerationIn(BaseModel):
         return value.upper()
 
     @model_validator(mode="after")
-    def require_image_or_description(self):
-        if not (self.description and self.description.strip()) and not (
-            self.uploadedImage or self.uploadedImageUrl or self.imageName
-        ):
-            raise ValueError("Provide a room description or upload an image.")
+    def require_image(self):
+        if not (self.uploadedImage or self.uploadedImageUrl or self.imageName):
+            raise ValueError("A room photo is required for the redesign.")
         return self
 
 
@@ -170,4 +177,4 @@ class AiDesign(BaseModel):
 
 
 class AiDesignResponse(BaseModel):
-    designs: list[AiDesign] = Field(min_length=3, max_length=5)
+    designs: list[AiDesign] = Field(min_length=2, max_length=2)

@@ -277,6 +277,7 @@ class DesignRequest(TimestampMixin, Base):
         index=True,
     )
     internal_status: Mapped[str | None] = mapped_column(String(120), index=True)
+    image_generation_status: Mapped[str] = mapped_column(String(32), default="pending", nullable=False)
     last_admin_viewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     user: Mapped[User | None] = relationship(back_populates="design_requests", foreign_keys=[user_id])

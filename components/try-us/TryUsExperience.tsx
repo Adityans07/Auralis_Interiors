@@ -34,6 +34,7 @@ import {
   generateDesigns,
   getFreeGenerationStatus,
   uploadImage,
+  getImageStatus,
 } from "@/lib/services/api";
 import { ApiRequestError } from "@/lib/services/http";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -65,7 +66,7 @@ function initialFormData(style?: DesignStyle): TryUsFormData {
     description: "",
     style: style ?? "modern",
     budget: 0,
-    currency: "USD",
+    currency: "INR",
     location: { city: "", state: "", country: "", zip: "" },
     selectedItems: [],
   };
@@ -83,6 +84,8 @@ export function TryUsExperience() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [results, setResults] = useState<GeneratedDesign[]>([]);
+  const [designRequestId, setDesignRequestId] = useState<string | null>(null);
+  const [imagesReady, setImagesReady] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailsDesign, setDetailsDesign] = useState<GeneratedDesign | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -134,6 +137,45 @@ export function TryUsExperience() {
     };
   }, [customer?.freeGenerationUsed, isAuthenticated]);
 
+  useEffect(() => {
+    let active = true;
+    let timer: NodeJS.Timeout;
+
+    const poll = async () => {
+      if (!designRequestId || imagesReady) return;
+      try {
+        const res = await getImageStatus(designRequestId);
+        if (!active) return;
+        const status = res.data.imageGenerationStatus;
+        if (status === "ready" || status === "failed") {
+          setImagesReady(true);
+          setResults((prev) =>
+            prev.map((d) => {
+              const updated = res.data.designs.find((u: any) => u.id === d.id);
+              if (updated && updated.previewImageUrl) {
+                return { ...d, previewImage: updated.previewImageUrl };
+              }
+              return d;
+            })
+          );
+        } else {
+          timer = setTimeout(poll, 5000);
+        }
+      } catch (err) {
+        if (active) timer = setTimeout(poll, 5000);
+      }
+    };
+
+    if (designRequestId && !imagesReady) {
+      void poll();
+    }
+
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [designRequestId, imagesReady]);
+
   const update = (patch: Partial<TryUsFormData>) =>
     setForm((f) => ({ ...f, ...patch }));
 
@@ -142,8 +184,8 @@ export function TryUsExperience() {
   const validateStep = (index: number): boolean => {
     const e: Record<string, string> = {};
     if (index === 0) {
-      if (!form.imagePreviewUrl && !form.description?.trim()) {
-        e.space = "Please upload an image or describe your space.";
+      if (!form.uploadedImageUrl && !form.imagePreviewUrl) {
+        e.space = "Please upload an image of your room.";
       }
     }
     if (index === 1) {
@@ -218,7 +260,9 @@ export function TryUsExperience() {
         }
       }
 
-      setResults(res.data);
+      setResults(res.data.designs);
+      setDesignRequestId(res.data.designRequestId);
+      setImagesReady(false);
       setPhase("results");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
@@ -385,7 +429,7 @@ export function TryUsExperience() {
           </motion.div>
         )}
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-10 grid gap-6 lg:grid-cols-2">
           {results.map((d, i) => (
             <DesignResultCard
               key={d.id}
@@ -396,6 +440,7 @@ export function TryUsExperience() {
               onToggleProduct={toggleProduct}
               onViewDetails={openDetails}
               onSelect={openSelection}
+              imagesReady={imagesReady}
             />
           ))}
         </div>

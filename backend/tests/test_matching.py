@@ -85,7 +85,7 @@ def test_product_matching_groups_results_by_selected_item(db_session: Session):
     db_session.commit()
 
     payload = ProductsSearchIn(
-        location={"city": "San Francisco", "state": "CA", "country": "US"},
+        location={"city": "Noida", "state": "UP", "country": "IN"},
         selectedItems=[{"id": "sofa", "label": "Sofa", "category": "furniture"}],
         budget=5000,
         style="modern",

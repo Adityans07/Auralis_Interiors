@@ -17,8 +17,8 @@ class Settings(BaseSettings):
     frontend_origin: str = "http://localhost:3000,https://auralis-interiors.vercel.app,https://auralis-interiors-7ln23i4e2-adityar739-gmailcoms-projects.vercel.app"
 
     openai_api_key: str | None = None
-    openai_model_text: str = "gpt-4o-mini"
-    openai_model_image: str | None = None
+    openai_model_text: str = "gpt-4o"
+    openai_model_image: str | None = "gpt-image-1-mini"
 
     stripe_secret_key: str | None = None
     stripe_webhook_secret: str | None = None

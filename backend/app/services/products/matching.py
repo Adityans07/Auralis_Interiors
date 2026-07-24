@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass
 from decimal import Decimal
 
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 
 from app.models.entities import Product, StockStatus
@@ -49,15 +49,8 @@ def _lower(values: list[str]) -> set[str]:
 
 
 def _location_score(product: Product, input_data: ProductsSearchIn) -> int:
-    city = input_data.location.city.lower()
-    country = input_data.location.country.lower()
-    if product.city.lower() == city and product.country.lower() == country:
-        return 35
-    if input_data.location.state and product.state and product.state.lower() == input_data.location.state.lower():
-        return 25
-    if product.country.lower() == country:
-        return 15
-    return 0
+    return 35  # All matches are exact city matches now
+
 
 
 def _score(product: Product, input_data: ProductsSearchIn, selected: set[str]) -> int:
@@ -89,20 +82,7 @@ def _score(product: Product, input_data: ProductsSearchIn, selected: set[str]) -
 
 
 def _candidate(product: Product, input_data: ProductsSearchIn, score: int) -> ProductCandidate:
-    city_match = (
-        product.city.lower() == input_data.location.city.lower()
-        and product.country.lower() == input_data.location.country.lower()
-    )
-    state_match = bool(
-        product.state
-        and input_data.location.state
-        and product.state.lower() == input_data.location.state.lower()
-    )
-    label = (
-        f"{product.city}, {product.state or product.country}"
-        if city_match
-        else f"{product.state}, {product.country}" if state_match else product.country
-    )
+    label = f"{product.city}, {product.state or product.country}"
     return ProductCandidate(
         id=product.id,
         name=product.name,
@@ -137,7 +117,7 @@ def search_matching_products(db: Session, input_data: ProductsSearchIn, per_item
         db.query(Product)
         .filter(
             or_(
-                Product.country.ilike(input_data.location.country),
+                func.lower(Product.city) == input_data.location.city.lower(),
                 Product.item_type.in_(list(selected)),
             ),
             Product.archived_at.is_(None),

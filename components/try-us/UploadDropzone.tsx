@@ -63,7 +63,7 @@ export function UploadDropzone({ previewUrl, fileName, onChange }: UploadDropzon
       {previewUrl ? (
         <div className="relative overflow-hidden rounded-3xl border border-white/10">
           <div className="relative aspect-video w-full">
-            <Image src={previewUrl} alt={fileName ?? "Uploaded space"} fill className="object-cover" unoptimized />
+            <Image src={previewUrl} alt={fileName ?? "Uploaded room photo"} fill className="object-cover" unoptimized />
           </div>
           <div className="flex items-center justify-between gap-3 bg-void/5 px-4 py-3">
             <span className="flex items-center gap-2 truncate text-sm text-muted-foreground">
@@ -101,7 +101,10 @@ export function UploadDropzone({ previewUrl, fileName, onChange }: UploadDropzon
             <UploadCloud className="h-7 w-7" />
           </span>
           <span className="text-base font-medium text-foreground">
-            Drag & drop a photo of your space
+            Upload your room photo (required)
+          </span>
+          <span className="text-sm text-muted-foreground">
+            A photo of your room is needed for AI redesign
           </span>
           <span className="text-sm text-muted-foreground">
             or <span className="font-medium text-gold-dark underline">browse files</span> · JPG, PNG, WEBP · up to {MAX_IMAGE_SIZE_MB} MB
@@ -114,7 +117,7 @@ export function UploadDropzone({ previewUrl, fileName, onChange }: UploadDropzon
         type="file"
         accept={ACCEPTED_IMAGE_TYPES.join(",")}
         className="sr-only"
-        aria-label="Upload an image of your space"
+        aria-label="Upload a room photo"
         onChange={(e) => handleFile(e.target.files?.[0])}
       />
 

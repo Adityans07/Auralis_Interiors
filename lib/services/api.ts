@@ -129,7 +129,7 @@ function mapGeneratedDesign(design: BackendGeneratedDesign): GeneratedDesign {
  */
 export async function generateDesigns(
   payload: DesignGenerationPayload
-): Promise<ApiResponse<GeneratedDesign[]>> {
+): Promise<ApiResponse<{ designRequestId: string, designs: GeneratedDesign[] }>> {
   const response = await backendRequest<BackendGenerateResponse>("/api/designs/generate", {
     method: "POST",
     body: {
@@ -160,9 +160,18 @@ export async function generateDesigns(
 
   return {
     success: true,
-    data: designs,
+    data: {
+      designRequestId: response.data.designRequestId,
+      designs
+    },
     message: "Designs generated successfully.",
   };
+}
+
+export async function getImageStatus(designRequestId: string) {
+  return backendRequest<{ imageGenerationStatus: string, designs: { id: string, previewImageUrl: string | null }[] }>(
+    `/api/designs/${designRequestId}/images-status`
+  );
 }
 
 /** GET /api/user/free-generation-status */

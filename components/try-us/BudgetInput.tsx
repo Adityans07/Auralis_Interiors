@@ -1,6 +1,6 @@
 "use client";
 
-import { DollarSign } from "lucide-react";
+import { IndianRupee } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
 interface BudgetInputProps {
@@ -9,7 +9,7 @@ interface BudgetInputProps {
   error?: string;
 }
 
-const QUICK_BUDGETS = [2000, 5000, 10000, 25000];
+const QUICK_BUDGETS = [50000, 100000, 250000, 500000];
 
 export function BudgetInput({ value, onChange, error }: BudgetInputProps) {
   return (
@@ -18,7 +18,7 @@ export function BudgetInput({ value, onChange, error }: BudgetInputProps) {
         Budget <span className="text-gold-dark">*</span>
       </label>
       <div className="relative">
-        <DollarSign className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
+        <IndianRupee className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
         <input
           id="budget"
           type="number"
@@ -46,7 +46,7 @@ export function BudgetInput({ value, onChange, error }: BudgetInputProps) {
                 : "border-white/20 bg-void text-muted-foreground hover:border-white/20")
             }
           >
-            {formatCurrency(b)}
+            {formatCurrency(b, "INR")}
           </button>
         ))}
       </div>

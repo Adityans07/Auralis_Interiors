@@ -19,6 +19,7 @@ interface DesignResultCardProps {
   onToggleProduct: (designId: string, productId: string) => void;
   onViewDetails: (design: GeneratedDesign) => void;
   onSelect: (design: GeneratedDesign) => void;
+  imagesReady?: boolean;
 }
 
 /** A premium proposal card for a single AI-generated design. */
@@ -30,6 +31,7 @@ export function DesignResultCard({
   onToggleProduct,
   onViewDetails,
   onSelect,
+  imagesReady = true,
 }: DesignResultCardProps) {
   const [expanded, setExpanded] = useState(false);
   const includedCount = design.products.filter((p) => p.included).length;
@@ -45,13 +47,20 @@ export function DesignResultCard({
       )}
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden">
-        <Image
-          src={design.previewImage}
-          alt={`${design.title} — ${humanize(design.style)} concept`}
-          fill
-          sizes="(max-width: 1024px) 100vw, 33vw"
-          className="object-cover"
-        />
+        {imagesReady && design.previewImage ? (
+          <Image
+            src={design.previewImage}
+            alt={`${design.title} — ${humanize(design.style)} concept`}
+            fill
+            sizes="(max-width: 1024px) 100vw, 33vw"
+            className="object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-base/50">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+            <p className="z-10 text-xs font-medium text-muted-foreground animate-pulse">Generating room preview...</p>
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-ink-950/50 to-transparent" />
         <span className="absolute left-4 top-4 rounded-full bg-void/10 px-3 py-1 text-xs font-medium text-foreground backdrop-blur">
           {humanize(design.style)}
