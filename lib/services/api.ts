@@ -214,9 +214,12 @@ export async function createCheckoutSession(
 }
 
 /** POST /api/uploads */
-export async function uploadImage(file: File): Promise<ApiResponse<UploadedImageRef>> {
+export async function uploadImage(file: File, metadata?: { location?: string; vendor?: string; productName?: string }): Promise<ApiResponse<UploadedImageRef>> {
   const formData = new FormData();
   formData.append("file", file);
+  if (metadata?.location) formData.append("location", metadata.location);
+  if (metadata?.vendor) formData.append("vendor", metadata.vendor);
+  if (metadata?.productName) formData.append("product_name", metadata.productName);
 
   const response = await backendRequest<UploadedImageRef>("/api/uploads", {
     method: "POST",

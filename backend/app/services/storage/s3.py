@@ -76,10 +76,33 @@ def create_presigned_upload(content_type: str, size: int) -> dict:
     return {"uploadUrl": url, "imageUrl": public_url(key), "imageKey": key, "headers": {"Content-Type": content_type}}
 
 
-async def upload_file(file: UploadFile) -> dict:
+async def upload_file(
+    file: UploadFile, 
+    location: str | None = None,
+    vendor: str | None = None,
+    product_name: str | None = None
+) -> dict:
     content = await file.read()
     validate_image(file.content_type or "", len(content))
-    key = _key(file.content_type or "image/jpeg")
+    
+    if location and vendor and product_name:
+        import re
+        import logging
+        logging.info(f"Uploading product image with meta: location={location}, vendor={vendor}, product_name={product_name}")
+        def slugify(text: str) -> str:
+            return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
+        
+        loc_slug = slugify(location)
+        ven_slug = slugify(vendor)
+        prod_slug = slugify(product_name)
+        ext = ALLOWED_IMAGE_TYPES.get(file.content_type or "image/jpeg", "jpg")
+        file_id = uuid.uuid4().hex[:8]
+        key = f"products/{loc_slug}/{ven_slug}/{prod_slug}/{file_id}.{ext}"
+    else:
+        import logging
+        logging.info(f"Fallback upload without meta. loc={location}, ven={vendor}, prod={product_name}")
+        key = _key(file.content_type or "image/jpeg")
+        
     _client().put_object(Bucket=settings.s3_bucket, Key=key, Body=content, ContentType=file.content_type)
     return {"imageUrl": public_url(key), "imageKey": key}
 

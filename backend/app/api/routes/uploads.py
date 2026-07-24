@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, Request, UploadFile
+from fastapi import APIRouter, File, Request, UploadFile, Form
 
 from app.schemas.api import PresignUploadIn
 from app.security.rate_limit import assert_rate_limit
@@ -15,6 +15,12 @@ def presign_upload(payload: PresignUploadIn, request: Request):
 
 
 @router.post("")
-async def upload_image(request: Request, file: UploadFile = File(...)):
+async def upload_image(
+    request: Request, 
+    file: UploadFile = File(...),
+    location: str | None = Form(None),
+    vendor: str | None = Form(None),
+    product_name: str | None = Form(None)
+):
     assert_rate_limit(request, "uploads", 10, 3600)
-    return success(await upload_file(file))
+    return success(await upload_file(file, location=location, vendor=vendor, product_name=product_name))
